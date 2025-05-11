@@ -12,19 +12,16 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../../progs'))
-sys.path.insert(0, os.path.abspath('../../progs/Basler'))
-sys.path.insert(0, os.path.abspath('../../progs/Basler/src'))
-sys.path.insert(0, os.path.abspath('../../progs/Basler/src/supoptools'))
+sys.path.insert(0, os.path.abspath('../../appli'))
 
 
 
 # -- Project information -----------------------------------------------------
 
-project = 'Camera GUI'
-copyright = '2024, Julien Villemejane'
+project = 'Aberrations GUI / Zygo'
+copyright = '2025, Julien Villemejane'
 author = 'Julien Villemejane <>'
-release = '0.1'
+release = '1.0'
 
 
 # -- General configuration ---------------------------------------------------
