@@ -1,0 +1,65 @@
+# -*- coding: utf-8 -*-
+# Dictionnaire Français
+#
+# --------------------
+# TitleWidget
+# --------------------
+label_title;Zygo - Analyse de surfaces / Aberrations
+label_subtitle;Interface développée par le LEnsE
+# --------------
+# MainMenuWidget
+# --------------
+window_title_main_menu_widget; Menu Principal
+label_title_main_menu; Menu
+camera_button; Caméra
+load_images_button; Images pré-enregistrées
+masks_button; Gestion des masques
+acquisition_button; Acquisition simple
+acquisition_multi_button; Acquisition multiple
+simple_analysis_button; Analyse simple
+multi_analysis_button; Analyse multi-acquisition
+aberrations_button; Aberrations
+help_button; Aide
+options_button; Options interface
+piezo_button; Gestion du piezo
+# --------------
+# Images
+# --------------
+sub_menu_images; Gestion des images
+open_images_button; Ouverture d'un set
+display_images_button; Gestion du set
+delete_images_button; Suppression d'images
+save_images_button; Sauvegarde d'images
+label_images_choice_title; Choix de l'image à afficher
+# --------------
+# Masques
+# --------------
+sub_menu_masks; Gestion des masques
+circular_mask_button; Masque Circulaire
+rectangular_mask_button; Masque Rectangulaire
+polygon_mask_button; Masque Polygonal
+label_masks_option_title; Affichage des masques
+delete_all; Supprimer tous
+show_all; Montrer tous
+show_mask; Montrer masque
+del_mask; Supprimer masque
+# --------------
+# Analyses
+# --------------
+label_simple_analysis_title; Analyse simple
+sub_menu_simpleanalysis; Analyse simple
+wrapped_phase_button; Affichage Phase non déroulée
+unwrapped_phase_button; Affichage Phase déroulée
+wedge_factor_label; Wedge Factor
+label_sub_acquisition_title; Correction
+check_tilt; Tilt
+# --------------
+# Aberrations
+# --------------
+ab_piston_title; Piston
+ab_tilt_title; Tilt
+ab_defocus_title; Defocus
+ab_astig_title; Astigmatisme
+ab_coma_title; Coma
+ab_trefoil_title; Trèfle
+ab_sphere_title; Ab. Sphériques

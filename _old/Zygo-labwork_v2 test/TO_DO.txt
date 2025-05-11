@@ -1,0 +1,29 @@
+## ZYGO v2 APP
+==============
+
+/!\ MODIFICATION OF NI_DAQ CLASS !
+
+
+### Things to check
+-------------------
+
+
+### Bugs to delete
+------------------
+-->   Crash after last Zernike calculations (sometimes - often on first start of the app in PyCharm)
+-->   Masks upgrade and display
+-->   Saving images (histo or AOI) : stop camera acquisition !
+
+-->   Images (mode) - delete "Delete image" ?
+                    - move "Save images" to Acquisition !
+
+### Functions to add
+--------------------
+
+-->   Change color of Zernike coeff corrected in Zernike Graph
+-->   Multiple acquisition : Mean on a set of images + display !!
+        - display PV and RMS for each set of data
+        - display global PV and RMS and mean / std for sets
+        - display an unwrapped figure for each acquisition
+
+-->   Display of PV and RMS in simple analysis (without Stats Table !)

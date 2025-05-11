@@ -1,0 +1,25 @@
+## Zygo Lab GUI / IDS Camera
+# Documentation :  https://iogs-lense-ressources.github.io/camera-gui/contents/applis/appli_Zygo_labwork.html
+
+## IDS Camera
+# IDS peak (2.8 or higher) and IDS Sofware Suite (4.95 or higher) softwares are required on your computer.
+# IDS peak IPL (Image Processing Library) and Numpy are required.
+
+## Basler Camera
+# pylon Viewer software must be installed (including Basler cameras drivers).
+# pypylon API is required.
+
+## Python requirements
+numpy==1.26
+scipy
+matplotlib
+pyqt6
+nidaqmx
+PyOpenGL
+PyOpenGL-accelerate
+opencv-python
+pypylon
+lensepi
+lensecam
+pyqtgraph
+scikit-image

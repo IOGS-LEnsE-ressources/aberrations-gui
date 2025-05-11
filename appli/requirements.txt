@@ -1,0 +1,20 @@
+## Zygo Lab GUI / IDS Camera
+
+## IDS Camera
+# IDS peak (2.8 or higher) and IDS Sofware Suite (4.95 or higher) softwares are required on your computer.
+# IDS peak IPL (Image Processing Library) and Numpy are required.
+
+## Python requirements
+numpy
+scipy
+matplotlib
+pyqt6
+pyqtgraph
+nidaqmx
+PyOpenGL
+PyOpenGL-accelerate
+opencv-python
+pypylon
+lensepy
+lensecam
+scikit-image

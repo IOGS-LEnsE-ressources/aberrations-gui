@@ -1,0 +1,7 @@
+# Menu Camera
+# Type; Title; Signal;
+S;;;
+B;acquisition_simple_button;simple_acquisition;
+B;acquisition_multi_button;multi_acquisition;
+S;;;
+E;;;

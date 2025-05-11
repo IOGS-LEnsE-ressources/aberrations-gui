@@ -1,0 +1,8 @@
+# Menu Simple Analysis
+# Type; Title; Signal; Options List;
+B;wrapped_phase_button;wrappedphase_analyses;;
+B;unwrapped_phase_button;unwrappedphase_analyses;;
+B;corrected_phase_button;correctedphase_analyses;;
+B;histogram_phase_button;histophase_analyses;;
+S;;;;
+E;;;;

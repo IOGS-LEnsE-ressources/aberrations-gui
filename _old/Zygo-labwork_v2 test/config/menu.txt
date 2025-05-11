@@ -1,0 +1,15 @@
+# Menu MAIN
+# Type; Title; Signal;
+B;camera_button;camera;
+B;load_images_button;images;
+S;;;
+B;masks_button;masks;
+B;acquisition_button;acquisition;
+S;;;
+B;simple_analysis_button;simpleanalysis;
+B;aberrations_button;aberrations;
+S;;;
+O;help_button;help;
+O;options_button;options;
+O;piezo_button;piezo;
+E;;;

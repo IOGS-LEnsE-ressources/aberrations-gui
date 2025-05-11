@@ -1,0 +1,51 @@
+DONE : Acquisition, Images, Masks, Analyses
+
+-->     If new acquisition or new data, erase zernike coeff ! And restart analyses
+
+Labwork
+=======
+
+- PSF 2D
+- FTM 2D + 4 directions (0 / 45 / 90 /135) + frequency cursor
+- Circled energy + cursor (83 % ?)
+- Zernike analyse + strehl ??
+
+Functions
+=========
+-->     GLOBAL : Hardware - default values for camera and piezo to update
+            if hardware is connected
+-->     Save mask type in MAT file (and read it)
+-->     Analyses mode / view : add 3D option - old version ?
+-->     In 3D display, add a Z-axis factor to increase details ?
+
+
+Bugs
+====
+-->     GLOBAL / Freeze and crash when open images then go to analyses (via masks or not)
+
+-->     main menu management - and options list !
+            + if no mask in the data loaded, Masks in main menu is not available
+-->     in acquisition controllers (and global)
+            + find a way to update DEFAULT parameters (for camera and piezo)
+            + find a way to stop thread_update camera on closing acquisition mode
+-->     in masks controllers / options view
+            + in update_submenu : update 'nomask' in options_list of manager
+
+-->     GLOBAL TEST
+            +> main_menu
+            +> acquisition mode
+                + !! CAMERA !! when starting in CMD shell :
+                        QObject::startTimer: Timers cannot be started from another thread
+                + update default values to camera/piezo parameters
+                + when clicking from camera submode to other submode (simple, piezo...) :
+                        thread_image / acquisition mode / Error-Code: 13 (PEAK_RETURN_CODE_TIMEOUT)
+            +> images mode
+                + when deleting a mask (in masks mode) then back to images mode,
+                access to images is not possible (bar with buttons is deleted)
+            +> masks mode
+            +> analyses mode
+
+Test to do
+==========
+-> Save set of images (with multi acquisition)
+-> Display images from multi sets

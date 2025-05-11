@@ -1,0 +1,8 @@
+# Aberrations Choice
+# Name; Row; Col; List_of_orders; Global (Y-N); type;
+# If Global = Yes -> Use 2 cols
+#ab_piston_title;0;0;0;Y;piston;
+ab_astig_title;0;0;3,5,7;N;astig;
+ab_coma_title;2;0;3,5,7;N;coma;
+ab_sphere_title;4;0;3,5,7;N;sphere;
+ab_trefoil_title;6;0;,5,7;N;trefoil;

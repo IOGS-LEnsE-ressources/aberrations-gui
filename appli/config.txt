@@ -1,0 +1,18 @@
+# -*- coding: utf-8 -*-
+### Configuration file of Zygo Lab App
+Language;FR
+### Camera IDS / 
+ColorMode;Mono8
+Exposure Time;1000
+Max Expo Time;20000
+Frame Rate;40
+Black Level;10
+### Wedge Factor
+Wedge Factor;0.5
+### Piezo
+Piezo voltage from Matlab;0.80,1.62,2.43,3.24,4.05
+Piezo Voltage;0.80,1.62,2.43,3.24,4.05
+Piezo Active;1
+Piezo Channel;1
+### Default directory
+Dir Images;D:\tools\git_repo\LEnsE\ressources\camera-gui\applis\Zygo-labwork_v2b\_test
