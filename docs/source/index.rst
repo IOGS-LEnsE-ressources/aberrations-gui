@@ -19,10 +19,8 @@ The GitHub repository of this project : `Aberrations GUI <https://github.com/IOG
 
 Labworks subject are available at the following addresses :
 
-- `Interferometric test - First year <
-https://lense.institutoptique.fr/tp-controles-interferometriques/>`_
-- `Aberrations - Second year <
-https://lense.institutoptique.fr/ressources/Annee2/TP_Photonique/S8-2425-Aberrations.EN.pdf>`_
+- `Interferometric test - First year <https://lense.institutoptique.fr/tp-controles-interferometriques/>`_
+- `Aberrations - Second year <https://lense.institutoptique.fr/ressources/Annee2/TP_Photonique/S8-2425-Aberrations.EN.pdf>`_
 
 
 About the LEnsE
