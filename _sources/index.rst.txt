@@ -23,12 +23,25 @@ Labworks subject are available at the following addresses :
 - `Aberrations - Second year <https://lense.institutoptique.fr/ressources/Annee2/TP_Photonique/S8-2425-Aberrations.EN.pdf>`_
 
 
-About the LEnsE
-***************
+Main contributors
+*****************
 
-This is a test.
+The first Python/PyQt6 release of the GUI was developed by
+**Dorian MENDES** (Student at *Institut d'Optique* from 2023 to 2026) during an internship in July 2024.
 
-.. raw:: html
+A second release, which notably made the processing more fluid, was improved by
+**Abdallah MRABTI** (Student at *Institut d'Optique* from 2023 to 2026) during a 3-weeks project in 2025.
 
-	<span class="linkgit"><a href="https://lense.institutoptique.fr/mine/nucleo-bibliotheques-de-fonctions/"><i class="fa fa-github"></i> Bibliothèques MBED 6</a></span>
+These two releases were made under the supervision of **Julien VILLEMEJANE** (Teacher at *Institut d'Optique*).
 
+
+
+This GUI is based on an obsolete *MatLab version*, developed in the 90's by Lionel JACUBOWIEZ (and students).
+The main processes were adapted from this version.
+
+Technical support was regularly provided by
+Thierry AVIGNON (Lead Technical and Operations Engineer at *LEnsE* / *Institut d'Optique*),
+assistance with physical aspects was given by
+Gaëlle LUCAS-LECLIN (Professor at Institut d'Optique) and
+David HOLLEVILLE (*Observatoire de Paris*),
+and several tests were carried out by Sébastien DE ROSSI (Professor at *Institut d'Optique*).
