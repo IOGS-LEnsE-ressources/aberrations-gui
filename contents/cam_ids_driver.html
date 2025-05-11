@@ -1,0 +1,446 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IDS / Driver &mdash; Camera GUI 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-toolbox-code.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/lense-ressources.css?v=bc9b2a83" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/links.css?v=7a4609b2" />
+      <link rel="stylesheet" type="text/css" href="https://iogs-lense.github.io/lense.tech/assets/css/fontawesome/css/all.css" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=2709fde1"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Camera GUI
+              <img src="../_static/logo-ressources_git.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="how_to_use.html">How To use these ressources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyqt6_integration.html">PyQt6 widget integration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Applications</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="applis/appli_CMOS_labwork.html">Study of a CMOS sensor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="applis/appli_Zygo_labwork.html">Interferometric controls</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Camera GUI</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">IDS / Driver</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/contents/cam_ids_driver.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This page is still under construction.</p>
+<p><em>Device object</em> section to modify.</p>
+<p><em>Camera general informations</em> section to modify.</p>
+<p><em>Complete example</em> section to modify.</p>
+</div>
+<section id="ids-driver">
+<h1>IDS / Driver<a class="headerlink" href="#ids-driver" title="Link to this heading"></a></h1>
+<p>The <strong>driver</strong> is based on the <strong>IDS-peak</strong> software..</p>
+<p>The source is in the <code class="file docutils literal notranslate"><span class="pre">camera_ids.py</span></code> <a class="reference download external" download="" href="https://github.com/IOGS-LEnsE-ressources/camera-gui/blob/main/progs/IDS/src/camera_ids.py"><code class="xref download docutils literal notranslate"><span class="pre">&lt;</span></code></a> file including :</p>
+<ul class="simple">
+<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">CameraIds</span></code> class,</p></li>
+<li><p><code class="samp docutils literal notranslate"><span class="pre">get_converter_mode(color_mode:</span> <span class="pre">str)</span></code></p></li>
+<li><p><code class="samp docutils literal notranslate"><span class="pre">get_bits_per_pixel(color_mode:</span> <span class="pre">str)</span></code></p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The <code class="file docutils literal notranslate"><span class="pre">camera_ids.py</span></code> must be in the same directory as the Python file containing your script.</p>
+</div>
+<section id="import-the-camerabasler-class">
+<h2>Import the CameraBasler class<a class="headerlink" href="#import-the-camerabasler-class" title="Link to this heading"></a></h2>
+<p>To access <code class="xref py py-class docutils literal notranslate"><span class="pre">CameraIds</span></code> class and its functions, import the class in your Python code like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">camera_ids</span><span class="w"> </span><span class="kn">import</span> <span class="n">CameraIds</span>
+</pre></div>
+</div>
+</section>
+<section id="initialize-a-camera">
+<h2>Initialize a camera<a class="headerlink" href="#initialize-a-camera" title="Link to this heading"></a></h2>
+<section id="device-object">
+<h3>Device object<a class="headerlink" href="#device-object" title="Link to this heading"></a></h3>
+<p>First of all, you need to create a device … :</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+</pre></div>
+</div>
+<p>This script gets the first Ids camera connected device. If no device is connected, it returns an error.</p>
+<p>You can also use the <code class="xref py py-class docutils literal notranslate"><span class="pre">CameraList</span></code> class, as shown in the previous section. The <code class="samp docutils literal notranslate"><span class="pre">get_cam_device()</span></code> method returns a <code class="xref py py-class docutils literal notranslate"><span class="pre">ids_peak.Device</span></code> object that is the same type as the <code class="samp docutils literal notranslate"><span class="pre">ids_peak</span></code> module.</p>
+</section>
+<section id="camera-object">
+<h3>Camera object<a class="headerlink" href="#camera-object" title="Link to this heading"></a></h3>
+<p>An instance of the <code class="xref py py-class docutils literal notranslate"><span class="pre">CameraIds</span></code> class creates an object able to communicate with the device.</p>
+<p>To use our driver, you have to create an instance of the <code class="xref py py-class docutils literal notranslate"><span class="pre">CameraIds</span></code> class like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">my_cam</span> <span class="o">=</span> <span class="n">CameraBasler</span><span class="p">(</span><span class="n">my_cam_dev</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>When you use this constructor, a well-initialized message is written in the console (if the camera is correctly connected and recognized by the system.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_cam</span> <span class="o">=</span> <span class="n">CameraIds</span><span class="p">(</span><span class="n">my_cam_dev</span><span class="p">)</span>
+<span class="go">Device is well initialized.</span>
+</pre></div>
+</div>
+</section>
+<section id="connected-camera">
+<h3>Connected camera<a class="headerlink" href="#connected-camera" title="Link to this heading"></a></h3>
+<p>The <code class="code docutils literal notranslate"><span class="pre">is_camera_connected()</span></code> method returns the status of the camera, in other words it says if the camera could be opened or not.</p>
+<p>To check if the camera is well connected, you can use this command:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_cam</span><span class="o">.</span><span class="n">is_camera_connected</span><span class="p">()</span>
+<span class="go">Device is well initialized.</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>If the camera is well initialized, you will obtain a success message in the console, following by <code class="samp docutils literal notranslate"><span class="pre">True</span></code>.</p>
+</section>
+</section>
+<section id="get-information-from-the-camera">
+<h2>Get information from the camera<a class="headerlink" href="#get-information-from-the-camera" title="Link to this heading"></a></h2>
+<p>Different kind of informations are available on Basler camera. You can get the name, the serial number, the frame rate, the exposure time… of the camera.</p>
+<section id="camera-general-informations">
+<h3>Camera general informations<a class="headerlink" href="#camera-general-informations" title="Link to this heading"></a></h3>
+<section id="serial-number-and-name">
+<h4>Serial Number and name<a class="headerlink" href="#serial-number-and-name" title="Link to this heading"></a></h4>
+<p>The <code class="code docutils literal notranslate"><span class="pre">get_cam_info()</span></code> method returns a tuple with the serial number (str) and the name of the camera (str).</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_cam</span><span class="o">.</span><span class="n">get_cam_info</span>
+<span class="go">(&#39;40282239&#39;, &#39;a2A1920-160ucBAS&#39;)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_cam</span><span class="o">.</span><span class="n">get_cam_info</span>
+<span class="go">(&#39;40282239&#39;, &#39;a2A1920-160ucBAS&#39;)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_cam</span><span class="o">.</span><span class="n">get_cam_info</span><span class="p">()</span>
+<span class="go">(&#39;40282239&#39;, &#39;a2A1920-160ucBAS&#39;)</span>
+</pre></div>
+</div>
+</section>
+<section id="sensor-size">
+<h4>Sensor size<a class="headerlink" href="#sensor-size" title="Link to this heading"></a></h4>
+<p>The <code class="code docutils literal notranslate"><span class="pre">get_sensor_size()</span></code> method returns a tuple with the width (int) and the height (int) of the sensor.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_cam</span><span class="o">.</span><span class="n">get_sensor_size</span><span class="p">()</span>
+<span class="go">(1936, 1216)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="camera-parameters">
+<h3>Camera parameters<a class="headerlink" href="#camera-parameters" title="Link to this heading"></a></h3>
+<section id="color-mode">
+<h4>Color mode<a class="headerlink" href="#color-mode" title="Link to this heading"></a></h4>
+<p>The color mode corresponds to the format of the image data transmitted by the camera. There are different pixel formats depending on the model of your camera and whether it is a color or a mono camera.</p>
+<p>Four color modes are implemented in this driver :</p>
+<ul class="simple">
+<li><p>‘Mono8’ : monochromatic mode in 8 bits raw data</p></li>
+<li><p>‘Mono10’ : monochromatic mode in 10 bits raw data</p></li>
+<li><p>‘Mono12’ : monochromatic mode in 12 bits raw data</p></li>
+<li><p>‘RGB8’ : RGB mode in 8 bits raw data</p></li>
+</ul>
+<p>The <code class="code docutils literal notranslate"><span class="pre">get_color_mode()</span></code> method returns the color mode of the camera (str).</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_cam</span><span class="o">.</span><span class="n">get_color_mode</span><span class="p">()</span>
+<span class="go">&#39;Mono8&#39;</span>
+</pre></div>
+</div>
+<p>For more informations about the color mode of Basler camera, you can check on the <a class="reference external" href="https://docs.baslerweb.com/pixel-format#python">Basler Website</a>.</p>
+</section>
+<section id="exposure-time">
+<h4>Exposure Time<a class="headerlink" href="#exposure-time" title="Link to this heading"></a></h4>
+<p>The exposure time of a camera specifies how long the image sensor is exposed to light during image acquisition.</p>
+<p>The <code class="code docutils literal notranslate"><span class="pre">get_exposure()</span></code> method returns the exposure time of the camera (float) in microseconds.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_cam</span><span class="o">.</span><span class="n">get_exposure</span><span class="p">()</span>
+<span class="go">5000.0</span>
+</pre></div>
+</div>
+</section>
+<section id="frame-rate">
+<h4>Frame Rate<a class="headerlink" href="#frame-rate" title="Link to this heading"></a></h4>
+<p>The frame rate specifies the maximum value of images per second collected by the camera. This factor depends on the exposure time (and other parameters).</p>
+<p>The <code class="code docutils literal notranslate"><span class="pre">get_frame_rate()</span></code> method returns the frame rate of the camera (float) in frames per second.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_cam</span><span class="o">.</span><span class="n">get_frame_rate</span><span class="p">()</span>
+<span class="go">100.0</span>
+</pre></div>
+</div>
+</section>
+<section id="area-of-interest-aoi">
+<h4>Area of interest (AOI)<a class="headerlink" href="#area-of-interest-aoi" title="Link to this heading"></a></h4>
+<p>The AOI camera feature lets the user specify a portion of the camera’s sensor array to use. Only the pixels contained in this area are transmitted.</p>
+<p>The <code class="code docutils literal notranslate"><span class="pre">get_aoi()</span></code> method returns the position and the size of the area of interest (AOI). It gives a tuple of 4 integers : x, y, width, height. All these values are in pixels. x and y are the coordinates of the upper-left corner.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_cam</span><span class="o">.</span><span class="n">get_aoi</span><span class="p">()</span>
+<span class="go">(0, 0, 1936, 1216)</span>
+</pre></div>
+</div>
+</section>
+<section id="black-level">
+<h4>Black Level<a class="headerlink" href="#black-level" title="Link to this heading"></a></h4>
+<p>The Black Level camera feature allows you to change the overall brightness of an image. Adjusting the camera’s black level will result in an offset to the pixel’s gray values output by the camera.</p>
+<p>The <code class="code docutils literal notranslate"><span class="pre">get_black_level()</span></code> method returns the black level of the camera (int) in ADU (analog-to-digital units).</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_cam</span><span class="o">.</span><span class="n">get_black_level</span><span class="p">()</span>
+<span class="go">0.0</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="setup-a-camera">
+<h2>Setup a camera<a class="headerlink" href="#setup-a-camera" title="Link to this heading"></a></h2>
+<section id="id1">
+<h3>Color mode<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<p>The color mode corresponds to the format of the image data transmitted by the camera. There are different pixel formats depending on the model of your camera and whether it is a color or a mono camera.</p>
+<p>Four color modes are implemented in this driver :</p>
+<ul class="simple">
+<li><p>‘Mono8’ : monochromatic mode in 8 bits raw data</p></li>
+<li><p>‘Mono10’ : monochromatic mode in 10 bits raw data</p></li>
+<li><p>‘Mono12’ : monochromatic mode in 12 bits raw data</p></li>
+<li><p>‘RGB8’ : RGB mode in 8 bits raw data</p></li>
+</ul>
+<p>The <code class="code docutils literal notranslate"><span class="pre">set_color_mode(value)</span></code> method changes the color mode of the camera (str). The parameter is a str value corresponding to one of the four available modes.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_cam</span><span class="o">.</span><span class="n">set_color_mode</span><span class="p">(</span><span class="s1">&#39;Mono12&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id2">
+<h3>Exposure Time<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<p>The exposure time of a camera specifies how long the image sensor is exposed to light during image acquisition.</p>
+<p>The <code class="code docutils literal notranslate"><span class="pre">set_exposure(value)</span></code> method changes the exposure time of the camera. The parameter is a floatting number corresponding to the value of the exposure time in microseconds.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_cam</span><span class="o">.</span><span class="n">set_exposure</span><span class="p">(</span><span class="mi">20000</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id3">
+<h3>Frame Rate<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<p>The frame rate specifies the maximum value of images per second collected by the camera. This factor depends on the exposure time (and other parameters).</p>
+<p>The <code class="code docutils literal notranslate"><span class="pre">set_frame_rate(value)</span></code> method changes the frame rate of the camera. The parameter is a floatting number corresponding to the value of the frame rate in frames per second.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_cam</span><span class="o">.</span><span class="n">set_frame_rate</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id4">
+<h3>Area of interest (AOI)<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<p>The AOI camera feature lets the user specify a portion of the camera’s sensor array to use. Only the pixels contained in this area are transmitted.</p>
+<section id="set-a-new-aoi">
+<h4>Set a new AOI<a class="headerlink" href="#set-a-new-aoi" title="Link to this heading"></a></h4>
+<p>The <code class="code docutils literal notranslate"><span class="pre">set_aoi(x,</span> <span class="pre">y,</span> <span class="pre">w,</span> <span class="pre">h)</span></code> method changes the position and the size of the area of interest (AOI). It requires four parameters (integers) : x, y, width, height. All these values are in pixels. x and y are the coordinates of the upper-left corner.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_cam</span><span class="o">.</span><span class="n">set_aoi</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">600</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>x and y coordinates must be dividable without rest by 4.</p>
+</div>
+<p>If the coordinates or the sizes are out of the range of the sensor size, the function returns False and no changes are applied.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_cam</span><span class="o">.</span><span class="n">set_aoi</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">522</span><span class="p">,</span> <span class="mi">600</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_cam</span><span class="o">.</span><span class="n">set_aoi</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">522</span><span class="p">,</span> <span class="mi">600</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</section>
+<section id="reset-aoi">
+<h4>Reset AOI<a class="headerlink" href="#reset-aoi" title="Link to this heading"></a></h4>
+<p>The <code class="code docutils literal notranslate"><span class="pre">reset_aoi()</span></code> method forces the position to 0,0 and the size of the area of interest (AOI) to the width and the height of the sensor.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_cam</span><span class="o">.</span><span class="n">reset_aoi</span><span class="p">()</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="id5">
+<h3>Black Level<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<p>The Black Level camera feature allows you to change the overall brightness of an image. Adjusting the camera’s black level will result in an offset to the pixel’s gray values output by the camera.</p>
+<p>The <code class="code docutils literal notranslate"><span class="pre">set_black_level(value)</span></code> method changes the black level of the camera. The parameter is an integer number corresponding to the value of the black level in ADU (analog-to-digital units).</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_cam</span><span class="o">.</span><span class="n">set_black_level</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="get-and-display-images">
+<h2>Get and display images<a class="headerlink" href="#get-and-display-images" title="Link to this heading"></a></h2>
+<p>The main purpose of a camera is to capture images and transmit the data to the computer.</p>
+<section id="images-format-and-display">
+<h3>Images format and display<a class="headerlink" href="#images-format-and-display" title="Link to this heading"></a></h3>
+<p>Each image is stored in a <code class="code docutils literal notranslate"><span class="pre">numpy.ndarray</span></code>. Depending on the color mode, this array is a two-dimensional (‘MonoXX’) or three-dimensional array (‘RGB8’ - two-dimensional array per color).</p>
+<p>Each pixel is encoded in 8 bits (‘Mono8’ or ‘RGB8’) or in 16 bits (‘Mono10’ or ‘Mono12’).</p>
+<p>The next table gives an overview of the images format depending on the color mode.</p>
+<table class="docutils align-default" id="id6">
+<caption><span class="caption-text">Images format</span><a class="headerlink" href="#id6" title="Link to this table"></a></caption>
+<colgroup>
+<col style="width: 25.0%" />
+<col style="width: 25.0%" />
+<col style="width: 25.0%" />
+<col style="width: 25.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Color Mode</p></th>
+<th class="head"><p>Numpy.ndarray shape</p></th>
+<th class="head"><p>Pixel type</p></th>
+<th class="head"><p>Pixel Range Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Mono8</p></td>
+<td><p>(H, W)</p></td>
+<td><p>numpy.uint8</p></td>
+<td><p>0 to 255</p></td>
+</tr>
+<tr class="row-odd"><td><p>Mono10</p></td>
+<td><p>(H, W)</p></td>
+<td><p>numpy.uint16</p></td>
+<td><p>0 to 1023</p></td>
+</tr>
+<tr class="row-even"><td><p>Mono12</p></td>
+<td><p>(H, W)</p></td>
+<td><p>numpy.uint16</p></td>
+<td><p>0 to 4095</p></td>
+</tr>
+<tr class="row-odd"><td><p>RGB8</p></td>
+<td><p>(H, W, 3)</p></td>
+<td><p>numpy.uint8</p></td>
+<td><p>0 to 255</p></td>
+</tr>
+</tbody>
+</table>
+<p>The simplest way to display images in Python is to use <strong>Matplotlib</strong> library, as it shows in the next exemple.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="get-one-image">
+<h3>Get one image<a class="headerlink" href="#get-one-image" title="Link to this heading"></a></h3>
+<p>The <code class="code docutils literal notranslate"><span class="pre">get_image()</span></code> method configures the camera to capture one image and to store it in a <code class="code docutils literal notranslate"><span class="pre">numpy.ndarray</span></code>.</p>
+<p>The array has the same shape as the AOI.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">image</span> <span class="o">=</span> <span class="n">my_cam</span><span class="o">.</span><span class="n">get_image</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="get-a-set-of-images">
+<h3>Get a set of images<a class="headerlink" href="#get-a-set-of-images" title="Link to this heading"></a></h3>
+<p>The <code class="code docutils literal notranslate"><span class="pre">get_images(value)</span></code> method configures the camera to capture a set of images and to store them in a list of arrays. Each array corresponds to an image. The parameter is an integer number corresponding to the number of images to capture.</p>
+<p>Without any parameter, this method return only one image.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">images</span> <span class="o">=</span> <span class="n">my_cam</span><span class="o">.</span><span class="n">get_images</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can then access to one of the image like this:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">image1</span> <span class="o">=</span> <span class="n">images</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="complete-example">
+<h3>Complete example<a class="headerlink" href="#complete-example" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+    <span class="n">my_cam_dev</span> <span class="o">=</span> <span class="n">pylon</span><span class="o">.</span><span class="n">InstantCamera</span><span class="p">(</span><span class="n">pylon</span><span class="o">.</span><span class="n">TlFactory</span><span class="o">.</span><span class="n">GetInstance</span><span class="p">()</span><span class="o">.</span><span class="n">CreateFirstDevice</span><span class="p">())</span>
+
+<span class="n">my_cam</span> <span class="o">=</span> <span class="n">CameraBasler</span><span class="p">(</span><span class="n">my_cam_dev</span><span class="p">)</span>
+
+<span class="c1"># Check the colormode</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">my_cam</span><span class="o">.</span><span class="n">get_color_mode</span><span class="p">())</span>
+
+<span class="c1"># Change colormode to Mono12</span>
+<span class="n">my_cam</span><span class="o">.</span><span class="n">set_color_mode</span><span class="p">(</span><span class="s1">&#39;Mono12&#39;</span><span class="p">)</span>
+<span class="n">my_cam</span><span class="o">.</span><span class="n">set_display_mode</span><span class="p">(</span><span class="s1">&#39;Mono12&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">my_cam</span><span class="o">.</span><span class="n">get_color_mode</span><span class="p">())</span>
+
+<span class="c1"># Test to catch one image</span>
+<span class="n">images</span> <span class="o">=</span> <span class="n">my_cam</span><span class="o">.</span><span class="n">get_images</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">images</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="c1"># display image</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">images</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="start-a-continuous-shot">
+<h2>Start a continuous shot<a class="headerlink" href="#start-a-continuous-shot" title="Link to this heading"></a></h2>
+<p>Coming soon…</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Julien Villemejane.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

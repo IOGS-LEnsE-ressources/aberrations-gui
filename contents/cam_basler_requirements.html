@@ -1,0 +1,206 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Basler Requirements &mdash; Camera GUI 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-toolbox-code.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/lense-ressources.css?v=bc9b2a83" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/links.css?v=7a4609b2" />
+      <link rel="stylesheet" type="text/css" href="https://iogs-lense.github.io/lense.tech/assets/css/fontawesome/css/all.css" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=2709fde1"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Camera GUI
+              <img src="../_static/logo-ressources_git.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="how_to_use.html">How To use these ressources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyqt6_integration.html">PyQt6 widget integration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Applications</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="applis/appli_CMOS_labwork.html">Study of a CMOS sensor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="applis/appli_Zygo_labwork.html">Interferometric controls</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Camera GUI</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Basler Requirements</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/contents/cam_basler_requirements.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="basler-requirements">
+<h1>Basler Requirements<a class="headerlink" href="#basler-requirements" title="Link to this heading"></a></h1>
+<section id="a-basler-camera">
+<h2>A Basler camera<a class="headerlink" href="#a-basler-camera" title="Link to this heading"></a></h2>
+<p>It goes without saying that you must own a <strong>Basler</strong> camera.</p>
+<p>All the source codes of the wrapper were tested with a <strong class="program">a2A 1920-160ucBAS</strong> camera.</p>
+</section>
+<section id="pylon-viewer-software-and-drivers">
+<h2>Pylon Viewer software and drivers<a class="headerlink" href="#pylon-viewer-software-and-drivers" title="Link to this heading"></a></h2>
+<p>Industrial camera sensors from the <strong>Basler</strong> family require the installation of the <em>Basler drivers</em>, including in their <em>pylon Viewer</em> software. More information on the  <a class="reference external" href="https://www.baslerweb.com/en/">Basler website</a>.</p>
+<figure class="align-center" id="id1">
+<a class="reference internal image-reference" href="../_images/basler_pylon_software_download.png"><img alt="../_images/basler_pylon_software_download.png" src="../_images/basler_pylon_software_download.png" style="width: 475.2px; height: 205.2px;" />
+</a>
+<figcaption>
+<p><span class="caption-text">From Basler Website.</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="pypylon-wrapper">
+<h2>Pypylon wrapper<a class="headerlink" href="#pypylon-wrapper" title="Link to this heading"></a></h2>
+<p>An official python wrapper for the Basler pylon Camera Software Suite is called <strong>pypylon</strong>. You can get more information about pypylon on their GitHub repository : <a class="reference external" href="https://github.com/basler/pypylon">Pypylon GitHub repository</a>.</p>
+<figure class="align-center" id="id2">
+<a class="reference internal image-reference" href="../_images/pypylon_wrapper.png"><img alt="../_images/pypylon_wrapper.png" src="../_images/pypylon_wrapper.png" style="width: 417.59999999999997px; height: 144.6px;" />
+</a>
+<figcaption>
+<p><span class="caption-text">From Pypylon Website.</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>You can install this extension in a shell by the command : <code class="code docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">pypylon</span></code></p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>A complete version of Python (higher than 3.9) must be already installed on your computer. To check the version number, you can use the next command in a shell : <code class="code docutils literal notranslate"><span class="pre">python</span> <span class="pre">--version</span></code></p>
+</div>
+</section>
+<section id="installation-test">
+<h2>Installation test<a class="headerlink" href="#installation-test" title="Link to this heading"></a></h2>
+<p><strong>Before any software development</strong>, you need to test if the hardware is operational and if the driver of the USB camera is correctly installed.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Be sure that your camera is connected to an USB port of your computer.</p>
+</div>
+<section id="pylon-software-from-basler">
+<h3>Pylon Software from Basler<a class="headerlink" href="#pylon-software-from-basler" title="Link to this heading"></a></h3>
+<p>First of all, you should try to obtain images <strong>from the software</strong> provided by <em>Basler</em>.</p>
+<ol class="arabic">
+<li><p>Open the <strong>pylon Viewer</strong> software</p>
+<blockquote>
+<div><figure class="align-center">
+<img alt="../_images/basler_pylon_software_icone.png" src="../_images/basler_pylon_software_icone.png" />
+</figure>
+</div></blockquote>
+</li>
+<li><p>When the main window of the software is opened, you can see your device in the USB sub-section of the Devices area (in the upper left corner) :</p>
+<blockquote>
+<div><figure class="align-center">
+<img alt="../_images/basler_pylon_software_step1.png" src="../_images/basler_pylon_software_step1.png" />
+</figure>
+</div></blockquote>
+</li>
+<li><p>Double-click on the device you want to test.</p></li>
+<li><p>You have now control your device. Especially, in the lower left corner, you have access to different features of the camera :</p>
+<blockquote>
+<div><figure class="align-center">
+<img alt="../_images/basler_pylon_software_step2.png" src="../_images/basler_pylon_software_step2.png" />
+</figure>
+</div></blockquote>
+</li>
+<li><p>Start video by clicking on the Continuous Shot of the toolbar :</p>
+<blockquote>
+<div><figure class="align-center">
+<img alt="../_images/basler_pylon_software_main_tools.png" src="../_images/basler_pylon_software_main_tools.png" />
+</figure>
+</div></blockquote>
+</li>
+</ol>
+</section>
+<section id="pypylon-extension">
+<h3>Pypylon extension<a class="headerlink" href="#pypylon-extension" title="Link to this heading"></a></h3>
+<p>The <code class="file docutils literal notranslate"><span class="pre">pypylon_main_test.py</span></code> file from the <code class="file docutils literal notranslate"><span class="pre">progs/Basler/examples/</span></code> directory of the repository is an example to check that the <strong>pypylon</strong> extension is correctly installed and that the pylon driver is recognized by the Python API.</p>
+<p><em>You can also download this example</em> <a class="reference download external" download="" href="https://github.com/IOGS-LEnsE-ressources/camera-gui/blob/main/progs/Basler/examples/pypylon_main_test.py"><code class="xref download docutils literal notranslate"><span class="pre">here</span></code></a>.</p>
+<p>This file is provided by the development team of the <strong>pypylon</strong> wrapper.</p>
+<p>You can execute this script by using this command in a shell : <code class="code docutils literal notranslate"><span class="pre">python</span> <span class="pre">pypylon_main_test.py</span></code></p>
+<p>This script starts the camera and process 10 images by giving their size and the value of the first pixel.</p>
+<blockquote>
+<div><figure class="align-center">
+<img alt="../_images/pypylon_test.png" src="../_images/pypylon_test.png" />
+</figure>
+</div></blockquote>
+<p>If the execution of this script proceeds without error, it means that everything is ready to use the <em>Basler</em> devices in a Python script or interface.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Julien Villemejane.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

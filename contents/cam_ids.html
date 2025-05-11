@@ -1,0 +1,179 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IDS Camera Sensors &mdash; Camera GUI 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-toolbox-code.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/lense-ressources.css?v=bc9b2a83" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/links.css?v=7a4609b2" />
+      <link rel="stylesheet" type="text/css" href="https://iogs-lense.github.io/lense.tech/assets/css/fontawesome/css/all.css" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=2709fde1"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Camera GUI
+              <img src="../_static/logo-ressources_git.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="how_to_use.html">How To use these ressources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyqt6_integration.html">PyQt6 widget integration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Applications</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="applis/appli_CMOS_labwork.html">Study of a CMOS sensor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="applis/appli_Zygo_labwork.html">Interferometric controls</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Camera GUI</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">IDS Camera Sensors</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/contents/cam_ids.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="ids-camera-sensors">
+<h1>IDS Camera Sensors<a class="headerlink" href="#ids-camera-sensors" title="Link to this heading"></a></h1>
+<p>The LEnsE team developed <em>Python elements</em> for implementing industrial cameras from <strong>IDS</strong>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><strong>IDS peak</strong> (2.8 or higher) and <strong>IDS Sofware Suite</strong> (4.95 or higher) softwares
+are required on your computer.</p>
+<p><strong>IDS peak IPL</strong> (Image Processing Library) and <strong>Numpy</strong> are required.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To use old IDS generation of cameras (type UI), you need to install <strong>IDS peak</strong> in <strong>custom</strong> mode
+and add the <strong>uEye Transport Layer</strong> option.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>IDS peak IPL</strong> can be found in the <em>IDS peak</em> Python API.</p>
+<p>Installation file is in the directory <code class="file docutils literal notranslate"><span class="pre">INSTALLED_PATH_OF_IDS_PEAK/generic_sdk/ipl/binding/python/wheel/x86_[32|64]</span></code>.</p>
+<p>Then run this command in a shell (depending on your python version and computer architecture):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>ids_peak_1.2.4.1-cp&lt;version&gt;-cp&lt;version&gt;m-<span class="o">[</span>win32<span class="p">|</span>win_amd64<span class="o">]</span>.whl
+</pre></div>
+</div>
+<p>Generally <em>INSTALLED_PATH_OF_IDS_PEAK</em> is <code class="file docutils literal notranslate"><span class="pre">C:/Program</span> <span class="pre">Files/IDS/ids_peak</span></code></p>
+</div>
+<p>To facilitate the integration of the <strong>IDS peak</strong> API in the different projects, we developped :</p>
+<ul class="simple">
+<li><p>a <em>list system</em> to list available cameras, based on the <em>IDS peak</em> API,</p></li>
+<li><p>a <em>driver</em> to setup and to access a camera, based on the <em>IDS peak</em> API,</p></li>
+<li><p>a set of <em>widgets</em> based on <em>PyQt6</em>, to control and to display images.</p></li>
+</ul>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cam_ids_requirements.html">Requirements and test</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cam_ids_requirements.html#an-ids-camera">An IDS camera</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cam_ids_requirements.html#ids-sofware-suite">IDS Sofware Suite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cam_ids_requirements.html#ids-peak-software">IDS-peak Software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cam_ids_requirements.html#ids-peak-ipl-package">IDS-peak IPL package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cam_ids_requirements.html#installation-test">Installation test</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cam_ids_list.html">IDS Camera List</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cam_ids_list.html#import-the-cameralist-class">Import the CameraList class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cam_ids_list.html#example-of-use">Example of use</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cam_ids_list.html#complete-example">Complete example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cam_ids_driver.html">IDS Driver</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cam_ids_driver.html#import-the-camerabasler-class">Import the CameraBasler class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cam_ids_driver.html#initialize-a-camera">Initialize a camera</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cam_ids_driver.html#get-information-from-the-camera">Get information from the camera</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cam_ids_driver.html#setup-a-camera">Setup a camera</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cam_ids_driver.html#get-and-display-images">Get and display images</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cam_ids_driver.html#start-a-continuous-shot">Start a continuous shot</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cam_ids_widgets.html">IDS Widgets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cam_ids_api.html">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cam_ids_api.html#cameralist-class">CameraList class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cam_ids_api.html#cameraids-class">CameraIds class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cam_ids_api.html#cameraidswidget-class">CameraIdsWidget class</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Julien Villemejane.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

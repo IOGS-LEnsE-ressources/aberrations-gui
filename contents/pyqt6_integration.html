@@ -1,0 +1,257 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PyQt6 Widget Integration &mdash; Camera GUI 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-toolbox-code.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/lense-ressources.css?v=bc9b2a83" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/links.css?v=7a4609b2" />
+      <link rel="stylesheet" type="text/css" href="https://iogs-lense.github.io/lense.tech/assets/css/fontawesome/css/all.css" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=2709fde1"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Study of a CMOS sensor / Labwork" href="applis/appli_CMOS_labwork.html" />
+    <link rel="prev" title="How to use these ressources ?" href="how_to_use.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Camera GUI
+              <img src="../_static/logo-ressources_git.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="how_to_use.html">How To use these ressources</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">PyQt6 widget integration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#what-is-a-widget">What is a Widget ?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pyqt6-camera-widget">PyQt6 Camera Widget</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#install-pyqt6">Install PyQt6</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#test-our-widget">Test our widget</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#test-the-wrapper-or-driver">Test the wrapper or driver</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#test-the-widget">Test the widget</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#implement-our-widget-in-your-application">Implement our widget in your application</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#copy-the-files">Copy the files</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#add-the-widget-in-your-application">Add the widget in your application</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Applications</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="applis/appli_CMOS_labwork.html">Study of a CMOS sensor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="applis/appli_Zygo_labwork.html">Interferometric controls</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Camera GUI</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">PyQt6 Widget Integration</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/contents/pyqt6_integration.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="pyqt6-widget-integration">
+<h1>PyQt6 Widget Integration<a class="headerlink" href="#pyqt6-widget-integration" title="Link to this heading"></a></h1>
+<section id="what-is-a-widget">
+<h2>What is a Widget ?<a class="headerlink" href="#what-is-a-widget" title="Link to this heading"></a></h2>
+<p>In PyQt, a <strong>widget</strong> is a graphical user interface (GUI) component that users can interact with. It represents a visual element on the screen, including buttons, labels, text boxes, checkboxes, and more. Widgets are the building blocks of GUI applications in PyQt.</p>
+<p>PyQt provides a wide range of pre-built widgets that you can use to create GUI applications. These widgets are subclasses of QWidget, the base class for all GUI objects in PyQt.</p>
+<p>The LEnsE team also proposed a serie of widgets to integrate camera previzualisation in your graphical user interface.</p>
+<figure class="align-center" id="id1">
+<a class="reference internal image-reference" href="../_images/biophotonique_labwork_interface.png"><img alt="../_images/biophotonique_labwork_interface.png" src="../_images/biophotonique_labwork_interface.png" style="width: 60%;" />
+</a>
+<figcaption>
+<p><span class="caption-text">Example of Basler camera integration in a PyQt6 application. <a class="reference external" href="https://iogs-lense-platforms.github.io/">Biophotonic labwork - Structured illumination microscope</a></span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="pyqt6-camera-widget">
+<span id="pyqt6-integration"></span><h2>PyQt6 Camera Widget<a class="headerlink" href="#pyqt6-camera-widget" title="Link to this heading"></a></h2>
+<p><strong>PyQt6</strong> is a powerful and versatile tool for Python developers who want to create cross-platform applications with modern GUIs and rich functionality.</p>
+<p>It is a set of Python bindings for the <strong>Qt application framework</strong>. It allows Python developers to access the Qt library’s rich functionality and create cross-platform applications with ease.</p>
+<p>The <strong>Qt framework</strong> is a comprehensive C++ framework that provides tools and libraries for developing applications with graphical user interfaces (GUIs), as well as for networking, multimedia, database integration, and more. It is widely used in the development of desktop, mobile, and embedded applications.</p>
+<section id="install-pyqt6">
+<h3>Install PyQt6<a class="headerlink" href="#install-pyqt6" title="Link to this heading"></a></h3>
+<p>All our camera wrappers are accompanied by a widget based on the <strong>PyQt6</strong> module.</p>
+<p>First of all, you need to install <strong>PyQt6</strong> on your computer like this:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>pyqt6
+</pre></div>
+</div>
+</section>
+<section id="test-our-widget">
+<h3>Test our widget<a class="headerlink" href="#test-our-widget" title="Link to this heading"></a></h3>
+<p>All the modules developed by the LEnsE include a <strong>main section</strong> allowing each of the scripts to be executed separately.</p>
+<p>You can test each wrapper and each widget <strong>independently</strong>.</p>
+<p>After downloading (or cloning) the repository, you can browse through the files into the directory concerning your camera. For example, for Basler cameras, go to the <code class="file docutils literal notranslate"><span class="pre">/prog/Basler</span></code> directory.</p>
+<p>Then go to the <code class="file docutils literal notranslate"><span class="pre">/src</span></code> directory to find the source codes of the wrapper and the widget.</p>
+<p>A typical structure of a that type of directory is as follows:</p>
+<ul class="simple">
+<li><p>a <code class="file docutils literal notranslate"><span class="pre">camera_list.py</span></code> file containing a class that allows listing all the available cameras,</p></li>
+<li><p>a <code class="file docutils literal notranslate"><span class="pre">camera_brandname.py</span></code> file containing a class that gathers methods to setup a camera and get raw data (where <em>brandname</em> is the name of the camera manufacturer - for example <em>camera_basler.py</em> for Basler camera),</p></li>
+<li><p>a <code class="file docutils literal notranslate"><span class="pre">camera_brandname_widget.py</span></code> file containing a class that inherits from the <code class="xref py py-class docutils literal notranslate"><span class="pre">QWidget</span></code>.</p></li>
+</ul>
+<p>Some extra files or directories containing support methods may be present in the <code class="file docutils literal notranslate"><span class="pre">/src</span></code> directory.</p>
+<section id="test-the-wrapper-or-driver">
+<h4>Test the wrapper or driver<a class="headerlink" href="#test-the-wrapper-or-driver" title="Link to this heading"></a></h4>
+<p>To test the <strong>wrapper</strong> developed by the LEnsE, you can execute the following command in a shell where the source files are located:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>camera_brandname.py
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>A camera must be connected to your computer.</p>
+</div>
+<p>You will obtain that kind of results:</p>
+<figure class="align-default">
+<img alt="../_images/wrapper_test.png" src="../_images/wrapper_test.png" />
+</figure>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>An image may be displayed using the <em>Matplotlib</em> library. An error may occur if this library is not installed in your Python environment.</p>
+<p>To install it, execute the following command in a shell:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>matplotlib
+</pre></div>
+</div>
+</div>
+</section>
+<section id="test-the-widget">
+<h4>Test the widget<a class="headerlink" href="#test-the-widget" title="Link to this heading"></a></h4>
+<p>To test the <strong>widget</strong> developed by the LEnsE, you can execute the following command in a shell where the source files are located:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>camera_brandname_widget.py
+</pre></div>
+</div>
+<p>The majority of our widgets consist in 4 main steps:
+* listing the available cameras
+* connecting to a selected camera
+* displaying images from the camera
+* seting up the parameters of the camera</p>
+<section id="list-the-cameras">
+<h5>List the cameras<a class="headerlink" href="#list-the-cameras" title="Link to this heading"></a></h5>
+<p>In the first menu, you have the possibility to select one of the connected camera:</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../_images/widget_test_list.png"><img alt="../_images/widget_test_list.png" src="../_images/widget_test_list.png" style="width: 50%;" />
+</a>
+</figure>
+<p>You can also refresh this list if you didn’t connect the camera at the launch of the application.</p>
+</section>
+<section id="connect-to-a-camera">
+<h5>Connect to a camera<a class="headerlink" href="#connect-to-a-camera" title="Link to this heading"></a></h5>
+<p>You can then setup the selected camera by clicking on <span class="menuselection">Connect</span>:</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../_images/widget_test_connect.png"><img alt="../_images/widget_test_connect.png" src="../_images/widget_test_connect.png" style="width: 50%;" />
+</a>
+</figure>
+</section>
+<section id="display-images-from-a-camera">
+<h5>Display images from a camera<a class="headerlink" href="#display-images-from-a-camera" title="Link to this heading"></a></h5>
+<p>Real-time images from your camera are now displayed in the main part of the widget:</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../_images/widget_test_image.png"><img alt="../_images/widget_test_image.png" src="../_images/widget_test_image.png" style="width: 50%;" />
+</a>
+</figure>
+</section>
+<section id="access-to-the-parameters">
+<h5>Access to the parameters<a class="headerlink" href="#access-to-the-parameters" title="Link to this heading"></a></h5>
+<p>By clicking on <span class="menuselection">Parameters</span>, you can modify some main parameters of your camera:</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../_images/widget_test_params.png"><img alt="../_images/widget_test_params.png" src="../_images/widget_test_params.png" style="width: 50%;" />
+</a>
+</figure>
+</section>
+</section>
+</section>
+<section id="implement-our-widget-in-your-application">
+<h3>Implement our widget in your application<a class="headerlink" href="#implement-our-widget-in-your-application" title="Link to this heading"></a></h3>
+<section id="copy-the-files">
+<h4>Copy the files<a class="headerlink" href="#copy-the-files" title="Link to this heading"></a></h4>
+</section>
+<section id="add-the-widget-in-your-application">
+<h4>Add the widget in your application<a class="headerlink" href="#add-the-widget-in-your-application" title="Link to this heading"></a></h4>
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="how_to_use.html" class="btn btn-neutral float-left" title="How to use these ressources ?" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="applis/appli_CMOS_labwork.html" class="btn btn-neutral float-right" title="Study of a CMOS sensor / Labwork" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Julien Villemejane.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
