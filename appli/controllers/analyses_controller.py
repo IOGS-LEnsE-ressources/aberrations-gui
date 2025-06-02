@@ -95,6 +95,7 @@ class AnalysesController:
         if self.phase.get_wrapped_phase() is None:
             ## Where to find set_number ?
             set_number = 1
+            mask = self.data_set.get_global_mask().shape
             self.process_wrapped_phase_calculation(set_number)
             self.update_submenu('')
 
@@ -130,6 +131,7 @@ class AnalysesController:
         self.submenu.inactive_buttons()
         for k in range(len(self.submenu.buttons_list)):
             self.submenu.set_button_enabled(k + 1, False)
+
         ## Activate button depending on data
         if self.data_set.data_set_state == DataSetState.WRAPPED:
             self.submenu.set_button_enabled(1, True)
@@ -163,7 +165,8 @@ class AnalysesController:
                 self.options1_widget.widget_2D_3D.setEnabled(False)
                 self.options1_widget.widget_2D_3D.setStyleSheet(disabled_button)
                 # Display wrapped in 2D
-                self.display_2D_wrapped()
+                if self.data_set.data_set_state == DataSetState.WRAPPED:
+                    self.display_2D_wrapped()
                 # Help
                 self.display_help()  # Help in bottom right
                 # Options
@@ -387,6 +390,7 @@ class AnalysesController:
             self.phase.process_wrapped_phase()
             # End of process
             self.data_set.data_set_state = DataSetState.WRAPPED
+
 
     def process_unwrapped_phase_calculation(self, set_number: int = 1):
         """

@@ -63,6 +63,7 @@ class PhaseModel:
         self.cropped_masks_sets.add_mask(mask_cropped)
 
         # Process all the sets of images
+        self.cropped_images_sets.reset_all_images()
         for k in range(self.data_set.images_sets.get_number_of_sets()):
             images = self.data_set.get_images_sets(k)
             # Process all images in the set
@@ -142,6 +143,7 @@ class PhaseModel:
         self.wrapped_phase = None
         self.unwrapped_phase = None
         self.zernike_coeffs.reset_coeffs()
+        self.data_set.data_set_state = DataSetState.CROPPED
 
     def set_wedge_factor(self, value: float):
         """
