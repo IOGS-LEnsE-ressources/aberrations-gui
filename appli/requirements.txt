@@ -15,6 +15,7 @@ PyOpenGL
 PyOpenGL-accelerate
 opencv-python
 pypylon
+ids_peak
 lensepy
 lensecam
 scikit-image
