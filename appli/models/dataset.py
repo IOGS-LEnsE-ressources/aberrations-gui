@@ -21,6 +21,7 @@ import sys, os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), ".")))
 import numpy as np
+import scipy
 from enum import Enum
 from models.images import ImagesModel
 from models.masks import MasksModel
@@ -122,6 +123,24 @@ class DataSetModel:
             return True
         else:
             return False
+
+    def save_file(self, file_path: str):
+        """
+        Save data and masks to a .mat file.
+        :param file_path: Path and name of the file to write.
+        """
+        new_data = np.concatenate([np.stack(sublist, axis=-1) for sublist in self.images_sets.images_list], axis=-1)
+        new_data = new_data.astype(np.uint8)
+        data = {
+            'Images': new_data
+        }
+        if self.masks_sets.get_number() != 0:
+            masks_list = self.masks_sets.get_mask_list()
+            masks = [m[..., np.newaxis] for m in masks_list]
+            new_mask = np.concatenate(masks, axis=-1)
+            new_mask = new_mask.astype(bool)
+            data['Masks'] = new_mask
+        scipy.io.savemat(file_path, data)
 
 
 if __name__ == '__main__':

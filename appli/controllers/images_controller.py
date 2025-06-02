@@ -102,6 +102,7 @@ class ImagesController:
         # Images loaded ?
         if self.images_loaded:
             self.submenu.set_button_enabled(2, True)
+            self.submenu.set_button_enabled(4, True)
         # Data acquired ? Saving images is ok
         ### TO DO
         ## Update menu
@@ -141,7 +142,7 @@ class ImagesController:
                     self.options_widget = ImagesChoiceView(self)
                     self.manager.main_widget.set_options_widget(self.options_widget)
             case 'save_images':
-                pass
+                state = self.write_mat_file()
 
     def open_mat_file(self) -> bool:
         """
@@ -169,6 +170,25 @@ class ImagesController:
         else:
             msg = "No Image File was loaded..."
             message_box("Warning - No File Loaded", msg)
+            return False
+
+    def write_mat_file(self) -> bool:
+        """
+        Write a MAT file after controller click.
+        :return: True if the file is opened and images are present.
+        """
+        file_dialog = QFileDialog()
+        # Check default_path in default_parameters !
+
+        default_path = os.path.expanduser(".") + '/_data/'
+        file_path, _ = file_dialog.getSaveFileName(self.main_widget, translate('dialog_write_image'),
+                                                   default_path, "Matlab (*.mat)")
+        if file_path != '':
+            self.data_set.save_file(file_path)
+            return True
+        else:
+            msg = "No File was saved..."
+            message_box("Warning - No File Saved", msg)
             return False
 
 

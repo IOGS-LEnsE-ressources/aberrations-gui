@@ -61,6 +61,10 @@ class MasksModel:
         """Return all the masks in a list."""
         return self.masks_list
 
+    def get_number(self):
+        """Return the number of masks."""
+        return self.masks_number
+
     def add_mask(self, mask: np.ndarray, type_m: str = ''):
         """Add a new mask to the list.
         :param mask: Mask to add to the list.
@@ -168,6 +172,7 @@ class MasksModel:
             # Process masks from MAT file
             if 'Masks' in data_from_mat:
                 mask_mat = data_from_mat['Masks']
+                print(mask_mat.shape)
                 mask_d = split_3d_array(mask_mat, size=1)
                 if 'Masks_type' in data_from_mat:
                     print(f'Masks Type = {data_from_mat["Masks_type"]}')
