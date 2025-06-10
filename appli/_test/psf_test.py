@@ -114,11 +114,11 @@ def MTF(otf):
     mtf = np.abs(otf)
     return mtf
 
-D = 100             #diameter of the aperture
+D = 2               #diameter of the aperture
 lam = 632.8*1e-6    #wavelength of observation
-pix = 0.5 #plate scale
-f = 425.3            #effective focal length
-size = 500 #size of detector in pixels
+pix = 1 #plate scale
+f = 50            #effective focal length
+size = 1024 #size of detector in pixels
 
 coefficients = np.zeros(11)
 coefficients[1] = 0.1
@@ -131,14 +131,18 @@ coefficients[7] = 0.5
 coefficients[8] = -2
 
 ## Pupil
+GAIN = 32
+rpupil_disp = pupil_size(D*GAIN,lam,pix,size)
 rpupil = pupil_size(D,lam,pix,size)
+sim_phase_disp = center(coefficients,size,rpupil_disp)
 sim_phase = center(coefficients,size,rpupil)
+Mask_disp = mask(rpupil_disp, size)
 Mask = mask(rpupil, size)
 
 pupil_com = complex_pupil(sim_phase,Mask)
 
 plt.figure(figsize=(18,10))
-plt.imshow(sim_phase)
+plt.imshow(sim_phase_disp)
 plt.colorbar()
 
 ## PSF
