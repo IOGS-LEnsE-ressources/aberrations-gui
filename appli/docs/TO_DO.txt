@@ -1,5 +1,7 @@
 DONE : Acquisition, Images, Masks, Analyses
 
+DOC : Add a comment on the execution time of 3D display depending on the mask size
+
 
 Labwork
 =======
@@ -13,9 +15,11 @@ Functions
 =========
 -->     GLOBAL : Hardware - default values for camera and piezo to update
             if hardware is connected
+-->     ACQ : Histogram and slice in the image for contrast (with slider ?)
 -->     Save mask type in MAT file (and read it)
 -->     Analyses mode / view : add 3D option - old version ?
 -->     In 3D display, add a Z-axis factor to increase details ?
+-->     Save images from acquisition in ACQ mode for exemple (or in MASK mode) =/= IMAGES mode
 
 
 Bugs
