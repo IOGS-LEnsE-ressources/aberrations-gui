@@ -36,14 +36,16 @@ class ZygoApp:
     def __init__(self):
         """Constructor of the application."""
         load_default_dictionary("FR")
+        self.default_parameters = load_default_parameters('./config.txt')
         self.data_set = DataSetModel()
         self.phase = PhaseModel(self.data_set)
+        if 'Wedge Factor' in self.default_parameters:
+            self.phase.set_wedge_factor(float(self.default_parameters['Wedge Factor']))
         self.main_widget = MainView(self)
         self.main_menu = MainMenu()
         self.main_menu.load_menu('menu/menu.txt')
         self.main_widget.set_main_menu(self.main_menu)
         self.mode_manager = ModesManager(self)
-        self.default_parameters = load_default_parameters('./config.txt')
 
 
 if __name__ == "__main__":

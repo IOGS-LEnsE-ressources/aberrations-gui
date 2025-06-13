@@ -145,6 +145,8 @@ class MasksView(QDialog):
                         if len(self.points) == 3:
                             self.draw_circle()
                             self.can_draw = False
+                            self.accept()
+
                 case 'rectangular':
                     if len(self.points) < 2:
                         self.points.append((pos.x(), pos.y()))
@@ -152,6 +154,8 @@ class MasksView(QDialog):
                         if len(self.points) == 2:
                             self.draw_rectangle()
                             self.can_draw = False
+                            time.sleep(0.5)
+                            self.accept()
                 case 'polygon':
                     limit = 10 * self.ratio  # px
                     self.points.append((pos.x(), pos.y()))
@@ -162,6 +166,8 @@ class MasksView(QDialog):
                     if len(self.points) > 1 and dist < limit ** 2:
                         self.draw_polygon()
                         self.can_draw = False
+                        time.sleep(0.5)
+                        self.accept()
 
     def draw_point(self, x: int, y: int) -> None:
         """
