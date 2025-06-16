@@ -16,6 +16,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), ".")))
 from views import *
 from lensepy import load_dictionary, translate, dictionary
+from lensepy.pyqt6.widget_xy_chart import XYChartWidget
 from lensepy.css import *
 from lensepy.pyqt6.widget_image_histogram import ImageHistogramWidget
 from PyQt6.QtWidgets import QWidget
@@ -59,6 +60,10 @@ class AcquisitionController:
         self.top_left_widget = ImagesDisplayView()  # Display first image of a set
         self.top_right_widget = QWidget()  # Histogram or image display, depending on submode
         self.bot_right_widget = HTMLView()  # HTML Help on masks
+        self.slicer = XYChartWidget()
+        self.slicer.set_background("white")
+        self.slicer_bool = False
+        self.slicer.set_title("Horizontal slice of the image (brightness 0-255 per pixel)")
         # Submenu
         self.submenu = SubMenu(translate('submenu_acquisition'))
         if __name__ == "__main__":
@@ -90,7 +95,18 @@ class AcquisitionController:
         else:
             self.bot_right_widget.set_url('docs/html/acquisition.html', 'docs/html/styles.css')
         self.main_widget.set_bot_right_widget(self.bot_right_widget)
+        #self.main_widget.set_bot_right_widget(self.slice_widget)
         self.main_widget.set_options_widget(self.options1_widget)
+
+    def set_html(self):
+        if self.slicer_bool:
+            self.main_widget.set_bot_right_widget(self.bot_right_widget)
+        self.slicer_bool = False
+
+    def set_slice(self):
+        if not self.slicer_bool:
+            self.main_widget.set_bot_right_widget(self.slicer)
+        self.slicer_bool = True
 
     def update_submenu_view(self, submode: str):
         """
@@ -123,6 +139,7 @@ class AcquisitionController:
         # Specific submodes
         match self.submode:
             case 'camera_acquisition':
+                self.set_slice()
                 self.top_right_widget = ImageHistogramWidget(name=translate('histo_camera'),
                                                              info=True)
                 self.top_right_widget.set_background('white')
@@ -135,11 +152,13 @@ class AcquisitionController:
                 self.options1_widget.settings_changed.connect(self.params_changed)
 
             case 'piezo_acquisition':
+                self.set_slice()
                 self.options1_widget = PiezoOptionsView(self)
                 self.main_widget.set_options_widget(self.options1_widget)
                 self.options1_widget.voltage_changed.connect(self.params_changed)
 
             case 'simple_acquisition':
+                self.set_html()
                 self.top_right_widget = ImagesDisplayView()
                 self.main_widget.set_top_right_widget(self.top_right_widget)
                 self.options1_widget = SimpleAcquisitionView(self)
@@ -201,10 +220,13 @@ class AcquisitionController:
             else:
                 self.top_left_widget.set_image_from_array(image)
             # Update histogram in camera mode
+
             if self.submode == 'camera_acquisition':
                 if self.histo_here and not self.options1_widget.zoom_activated:
                     self.top_right_widget.set_image(image.squeeze())
                     self.top_right_widget.update_info()
+
+            self.slice_image(image)
             if self.acquiring:
                 self.thread = threading.Thread(target=self.thread_update_image)
                 self.thread.start()
@@ -265,6 +287,14 @@ class AcquisitionController:
             self.stop_acquisition()
             #self.data_set.acquisition_mode.camera.disconnect()
             self.data_set.acquisition_mode.camera.destroy_camera()
+
+    def slice_image(self, image, row = None):
+        if row is None:
+            row = len(image) // 2
+        image_slice = image[row][:].squeeze()
+        image_row = np.linspace(0, len(image[0])-1, len(image[0]))
+        self.slicer.set_data(image_row, image_slice)
+        self.slicer.refresh_chart()
 
 
 if __name__ == "__main__":
