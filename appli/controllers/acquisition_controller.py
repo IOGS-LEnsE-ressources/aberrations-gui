@@ -56,6 +56,7 @@ class AcquisitionController:
         self.histo_here = False  # To allow good synchronisation for histogram display
         self.acquiring = False
         self.thread = None
+        self.slice_ok = False
         # Graphical elements
         self.top_left_widget = ImagesDisplayView()  # Display first image of a set
         self.top_right_widget = QWidget()  # Histogram or image display, depending on submode
@@ -278,12 +279,13 @@ class AcquisitionController:
             self.data_set.acquisition_mode.camera.destroy_camera()
 
     def update_slice(self, image, row = None):
-        if row is None:
-            row = len(image) // 2
-        image_slice = image[row][:].squeeze()
-        image_row = np.linspace(0, len(image[0])-1, len(image[0]))
-        self.bot_right_widget.set_data(image_row, image_slice)
-        self.bot_right_widget.refresh_chart()
+        if self.slice_ok:
+            if row is None:
+                row = len(image) // 2
+            image_slice = image[row][:].squeeze()
+            image_row = np.linspace(0, len(image[0])-1, len(image[0]))
+            self.bot_right_widget.set_data(image_row, image_slice)
+            self.bot_right_widget.refresh_chart()
 
 
     def set_slice_view(self):
@@ -291,6 +293,7 @@ class AcquisitionController:
         self.bot_right_widget.set_background("white")
         self.bot_right_widget.set_title("Horizontal slice of the image (brightness 0-255 per pixel)")
         self.main_widget.set_bot_right_widget(self.bot_right_widget)
+        self.slice_ok = True
 
     def set_html_view(self):
         self.bot_right_widget = HTMLView()  # HTML Help on masks
