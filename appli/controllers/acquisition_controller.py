@@ -60,10 +60,6 @@ class AcquisitionController:
         self.top_left_widget = ImagesDisplayView()  # Display first image of a set
         self.top_right_widget = QWidget()  # Histogram or image display, depending on submode
         self.bot_right_widget = HTMLView()  # HTML Help on masks
-        self.slicer = XYChartWidget()
-        self.slicer.set_background("white")
-        self.slicer_bool = False
-        self.slicer.set_title("Horizontal slice of the image (brightness 0-255 per pixel)")
         # Submenu
         self.submenu = SubMenu(translate('submenu_acquisition'))
         if __name__ == "__main__":
@@ -95,18 +91,8 @@ class AcquisitionController:
         else:
             self.bot_right_widget.set_url('docs/html/acquisition.html', 'docs/html/styles.css')
         self.main_widget.set_bot_right_widget(self.bot_right_widget)
-        #self.main_widget.set_bot_right_widget(self.slice_widget)
         self.main_widget.set_options_widget(self.options1_widget)
 
-    def set_html(self):
-        if self.slicer_bool:
-            self.main_widget.set_bot_right_widget(self.bot_right_widget)
-        self.slicer_bool = False
-
-    def set_slice(self):
-        if not self.slicer_bool:
-            self.main_widget.set_bot_right_widget(self.slicer)
-        self.slicer_bool = True
 
     def update_submenu_view(self, submode: str):
         """
@@ -139,33 +125,34 @@ class AcquisitionController:
         # Specific submodes
         match self.submode:
             case 'camera_acquisition':
-                self.set_slice()
                 self.top_right_widget = ImageHistogramWidget(name=translate('histo_camera'),
                                                              info=True)
                 self.top_right_widget.set_background('white')
                 self.top_right_widget.set_bit_depth(8)  # Mono8 on the camera#
                 # self.top_right_widget.set_axis_labels(translate('x_label_histo'), translate('y_label_histo'))
                 self.main_widget.set_top_right_widget(self.top_right_widget)
+                self.set_slice_view()
                 # Display camera exposure time in options
                 self.options1_widget = CameraOptionsView(self)
                 self.main_widget.set_options_widget(self.options1_widget)
                 self.options1_widget.settings_changed.connect(self.params_changed)
 
             case 'piezo_acquisition':
-                self.set_slice()
                 self.options1_widget = PiezoOptionsView(self)
                 self.main_widget.set_options_widget(self.options1_widget)
                 self.options1_widget.voltage_changed.connect(self.params_changed)
+                self.set_slice_view()
 
             case 'simple_acquisition':
-                self.set_html()
                 self.top_right_widget = ImagesDisplayView()
                 self.main_widget.set_top_right_widget(self.top_right_widget)
                 self.options1_widget = SimpleAcquisitionView(self)
                 self.main_widget.set_options_widget(self.options1_widget)
                 self.options1_widget.acquisition_end.connect(self.acquisition_update)
+                self.set_html_view()
 
             case 'multi_acquisition':
+                self.set_html_view()
                 pass
 
 
@@ -225,8 +212,10 @@ class AcquisitionController:
                 if self.histo_here and not self.options1_widget.zoom_activated:
                     self.top_right_widget.set_image(image.squeeze())
                     self.top_right_widget.update_info()
+                self.update_slice(image)
+            elif self.submode == 'piezo_acquisition':
+                self.update_slice(image)
 
-            self.slice_image(image)
             if self.acquiring:
                 self.thread = threading.Thread(target=self.thread_update_image)
                 self.thread.start()
@@ -288,13 +277,24 @@ class AcquisitionController:
             #self.data_set.acquisition_mode.camera.disconnect()
             self.data_set.acquisition_mode.camera.destroy_camera()
 
-    def slice_image(self, image, row = None):
+    def update_slice(self, image, row = None):
         if row is None:
             row = len(image) // 2
         image_slice = image[row][:].squeeze()
         image_row = np.linspace(0, len(image[0])-1, len(image[0]))
-        self.slicer.set_data(image_row, image_slice)
-        self.slicer.refresh_chart()
+        self.bot_right_widget.set_data(image_row, image_slice)
+        self.bot_right_widget.refresh_chart()
+
+
+    def set_slice_view(self):
+        self.bot_right_widget = XYChartWidget()
+        self.bot_right_widget.set_background("white")
+        self.bot_right_widget.set_title("Horizontal slice of the image (brightness 0-255 per pixel)")
+        self.main_widget.set_bot_right_widget(self.bot_right_widget)
+
+    def set_html_view(self):
+        self.bot_right_widget = HTMLView()  # HTML Help on masks
+        self.main_widget.set_bot_right_widget(self.bot_right_widget)
 
 
 if __name__ == "__main__":
