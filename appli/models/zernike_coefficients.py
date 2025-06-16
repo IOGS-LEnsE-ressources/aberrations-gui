@@ -147,6 +147,7 @@ class Zernike:
         return False
 
     def process_cartesian_polynomials(self, noll_index: int) -> np.ndarray:
+        '''Normalized (RMS) Zernike coefficients calculation.'''
         if noll_index == 0:     # Piston
             return np.ones_like(self.X)
         elif noll_index == 1:   # x-Tilt
