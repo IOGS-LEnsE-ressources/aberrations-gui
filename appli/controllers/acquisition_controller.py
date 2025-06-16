@@ -201,12 +201,10 @@ class AcquisitionController:
             else:
                 self.top_left_widget.set_image_from_array(image)
             # Update histogram in camera mode
-            '''
             if self.submode == 'camera_acquisition':
                 if self.histo_here and not self.options1_widget.zoom_activated:
-                    #self.top_right_widget.set_image(image)
+                    self.top_right_widget.set_image(image.squeeze())
                     self.top_right_widget.update_info()
-            '''
             if self.acquiring:
                 self.thread = threading.Thread(target=self.thread_update_image)
                 self.thread.start()

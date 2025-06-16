@@ -78,7 +78,7 @@ class SimpleAcquisitionView(QWidget):
         """
         volt_list = [0.80, 1.62, 2.43, 3.24, 4.05]
         self.data_set.acquisition_mode.set_voltages(volt_list)
-        self.data_set.acquisition_mode.reset_all_images()
+        self.data_set.reset_data()
         if self.data_set.acquisition_mode.is_possible():
             self.data_set.acquisition_mode.start()
             thread = threading.Thread(target=self.update_progress_bar)

@@ -21,6 +21,7 @@ from controllers.analyses_controller import AnalysesController
 from controllers.aberrations_controller import AberrationsController
 from controllers.help_controller import HelpController
 from views.html_view import HTMLView
+from lensepy.css import actived_button
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -63,8 +64,14 @@ class ModesManager:
         css = './docs/html/styles.css'
         self.main_widget.bot_right_widget = HTMLView(url=url, css=css)
         self.main_widget.set_bot_right_widget(self.main_widget.bot_right_widget)
+        # If hardware, start in acquisition mode
+        if self.data_set.acquisition_mode.is_camera():
+            self.main_mode = 'acquisition'
+            self.mode_controller = AcquisitionController(self)
+            self.main_menu.actual_button = self.main_menu.buttons_list[0]
         # First update
         self.update_menu()
+
 
     def update_menu(self):
         """

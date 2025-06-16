@@ -48,6 +48,7 @@ class ImagesModel:
 
     def reset_all_images(self):
         """Reset all images."""
+        print('RESET IMAGES')
         self.images_list.clear()
         self.images_sets_number = 0
 

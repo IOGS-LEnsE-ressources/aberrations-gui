@@ -142,6 +142,12 @@ class DataSetModel:
             data['Masks'] = new_mask
         scipy.io.savemat(file_path, data)
 
+    def reset_data(self):
+        """Reset all the data of the data set."""
+        self.masks_sets.reset_masks()
+        self.images_sets.reset_all_images()
+        self.data_set_state = DataSetState.NODATA
+
 
 if __name__ == '__main__':
     from matplotlib import pyplot as plt
