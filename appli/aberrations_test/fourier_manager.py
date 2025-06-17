@@ -151,7 +151,7 @@ class FourierManager:
 
         diff_pattern = no_aberration * complex_pupil
 
-        return self.PSF(diff_pattern), np.angle(no_aberration)
+        return self.PSF(diff_pattern)
 
 
 if __name__ == "__main__":
@@ -191,10 +191,7 @@ if __name__ == "__main__":
     plt.imshow(F.MTF(mask), cmap = "gray")
 
     plt.figure()
-    lentille, dist_phase = F.lentille(phase, 50, -5)
+    lentille = F.lentille(phase, 50, -0.005)
     plt.imshow(lentille, cmap = "gray")
-
-    plt.figure()
-    plt.imshow(dist_phase, cmap = "gray")
 
     plt.show()
