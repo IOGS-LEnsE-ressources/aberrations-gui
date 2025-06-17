@@ -20,6 +20,14 @@ class FourierManager:
 
         self.rpupil = 50
         self.center = [100, 100]
+        self.lam = 650e-09
+
+    def pupil_size(self, D, lam, pix, size):
+        pixrad = pix * np.pi / (180 * 3600)  # Pixel-size in radians
+        nu_cutoff = D / lam  # Cutoff frequency in rad^-1
+        deltanu = 1. / (size * pixrad)  # Sampling interval in rad^-1
+        rpupil = nu_cutoff / (2 * deltanu)  # pupil size in pixels
+        self.rpupil = int(rpupil)
 
     def mask(self, size : tuple):
         r = 1
@@ -92,8 +100,9 @@ class FourierManager:
         psf_diff_lim = self.PSF(diff_lim_image)
 
         psf_image = self.PSF(image)
+        h, w = size
 
-        rf = psf_diff_lim[0][0] - psf_image[0][0]
+        rf = psf_image[h // 2][w // 2] / psf_diff_lim[h // 2][w // 2]
         return rf, psf_diff_lim, psf_image
 
     def find_rf_from_coefs(self, coefficients, size):
@@ -103,23 +112,46 @@ class FourierManager:
         A = self.phase(coefficients, size)
         image = self.complex_pupil(A, diff_lim_image)
         psf_image = self.PSF(image)
+        h, w = size
 
-        rf = psf_diff_lim[0][0] - psf_image[0][0]
+        rf = psf_image[h//2][w//2] / psf_diff_lim[h//2][w//2]
         return rf, psf_diff_lim, psf_image
 
     def afficher_pupille(self, coefficients, size):
         mask_image = self.mask(size)
         A = self.phase(coefficients, size)
-        image = self.complex_pupil(A, mask_image).real
+        image = np.angle(self.complex_pupil(A, mask_image))
         return image
 
-    def mtf(self, complx_pupil):
-        psf_image = self.psf(complx_pupil)
+    def MTF(self, complx_pupil):
+        psf_image = self.PSF(complx_pupil)
         otf = fft2(ifftshift(psf_image))
-        otf_max = float(otf[0, 0])
+        otf_max = abs(otf[0, 0])
         otf = otf / otf_max
         mtf = abs(otf)
-        return mtf
+        return np.fft.fftshift(mtf)
+
+    def lentille(self, complex_pupil, dist_foc: float, d: float = 0):
+        '''This function returns the diffraction pattern resulting from an optical system at whatever distance (d)
+        from its focal point (in algebraic value) you chose'''
+        r = 1
+        x = np.linspace(-r, r, 2 * self.rpupil)
+        y = np.linspace(-r, r, 2 * self.rpupil)
+
+        [X, Y] = np.meshgrid(x, y)
+        R = np.sqrt(X ** 2 + Y ** 2)
+
+        dist_phase = np.exp(1j * 2*np.pi/self.lam *(R**2/2 * (1/(dist_foc + d) - 1/dist_foc)))
+        dist_phase[R > 1] = 1
+
+        x0, y0 = self.center[0], self.center[1]
+        h, w = complex_pupil.shape
+        no_aberration = np.ones([h, w], dtype = np.complex128)
+        no_aberration[x0 - self.rpupil + 1:x0 + self.rpupil + 1, y0 - self.rpupil + 1:y0 + self.rpupil + 1] = dist_phase
+
+        diff_pattern = no_aberration * complex_pupil
+
+        return self.PSF(diff_pattern), np.angle(no_aberration)
 
 
 if __name__ == "__main__":
@@ -133,19 +165,36 @@ if __name__ == "__main__":
     coefficients[6] = -0.2
     coefficients[7] = 0.5
     coefficients[8] = -2
+    """coefficients[0] = 1"""
 
     size = (255,255)
 
-    image = F.afficher_pupille(coefficients, size)
+    phase = F.afficher_pupille(coefficients, size)
+    mask = F.mask(size)
+    image = F.complex_pupil(F.phase(coefficients, size), mask)
     rf, psf_diff_lim, psf_image = F.find_rf_from_coefs(coefficients, size)
+    print(f"Rf = {rf}")
 
     plt.figure()
-    plt.imshow(image, cmap = "gray")
+    plt.imshow(phase, cmap = "gray")
 
     plt.figure()
     plt.imshow(psf_diff_lim, cmap="gray")
 
     plt.figure()
     plt.imshow(psf_image, cmap="gray")
+
+    plt.figure()
+    plt.imshow(F.MTF(image), cmap = "gray")
+
+    plt.figure()
+    plt.imshow(F.MTF(mask), cmap = "gray")
+
+    plt.figure()
+    lentille, dist_phase = F.lentille(phase, 50, -5)
+    plt.imshow(lentille, cmap = "gray")
+
+    plt.figure()
+    plt.imshow(dist_phase, cmap = "gray")
 
     plt.show()
