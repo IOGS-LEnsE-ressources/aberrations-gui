@@ -18,9 +18,11 @@ class FourierManager:
 
         self.layout = QHBoxLayout()
 
-        self.rpupil = 50
-        self.center = [100, 100]
+        self.rpupil = 100
+        self.center = [200, 200]
         self.lam = 650e-09
+        grandissement = (345e-6*2456)/(4*0.3)
+        self.pix = 345e-6/grandissement
 
     def pupil_size(self, D, lam, pix, size):
         pixrad = pix * np.pi / (180 * 3600)  # Pixel-size in radians
@@ -139,10 +141,13 @@ class FourierManager:
         y = np.linspace(-r, r, 2 * self.rpupil)
 
         [X, Y] = np.meshgrid(x, y)
-        R = np.sqrt(X ** 2 + Y ** 2)
+        R2 = (X*self.pix) ** 2 + (Y*self.pix) ** 2
 
-        dist_phase = np.exp(1j * 2*np.pi/self.lam *(R**2/2 * (1/(dist_foc + d) - 1/dist_foc)))
-        dist_phase[R > 1] = 1
+        if d!=-dist_foc:
+            dist_phase = np.exp(1j * 2*np.pi/self.lam * (R2/2 * (1/(dist_foc + d) - 1/dist_foc)))
+            dist_phase[R2 > 1] = 1
+        else:
+            return abs(complex_pupil)
 
         x0, y0 = self.center[0], self.center[1]
         h, w = complex_pupil.shape
@@ -153,7 +158,9 @@ class FourierManager:
 
         return self.PSF(diff_pattern)
 
-    #def lentille_x_slice(self):
+    def normalize(self, image):
+        max_image = image.max()
+        return image/max_image
 
 
 if __name__ == "__main__":
@@ -169,7 +176,8 @@ if __name__ == "__main__":
     coefficients[8] = -2
     """coefficients[0] = 1"""
 
-    size = (255,255)
+    size = (600, 600)
+    F.center = [size[0]//2, size[1]//2]
 
     phase = F.afficher_pupille(coefficients, size)
     mask = F.mask(size)
@@ -186,14 +194,26 @@ if __name__ == "__main__":
     plt.figure()
     plt.imshow(psf_image, cmap="gray")
 
-    plt.figure()
+    """plt.figure()
     plt.imshow(F.MTF(image), cmap = "gray")
 
     plt.figure()
     plt.imshow(F.MTF(mask), cmap = "gray")
 
     plt.figure()
-    lentille = F.lentille(phase, 50, -0.5)
-    plt.imshow(lentille, cmap = "gray")
+    lentille = F.lentille(mask, 0.05, 100)
+    plt.imshow(lentille, cmap = "gray")"""
+
+    N = 100
+    x0 = 0.0499
+    #coefficients = np.zeros(11)
+    y = np.zeros([N, size[1]])
+    coefficients[3] = -1.5
+    for i in range(N):
+        coefficients[3] += i*0.1/N
+        rf, psf_diff_lim, psf_image = F.find_rf_from_coefs(coefficients, size)
+        y[i] = psf_image[size[0]//2][:]
+    plt.figure()
+    plt.imshow(y, cmap="gray")
 
     plt.show()
