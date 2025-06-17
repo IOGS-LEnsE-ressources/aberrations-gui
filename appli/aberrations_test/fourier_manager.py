@@ -153,6 +153,8 @@ class FourierManager:
 
         return self.PSF(diff_pattern)
 
+    #def lentille_x_slice(self):
+
 
 if __name__ == "__main__":
     F = FourierManager()
@@ -191,7 +193,7 @@ if __name__ == "__main__":
     plt.imshow(F.MTF(mask), cmap = "gray")
 
     plt.figure()
-    lentille = F.lentille(phase, 50, -0.005)
+    lentille = F.lentille(phase, 50, -0.5)
     plt.imshow(lentille, cmap = "gray")
 
     plt.show()
