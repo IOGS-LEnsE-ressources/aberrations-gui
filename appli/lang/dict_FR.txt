@@ -28,6 +28,7 @@ acquisition_simple_button; Acquisition simple
 label_progress_acq_bar; Progression de l'acquisition
 label_simple_acq_title; Acquisition de données
 start_acq_button; Lancer l'acquisition
+camera_zoom_button; Zoom
 # --------------
 # Images
 # --------------
