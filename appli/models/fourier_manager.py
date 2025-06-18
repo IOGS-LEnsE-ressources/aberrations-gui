@@ -21,8 +21,8 @@ class FourierManager:
         self.rpupil = 100
         self.center = [200, 200]
         self.lam = 650e-09
-        grandissement = (345e-6*2456)/(4*0.3)
-        self.pix = 345e-6/grandissement
+        """grandissement = (345e-6*2456)/(4*0.3)
+        self.pix = 345e-6/grandissement"""
 
     def pupil_size(self, D, lam, pix, size):
         pixrad = pix * np.pi / (180 * 3600)  # Pixel-size in radians
@@ -133,7 +133,14 @@ class FourierManager:
         mtf = abs(otf)
         return np.fft.fftshift(mtf)
 
-    def lentille(self, complex_pupil, dist_foc: float, d: float = 0):
+    def MTF_from_PSF(self, psf):
+        otf = fft2(ifftshift(psf))
+        otf_max = abs(otf[0, 0])
+        otf = otf / otf_max
+        mtf = abs(otf)
+        return np.fft.fftshift(mtf)
+
+    def lentille(self, complex_pupil, pix_size:float, dist_foc: float, d: float = 0):
         '''This function returns the diffraction pattern resulting from an optical system at whatever distance (d)
         from its focal point (in algebraic value) you chose'''
         r = 1
@@ -141,7 +148,7 @@ class FourierManager:
         y = np.linspace(-r, r, 2 * self.rpupil)
 
         [X, Y] = np.meshgrid(x, y)
-        R2 = (X*self.pix) ** 2 + (Y*self.pix) ** 2
+        R2 = (X*pix_size) ** 2 + (Y*pix_size) ** 2
 
         if d!=-dist_foc:
             dist_phase = np.exp(1j * 2*np.pi/self.lam * (R2/2 * (1/(dist_foc + d) - 1/dist_foc)))
@@ -151,7 +158,7 @@ class FourierManager:
 
         x0, y0 = self.center[0], self.center[1]
         h, w = complex_pupil.shape
-        no_aberration = np.ones([h, w], dtype = np.complex128)
+        no_aberration = np.ones([h, w], dtype=np.complex128)
         no_aberration[x0 - self.rpupil + 1:x0 + self.rpupil + 1, y0 - self.rpupil + 1:y0 + self.rpupil + 1] = dist_phase
 
         diff_pattern = no_aberration * complex_pupil
@@ -162,22 +169,44 @@ class FourierManager:
         max_image = image.max()
         return image/max_image
 
+    def test_params(self):
+        '''This function serves as a backup for testing when no acquisition is done beforehand,
+        it returns the coefficients and the image size which are necessary for further use'''
+        coefficients = np.zeros(11)
+        coefficients[1] = 0.1
+        coefficients[2] = 0.1
+        coefficients[3] = 0.3
+        coefficients[4] = -0.2
+        coefficients[5] = 0.3
+        coefficients[6] = -0.2
+        coefficients[7] = 0.5
+        coefficients[8] = -2
+        size = (800, 800)
+        self.center = [size[0] // 2, size[1] // 2]
+        return coefficients, size
+
+    def focal_scan(self, coefficients, size, Nstep, initial_c3, final_c3):
+        img_size = 2 * self.rpupil
+        y = np.zeros((Nstep, img_size, img_size))
+
+        for i in range(Nstep):
+            coefficients[3] = initial_c3 + i * (final_c3 - initial_c3) / (Nstep - 1)
+            _, _, psf_image = self.find_rf_from_coefs(coefficients, size)
+
+            x_center, y_center = size[0] // 2, size[1] // 2
+            cropped = psf_image[
+                      x_center - self.rpupil:x_center + self.rpupil,
+                      y_center - self.rpupil:y_center + self.rpupil
+                      ]
+
+            y[i] = cropped
+
+        return y
+
 
 if __name__ == "__main__":
     F = FourierManager()
-    coefficients = np.zeros(11)
-    coefficients[1] = 0.1
-    coefficients[2] = 0.1
-    coefficients[3] = 0.3
-    coefficients[4] = -0.2
-    coefficients[5] = 0.3
-    coefficients[6] = -0.2
-    coefficients[7] = 0.5
-    coefficients[8] = -2
-    """coefficients[0] = 1"""
-
-    size = (600, 600)
-    F.center = [size[0]//2, size[1]//2]
+    coefficients, size = F.test_params()
 
     phase = F.afficher_pupille(coefficients, size)
     mask = F.mask(size)
@@ -186,7 +215,7 @@ if __name__ == "__main__":
     print(f"Rf = {rf}")
 
     plt.figure()
-    plt.imshow(phase, cmap = "gray")
+    plt.imshow(phase.astype(np.uint8), cmap = "gray")
 
     plt.figure()
     plt.imshow(psf_diff_lim, cmap="gray")
@@ -204,15 +233,12 @@ if __name__ == "__main__":
     lentille = F.lentille(mask, 0.05, 100)
     plt.imshow(lentille, cmap = "gray")"""
 
-    N = 100
+    N = 50
     x0 = 0.0499
+    ini_c3 = -1.5
+    fin_c3 = 1.5
     #coefficients = np.zeros(11)
-    y = np.zeros([N, size[1]])
-    coefficients[3] = -1.5
-    for i in range(N):
-        coefficients[3] += i*0.1/N
-        rf, psf_diff_lim, psf_image = F.find_rf_from_coefs(coefficients, size)
-        y[i] = psf_image[size[0]//2][:]
+    y = F.focal_scan(coefficients, size, N, ini_c3, fin_c3)[:, F.rpupil, :]
     plt.figure()
     plt.imshow(y, cmap="gray")
 

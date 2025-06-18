@@ -12,7 +12,7 @@ Creation : march/2025
 import sys, os
 import numpy as np
 from PyQt6.QtWidgets import QGraphicsView, QGraphicsScene
-from PyQt6.QtCore import QRectF
+from PyQt6.QtCore import QRectF, Qt
 from PyQt6.QtGui import QImage, QPainter
 
 
@@ -47,6 +47,9 @@ class ImagesDisplayView(QGraphicsView):
             image = QImage(image_disp, width, height, QImage.Format.Format_Grayscale8)
         self.__scene.set_image(image)
         self.update()
+
+    def fit_images_in_view(self):
+        self.fitInView(self.__scene.itemsBoundingRect(), Qt.AspectRatioMode.KeepAspectRatio)
 
 
 class ImageToGraphicsScene(QGraphicsScene):
