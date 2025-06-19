@@ -42,9 +42,17 @@ class CameraOptionsView(QWidget):
         self.camera = self.controller.data_set.acquisition_mode.camera
         self.zoom_activated = False
         self.zoom_window = ImagesDisplayView()
+        self.default_parameters = self.controller.main_app.default_parameters
         # Default parameters to update on loading
-        self.default_exposure = 1000
-        self.default_max_expo = 20000
+        if 'Exposure Time' in self.default_parameters:
+            self.default_exposure = int(self.default_parameters['Exposure Time'])
+        else:
+            self.default_exposure = 1000
+        self.camera.set_exposure(self.default_exposure)
+        if 'Max Expo Time' in self.default_parameters:
+            self.default_max_expo = int(self.default_parameters['Max Expo Time'])
+        else:
+            self.default_max_expo = 5000
         self.default_fps = 8
         self.default_black = 9
 

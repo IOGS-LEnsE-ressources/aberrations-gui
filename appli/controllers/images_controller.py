@@ -126,7 +126,7 @@ class ImagesController:
                 if state:
                     # Erase old data
                     self.manager.phase.reset_phase()
-                    self.data_set.data_set_state == DataSetState.NODATA
+                    self.data_set.data_set_state = DataSetState.NODATA
                     # Update submenu to display images
                     self.update_submenu("display_images")
                 else:
