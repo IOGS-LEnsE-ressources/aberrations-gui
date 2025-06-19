@@ -91,16 +91,25 @@ class TreatmentController:
         self.init_view()
 
         ### Secondary window displays
-
-        self.image = self.phase.get_unwrapped_phase()
         self.fourier = FourierManager()
+        self.image = self.phase.get_unwrapped_phase()
+        size = self.image.shape
+        x_pad = 800 - size[0] * (800 >= size[0])
+        y_pad = 800 - size[1] * (800 >= size[1])
+        pad_width = ((x_pad//2, x_pad//2), (y_pad//2, y_pad//2))
+        self.fourier.rpupil = 75
+        self.image = np.pad(self.image, pad_width, mode='constant', constant_values=0)
         self.size = self.image.shape
+        print(f"size = {self.size[0]}, {self.size[1]}")
         self.coefficients = self.zernike_coeffs.get_coeffs()
+        self.coefficients[0] = 0
+        self.coefficients[1] = 0
+        self.coefficients[2] = 0
 
         self.fourier.center = [self.size[0] // 2, self.size[1] // 2]
-        """self.fourier.rpupil = self.size[0] // 2"""
 
         self.rf, self.psf_diff_lim, self.psf_image = self.fourier.find_rf_from_coefs(self.coefficients, self.size)
+        #self.rf, self.psf_diff_lim, self.psf_image = self.fourier.find_rf_from_image(np.exp(1j*self.image).astype(np.complex128))
         self.mtf_image = self.fourier.MTF_from_PSF(self.psf_image)
         self.mtf_diff = self.fourier.MTF_from_PSF(self.psf_diff_lim)
 
@@ -299,8 +308,8 @@ if __name__ == "__main__":
     m_app.main_menu.load_menu('')
     manager = ModesManager(m_app)
     # Update data
-    manager.data_set.load_images_set_from_file("../_data/test3.mat")
-    manager.data_set.load_mask_from_file("../_data/test3.mat")
+    manager.data_set.load_images_set_from_file("../_data/test4.mat")
+    manager.data_set.load_mask_from_file("../_data/test4.mat")
     manager.phase.prepare_data()
     manager.phase.process_wrapped_phase()
     manager.phase.process_unwrapped_phase()

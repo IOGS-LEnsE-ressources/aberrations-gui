@@ -341,14 +341,9 @@ class FocalView(QWidget):
         self.maximum_slider = 200
         self.minimum_slider = -200
         self.maximum_c3 = 7
-        self.minimum_c3 = -7
+        self.minimum_c3 = self.minimum_slider * self.maximum_c3/self.maximum_slider
         self.Nstep = 30
         self.color = (255, 150, 10)
-
-        self.slider = QSlider()
-        self.slider.setMaximum(self.maximum_slider)
-        self.slider.setMinimum(self.minimum_slider)
-        self.slider.setSliderPosition(0)
 
         self.c3_text = QLabel(f"C3 = 0")
         self.c3_text.setFixedWidth(75)
@@ -359,7 +354,15 @@ class FocalView(QWidget):
             self.scan = self.fourier.focal_scan(coefficients, size, self.Nstep, self.minimum_c3, self.maximum_c3)
         else:
             self.fourier = self.parent.fourier
-            self.scan = self.fourier.focal_scan(self.parent.coefficients, self.parent.size, self.Nstep, self.minimum_c3, self.maximum_c3)
+            coefficients, size = self.parent.coefficients[:], self.parent.size
+            self.scan = self.fourier.focal_scan(coefficients, size, self.Nstep, self.minimum_c3, self.maximum_c3)
+
+        self.slider = QSlider()
+        self.maximum_slider = self.maximum_slider + int(coefficients[3] * self.maximum_slider/self.maximum_c3)
+        self.minimum_slider = self.minimum_slider + int(coefficients[3] * self.maximum_slider/self.maximum_c3)
+        self.slider.setMaximum(self.maximum_slider)
+        self.slider.setMinimum(self.minimum_slider)
+        self.slider.setSliderPosition(int(coefficients[3] * self.maximum_slider/self.maximum_c3))
 
         self.hslice = self.scan[int(self.Nstep//2), :, :]
         self.vslice = self.scan[:, self.fourier.rpupil, :]
