@@ -56,7 +56,6 @@ class TreatmentController:
         self.zernike_coeffs: Zernike = Zernike(self.phase)
         self.main_widget: MainView = self.manager.main_widget
         self.sub_mode = ''
-        self.corrected_aberrations_list = []
         self.corrected_initial_list = ['piston','tilt']
         #
         self.masks_loaded = self.data_set.get_global_mask()
@@ -65,16 +64,12 @@ class TreatmentController:
         plt.show()
         self.lambda_check = False
         self.lambda_value = 632.8
+        self.colors = [None] * (self.zernike_coeffs.max_order + 1)
 
         # Graphical elements
         self.top_left_widget = QWidget()
         self.top_right_widget = Surface2DView('Unwrapped Phase')
         self.bot_right_widget = HTMLView()
-        self.colors = []
-        self.corrected_aberrations_list = []
-        self.corrected_initial_list = ['piston', 'tilt']
-        self.correct_disp = False
-        self.correct_first = False
         self.lambda_check = False
         self.lambda_value = 632.8
         self.defocus = False
@@ -105,12 +100,7 @@ class TreatmentController:
         self.main_widget.set_top_left_widget(self.top_left_widget)
         self.main_widget.set_top_right_widget(self.top_right_widget)
         self.main_widget.set_options_widget(self.options1_widget)
-
-        ## Test 2D or 3D ??
-        unwrapped = self.phase.get_unwrapped_phase()
-        unwrapped_array = unwrapped.filled(np.nan)
-        # Display wrapped in 2D
-        self.top_right_widget.set_array(unwrapped_array)
+        self.display_2D_corrected_phase()
 
         # Process Zernike coefficients
         for k in range(self.zernike_coeffs.max_order + 1):
@@ -189,18 +179,32 @@ class TreatmentController:
 
         self.update_color_aberrations()
         # Force to 0 corrected coefficients
-        if first:
-            for jj, aberration in enumerate(self.corrected_initial_list):
-                for k in aberrations_type[aberration]:
-                    coeffs_disp[k] = 0
-        if disp_correct:
-            for jj, aberration in enumerate(self.corrected_aberrations_list):
-                for k in aberrations_type[aberration]:
-                    coeffs_disp[k] = 0
+        for jj, aberration in enumerate(self.corrected_initial_list):
+            for k in aberrations_type[aberration]:
+                coeffs_disp[k] = 0
         y_axis = np.array(coeffs_disp)
         self.top_left_widget.set_data(x_axis, y_axis, color_x=self.colors)
         self.top_left_widget.set_labels(x_axis_label, y_axis_label)
 
+
+    def display_2D_corrected_phase(self):
+        """
+        Display tilt and piston corrected phase in the top right corner.
+        """
+        self.main_widget.clear_top_right()
+        # Display wrapped in 2D
+        self.top_right_widget = Surface2DView(translate('ab_corrected_phase'))
+        self.main_widget.set_top_right_widget(self.top_right_widget)
+        # Correction of the phase with tilt and piston
+        wedge_factor = self.phase.get_wedge_factor()
+        correction_list = self.corrected_initial_list
+        _, corrected = self.zernike_coeffs.process_surface_correction(correction_list)
+        unwrapped_array = corrected * wedge_factor
+        if self.lambda_check:
+            unwrapped_array = unwrapped_array * self.lambda_value * 1e-9 * 1e6
+        unwrapped_array = unwrapped_array.filled(np.nan)
+        # Statistics
+        self.top_right_widget.set_array(unwrapped_array)
 
     def update_color_aberrations(self):
         """
@@ -225,10 +229,6 @@ class TreatmentController:
             else:
                 for jj in aberrations_type[ab_type]:
                     self.colors[jj] = '#051725'
-
-        for jj, aberration in enumerate(self.corrected_aberrations_list):
-            for k in aberrations_type[aberration]:
-                self.colors[k] = ORANGE_IOGS
 
         for jj, aberration in enumerate(self.corrected_initial_list):
             for k in aberrations_type[aberration]:
