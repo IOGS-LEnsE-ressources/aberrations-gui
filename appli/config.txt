@@ -3,8 +3,8 @@
 Language;FR
 ### Camera IDS / 
 ColorMode;Mono8
-Exposure Time;1000
-Max Expo Time;20000
+Exposure Time;300
+Max Expo Time;4000
 Frame Rate;40
 Black Level;10
 ### Wedge Factor
