@@ -351,7 +351,7 @@ class FocalView(QWidget):
         self.slider.setSliderPosition(0)
 
         self.c3_text = QLabel(f"C3 = 0")
-        self.c3_text.setFixedWidth(50)
+        self.c3_text.setFixedWidth(75)
 
         if not self.linked:
             self.fourier = FourierManager()
@@ -393,7 +393,7 @@ class FocalView(QWidget):
 
     def slider_update(self):
         value = self.slider.value()
-        ratio = (value - self.minimum_slider)/(self.maximum_slider - self.minimum_slider)
+        ratio = (self.maximum_slider - value)/(self.maximum_slider - self.minimum_slider)
         index = int(ratio * self.Nstep) - 1
         if index < 0:
             index = 0
