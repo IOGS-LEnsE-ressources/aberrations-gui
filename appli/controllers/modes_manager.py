@@ -20,6 +20,7 @@ from controllers.masks_controller import MasksController
 from controllers.analyses_controller import AnalysesController
 from controllers.aberrations_controller import AberrationsController
 from controllers.help_controller import HelpController
+from controllers.treatment_controller import TreatmentController
 from views.html_view import HTMLView
 from lensepy.css import actived_button
 
@@ -137,3 +138,5 @@ class ModesManager:
                 self.mode_controller = AberrationsController(self)
             case 'help':
                 self.mode_controller = HelpController(self)
+            case 'postprocess':
+                self.mode_controller = TreatmentController(self)
