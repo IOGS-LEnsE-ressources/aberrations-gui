@@ -11,6 +11,7 @@ Creation : march/2025
 import sys, os
 import threading, time
 import numpy as np
+from matplotlib import pyplot as plt
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), ".")))
 from views.main_structure import MainView
@@ -52,20 +53,36 @@ class TreatmentController:
         self.manager: "ModesManager" = manager
         self.data_set: DataSetModel = self.manager.data_set
         self.phase: "PhaseModel"= self.manager.phase
-        self.zernike_coeffs = self.phase.zernike_coeffs
+        self.zernike_coeffs: Zernike = Zernike(self.phase)
         self.main_widget: MainView = self.manager.main_widget
+        self.sub_mode = ''
+        self.corrected_aberrations_list = []
+        self.corrected_initial_list = ['piston','tilt']
+        #
+        self.masks_loaded = self.data_set.get_global_mask()
+        plt.figure()
+        plt.imshow(self.masks_loaded)
+        plt.show()
+        self.lambda_check = False
+        self.lambda_value = 632.8
+
         # Graphical elements
         self.top_left_widget = QWidget()
         self.top_right_widget = Surface2DView('Unwrapped Phase')
         self.bot_right_widget = HTMLView()
         self.colors = []
         # Submenu
-        self.submenu = SubMenu(translate('submenu_aberrations'))
+        self.submenu = SubMenu(translate('submenu_postprocess'))
         if __name__ == "__main__":
-            self.submenu.load_menu('../menu/aberrations_menu.txt')
+            self.submenu.load_menu('../menu/postprocess_menu.txt')
         else:
-            self.submenu.load_menu('menu/aberrations_menu.txt')
-        #self.submenu.menu_changed.connect(self.update_submenu)
+            self.submenu.load_menu('menu/postprocess_menu.txt')
+        self.submenu.menu_changed.connect(self.update_submenu)
+
+        # Option 1
+        self.options1_widget = QWidget()         # ??
+        # Option 2
+        self.options2_widget = QWidget()        # ??
 
         # Update menu and view
         self.init_view()
@@ -89,12 +106,55 @@ class TreatmentController:
         # Process Zernike coefficients
         for k in range(self.zernike_coeffs.max_order + 1):
             self.zernike_coeffs.process_zernike_coefficient(k)
-            val_progression = int((k + 1) * 100 / self.zernike_coeffs.max_order)
-            self.options1_widget.update_progress_bar(val_progression)
-            self.submenu.set_button_enabled(1, True)
-            self.submenu.set_button_enabled(2, True)
-            self.submenu.set_button_enabled(4, True)
-            self.submenu.set_button_enabled(6, True)
+
+        self.display_bar_graph_coeff()
+
+
+    def update_submenu_view(self, submode: str):
+        """
+        Update the view of the submenu to display new options.
+        :param submode: Submode name : [open_images, display_images, save_images]
+        """
+        self.manager.update_menu()
+        self.submode = submode
+        ## Erase enabled list for buttons
+        self.submenu.inactive_buttons()
+
+        # Update views
+        self.main_widget.clear_bot_right()
+        self.main_widget.clear_options()
+        # For all submodes
+        self.display_bar_graph_coeff()
+
+        self.bot_right_widget = HTMLView()
+        url = 'docs/html/FR/aberrations.html'
+        css = 'docs/html/styles.css'
+        if __name__ == "__main__":
+            self.bot_right_widget.set_url('../' + url, '../' + css)
+        else:
+            self.bot_right_widget.set_url(url, css)
+        self.main_widget.set_bot_right_widget(self.bot_right_widget)
+
+        # Specific submodes
+        match self.submode:
+            case 'psf_process':
+                pass
+            case 'airy_process':
+                pass
+
+
+    def update_submenu(self, event):
+        """
+        Update data and views when the submenu is clicked.
+        :param event: Sub menu click.
+        """
+        # Update view
+        self.update_submenu_view(event)
+        # Update Action
+        match event:
+            case 'psf_process':
+                pass
+
 
     def display_bar_graph_coeff(self, disp_correct: bool = False, first: bool = False):
         """
@@ -131,6 +191,7 @@ class TreatmentController:
         y_axis = np.array(coeffs_disp)
         self.top_left_widget.set_data(x_axis, y_axis, color_x=self.colors)
         self.top_left_widget.set_labels(x_axis_label, y_axis_label)
+
 
     def display_2D_ab_init(self, defocus: bool = False):
         """
@@ -225,3 +286,33 @@ class TreatmentController:
 
         if self.colors[k] is None:
             self.colors[k] = BLUE_IOGS
+
+
+if __name__ == "__main__":
+    from zygo_lab_app import ZygoApp
+    from PyQt6.QtWidgets import QApplication
+    from controllers.modes_manager import ModesManager
+    from views.main_menu import MainMenu
+    from models.dataset import DataSetModel
+    from models.phase import PhaseModel
+
+    app = QApplication(sys.argv)
+    m_app = ZygoApp()
+    data_set = DataSetModel()
+    m_app.data_set = data_set
+    m_app.phase = PhaseModel(m_app.data_set)
+    m_app.main_widget = MainView()
+    m_app.main_menu = MainMenu()
+    m_app.main_menu.load_menu('')
+    manager = ModesManager(m_app)
+    # Update data
+    manager.data_set.load_images_set_from_file("../_data/test3.mat")
+    manager.data_set.load_mask_from_file("../_data/test3.mat")
+    manager.phase.prepare_data()
+    manager.phase.process_wrapped_phase()
+    manager.phase.process_unwrapped_phase()
+
+    # Test controller
+    manager.mode_controller = TreatmentController(manager)
+    m_app.main_widget.showMaximized()
+    sys.exit(app.exec())

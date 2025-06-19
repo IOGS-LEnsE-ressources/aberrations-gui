@@ -69,7 +69,7 @@ class ModesManager:
         if self.data_set.acquisition_mode.is_camera():
             self.main_mode = 'acquisition'
             self.mode_controller = AcquisitionController(self)
-            self.main_menu.actual_button = self.main_menu.buttons_list[0]
+            #self.main_menu.actual_button = self.main_menu.buttons_list[0]
         # First update
         self.update_menu()
 

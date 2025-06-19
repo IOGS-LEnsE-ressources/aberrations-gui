@@ -53,6 +53,7 @@ class AberrationsController:
         self.phase: "PhaseModel"= self.manager.phase
         self.zernike_coeffs: Zernike = Zernike(self.phase)
         self.main_widget: MainView = self.manager.main_widget
+        #
         self.images_loaded = (self.data_set.images_sets.get_number_of_sets() >= 1)
         self.masks_loaded = (len(self.data_set.get_masks_list()) >= 1)
         self.sub_mode = ''
