@@ -170,7 +170,7 @@ class TreatmentController:
         self.display_bar_graph_coeff()
 
         self.bot_right_widget = HTMLView()
-        url = 'docs/html/FR/aberrations.html'
+        url = 'docs/html/FR/process.html'
         css = 'docs/html/styles.css'
         if __name__ == "__main__":
             self.bot_right_widget.set_url('../' + url, '../' + css)

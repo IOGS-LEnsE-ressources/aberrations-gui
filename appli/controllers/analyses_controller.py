@@ -234,8 +234,8 @@ class AnalysesController:
                     self.update_submenu('unwrappedphase_analyses')
 
             case 'correctedphase_analyses':
-                self.display_2D_unwrapped()
-                self.display_2D_correction()
+                self.display_2D_unwrapped(gain=5)
+                self.display_2D_correction(gain=5)
 
             case 'histophase_analyses':
                 bins = np.linspace(-10, 10, 1001)
@@ -265,7 +265,7 @@ class AnalysesController:
         self.main_widget.set_top_right_widget(self.top_right_widget)
         self.top_right_widget.set_array(wrapped_array)
 
-    def display_2D_unwrapped(self):
+    def display_2D_unwrapped(self, gain = 1):
         """
         Display unwrapped phase in 2D at the bottom right corner.
         """
@@ -275,7 +275,7 @@ class AnalysesController:
         self.main_widget.clear_bot_right()
         self.bot_right_widget = Surface2DView('Unwrapped Phase')
         self.main_widget.set_bot_right_widget(self.bot_right_widget)
-        self.bot_right_widget.set_array(unwrapped_array)
+        self.bot_right_widget.set_array(unwrapped_array*gain)
         pv, rms = process_statistics_surface(unwrapped)
         self.options1_widget.set_pv_uncorrected(pv, '\u03BB')
         self.options1_widget.set_rms_uncorrected(rms, '\u03BB')
@@ -291,7 +291,7 @@ class AnalysesController:
                 self.bot_right_widget.set_url('docs/html/analyses.html', 'docs/html/styles.css')
             self.main_widget.set_bot_right_widget(self.bot_right_widget)
 
-    def display_2D_correction(self):
+    def display_2D_correction(self, gain = 1):
         """
         Display correction depending on tilt checkbox value.
         """
@@ -310,7 +310,7 @@ class AnalysesController:
         else:
             corrected = unwrapped
         self.corrected_phase = corrected.filled(np.nan)
-        self.top_right_widget.set_array(self.corrected_phase)
+        self.top_right_widget.set_array(self.corrected_phase*gain)
         # Test if range is checked
         if self.options1_widget.is_range_checked():
             if self.submode == 'correctedphase_analyses':
