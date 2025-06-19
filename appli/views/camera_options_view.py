@@ -75,14 +75,16 @@ class CameraOptionsView(QWidget):
         # Settings
         max_expo = self.default_max_expo
         default_expo = self.default_exposure
-        self.slider_exposure_time = SliderBloc(name='name_slider_exposure_time', unit='us',
+        self.slider_exposure_time = SliderBloc(name=translate('name_slider_exposure_time'),
+                                               unit='us',
                                                min_value=0, max_value=max_expo, integer=True)
         self.slider_exposure_time.set_value(default_expo)
         self.slider_exposure_time.slider_changed.connect(self.slider_exposure_time_changing)
 
         default_black = self.default_black
-        self.slider_black_level = SliderBloc(name='name_slider_black_level', unit='gray',
-                                              min_value=0, max_value=100, integer=True)
+        self.slider_black_level = SliderBloc(name=translate('name_slider_black_level'),
+                                             unit='gray',
+                                             min_value=0, max_value=100, integer=True)
         self.slider_black_level.set_value(default_black)
         self.slider_black_level.slider_changed.connect(self.slider_black_level_changing)
 

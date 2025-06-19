@@ -340,7 +340,7 @@ class AnalysesController:
         if self.submode == 'unwrappedphase_analyses':
             wrapped = self.phase.get_wrapped_phase()
             wrapped_array = wrapped.filled(np.nan)
-            Z1 = np.ma.masked_where(np.logical_not(mask), wrapped_array)
+            Z1 = np.ma.masked_where(np.logical_not(mask), wrapped_array*0.1)
             self.w_3d_view.add_labels(name1='Wrapped Phase', name2='Unwrapped Phase')
         elif self.submode == 'correctedphase_analyses':
             Z1 = np.ma.masked_where(np.logical_not(mask), self.corrected_phase)

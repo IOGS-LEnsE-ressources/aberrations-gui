@@ -4,7 +4,6 @@ B;camera_button;camera_acquisition;;
 B;piezo_button;piezo_acquisition;;
 S;;;;
 B;acquisition_simple_button;simple_acquisition;;
-B;acquisition_multi_button;multi_acquisition;;
+#B;acquisition_multi_button;multi_acquisition;;
 S;;;;
-B;contrast_button;contrast;;
 E;;;;
