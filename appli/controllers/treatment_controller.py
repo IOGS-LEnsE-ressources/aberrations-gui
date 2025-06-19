@@ -31,6 +31,7 @@ from PyQt6.QtWidgets import (
     QWidget
 )
 from models.zernike_coefficients import Zernike, aberrations_type, aberrations_list
+from models.fourier_manager import *
 from utils.dataset_utils import generate_images_grid, DataSetState
 #from views.treatment_views import TreatmentView
 
