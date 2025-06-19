@@ -59,6 +59,13 @@ class TreatmentController:
         self.top_right_widget = Surface2DView('Unwrapped Phase')
         self.bot_right_widget = HTMLView()
         self.colors = []
+        self.corrected_aberrations_list = []
+        self.corrected_initial_list = ['piston', 'tilt']
+        self.correct_disp = False
+        self.correct_first = False
+        self.lambda_check = False
+        self.lambda_value = 632.8
+        self.defocus = False
         # Submenu
         self.submenu = SubMenu(translate('submenu_aberrations'))
         if __name__ == "__main__":
@@ -69,6 +76,8 @@ class TreatmentController:
 
         # Update menu and view
         self.init_view()
+
+        self.options1_widget = AberrationsStartView(self)
 
 
     def init_view(self):
@@ -132,65 +141,6 @@ class TreatmentController:
         self.top_left_widget.set_data(x_axis, y_axis, color_x=self.colors)
         self.top_left_widget.set_labels(x_axis_label, y_axis_label)
 
-    def display_2D_ab_init(self, defocus: bool = False):
-        """
-        Display tilt and piston corrected phase in the top right corner.
-        :param defocus: If defocus aberration has to be corrected on display.
-        """
-        self.main_widget.clear_top_right()
-        # Display wrapped in 2D
-        self.top_right_widget = Surface2DView(translate('initial_corrected_phase'))
-        self.main_widget.set_top_right_widget(self.top_right_widget)
-        # Correction of the phase with tilt and piston
-        # Check if defocus has to be corrected
-        if defocus:
-            if 'defocus' not in self.corrected_aberrations_list:
-                self.corrected_aberrations_list.append('defocus')
-        else:
-            if 'defocus' in self.corrected_aberrations_list:
-                self.corrected_aberrations_list.remove('defocus')
-
-        new_list = self.corrected_initial_list + self.corrected_aberrations_list
-        wedge_factor = self.phase.get_wedge_factor()
-        _, corrected = self.zernike_coeffs.process_surface_correction(new_list)
-        unwrapped_array = corrected * wedge_factor
-        z_label = translate('phase_value_in') + ' (\u03BB)'
-        if self.lambda_check:
-            unwrapped_array = unwrapped_array * self.lambda_value * 1e-9 * 1e6
-            z_label = translate('phase_value_in') + ' (um)'
-        unwrapped_array = unwrapped_array.filled(np.nan)
-        # Statistics
-        self.top_right_widget.set_array(unwrapped_array)
-        self.top_right_widget.set_z_axis_label(z_label)
-        pv, rms = process_statistics_surface(unwrapped_array)
-        # TO DO : depending on lambda or nm -> PV RMS to modify (and units !)
-        self.options1_widget.set_pv_uncorrected(pv, '\u03BB')
-        self.options1_widget.set_rms_uncorrected(rms, '\u03BB')
-
-    def display_2D_ab_corrected(self):
-        """
-        Display tilt and piston corrected phase in the top right corner.
-        """
-        self.main_widget.clear_bot_right()
-        # Display wrapped in 2D
-        self.bot_right_widget = Surface2DView(translate('ab_corrected_phase'))
-        self.main_widget.set_bot_right_widget(self.bot_right_widget)
-        # Correction of the phase with tilt and piston
-        wedge_factor = self.phase.get_wedge_factor()
-        correction_list = self.corrected_initial_list + self.corrected_aberrations_list
-        _, corrected = self.zernike_coeffs.process_surface_correction(correction_list)
-        unwrapped_array = corrected * wedge_factor
-        if self.lambda_check:
-            unwrapped_array = unwrapped_array * self.lambda_value * 1e-9 * 1e6
-        unwrapped_array = unwrapped_array.filled(np.nan)
-        # Statistics
-        self.bot_right_widget.set_array(unwrapped_array)
-        '''
-        pv, rms = process_statistics_surface(unwrapped_array)
-        self.options1_widget.set_pv_uncorrected(pv, '\u03BB')
-        self.options1_widget.set_rms_uncorrected(rms, '\u03BB')
-        '''
-
     def update_color_aberrations(self):
         """
         Return a list of color to apply on Zernike bar graph.
@@ -225,3 +175,4 @@ class TreatmentController:
 
         if self.colors[k] is None:
             self.colors[k] = BLUE_IOGS
+
