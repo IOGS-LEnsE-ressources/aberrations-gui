@@ -42,7 +42,7 @@ def slice_image(image, slope : float, axis : bool = False):
     --------|------> x    axis0 -> axis0 + 1
             |             axis1 -> axis1 + slope
             |
-    If the slope is too big, the program will invert the axis by default and return a horizontal (resp. vertical) slice
+    If the slope is too big, the program will invert the axis by default and return the associated slice
     '''
     size = image.shape
     assert size[0] != 0 and size[1] != 0 and image is not None, "The data is not suitable : 0-dimensional array"
@@ -52,7 +52,7 @@ def slice_image(image, slope : float, axis : bool = False):
         ax = 1
     if int(size[ax] * slope) > size[not ax]:
         ax = not ax
-        slope = 0
+        slope = 1/slope
 
     plot_x = np.linspace(0, size[ax], size[ax])
     plot_y = np.zeros(size[ax])
@@ -163,7 +163,7 @@ class PSFView(QWidget):
         self.setLayout(self.layout)
 
         bounds = self.parent.airy_view.get_bounds()
-        lims = bounds[0]//2, bounds[1]//2
+        lims = max(bounds[0]//2, bounds[1]//2)
 
         if not self.linked:
             self.fourier = FourierManager()
@@ -176,16 +176,16 @@ class PSFView(QWidget):
             psf_diff_lim = self.parent.psf_diff_lim
 
         h, w = size
-        psf_image = psf_image[h//2 - lims[0]:h//2 + lims[0], w//2 - lims[1]:w//2 + lims[1]]
-        psf_diff_lim = psf_diff_lim[h//2 - lims[0]:h//2 + lims[0], w//2 - lims[1]:w//2 + lims[1]]
+        psf_image = psf_image[h//2 - lims:h//2 + lims, w//2 - lims:w//2 + lims]
+        psf_diff_lim = psf_diff_lim[h//2 - lims:h//2 + lims, w//2 - lims:w//2 + lims]
 
         psf_image = resize_image_ratio(psf_image, 900, 900)
         psf_diff_lim = resize_image_ratio(psf_diff_lim, 900, 900)
         self.left_widget.set_image(psf_image)
         self.right_widget.set_image(psf_diff_lim)
 
-    def afficher_phase(self, coefficients, size):
-        return self.fourier.afficher_pupille(coefficients, size)
+    """def display_phase(self, coefficients, size):
+        return self.fourier.afficher_pupille(coefficients, size)"""
 
 class AiryView(QWidget):
     def __init__(self, parent = None):
@@ -454,8 +454,8 @@ class PSFDisplayWidget(QWidget):
     def set_title(self, title: str):
         self.title.setText(title)
 
-    def set_max_size(self, size):
-        self.image_display.setMaximumSize(size[0], size[1])
+    """def set_max_size(self, size):
+        self.image_display.setMaximumSize(size[0], size[1])"""
 
     def shorten_horizontal(self, image, margin: int = 4, lower_bound: float = 1e-05):
         '''This function crops the unnecessary zeroes on the sides of an image'''
@@ -488,7 +488,7 @@ class PSFDisplayWidget(QWidget):
         self.shorten_horizontal(image, margin, lower_bound)
         return image
 
-    def resize_image_to(self, image, h, w, keep_proportions = True):
+    """def resize_image_to(self, image, h, w, keep_proportions = True):
         '''This function can be used to create a new image that is resized to the desired height(h)
         and width(w)'''
         size = image.shape
@@ -522,7 +522,7 @@ class PSFDisplayWidget(QWidget):
                 botright = x_index_float * y_index_float * image[y_next_index, x_next_index]
                 resized_image[i][j] = topleft + topright + botleft + botright
 
-        return resized_image
+        return resized_image"""
 
     def toRGB(self, image):
         '''Converts a grayscale image to RGB'''
