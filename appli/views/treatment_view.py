@@ -97,8 +97,8 @@ if __name__ == "__main__":
 
             self.setLayout(self.layout)
 
-            self.psf_view = PSFView(self)
             self.airy_view = AiryView(self)
+            self.psf_view = PSFView(self)
             self.mtf_view = MTFView(self)
             self.focal_view = FocalView(self)
 
@@ -162,18 +162,27 @@ class PSFView(QWidget):
 
         self.setLayout(self.layout)
 
+        bounds = self.parent.airy_view.get_bounds()
+        lims = bounds[0]//2, bounds[1]//2
+
         if not self.linked:
             self.fourier = FourierManager()
             coefficients, size = self.fourier.test_params()
             psf_diff_lim, psf_image = self.parent.calculate_psf_from_coefs(coefficients, size)
-            self.left_widget.set_image(psf_image)
-            self.right_widget.set_image(psf_diff_lim)
         else:
             self.fourier = self.parent.fourier
+            size = self.parent.size
             psf_image = self.parent.psf_image
             psf_diff_lim = self.parent.psf_diff_lim
-            self.left_widget.set_image(psf_image)
-            self.right_widget.set_image(psf_diff_lim)
+
+        h, w = size
+        psf_image = psf_image[h//2 - lims[0]:h//2 + lims[0], w//2 - lims[1]:w//2 + lims[1]]
+        psf_diff_lim = psf_diff_lim[h//2 - lims[0]:h//2 + lims[0], w//2 - lims[1]:w//2 + lims[1]]
+
+        psf_image = resize_image_ratio(psf_image, 900, 900)
+        psf_diff_lim = resize_image_ratio(psf_diff_lim, 900, 900)
+        self.left_widget.set_image(psf_image)
+        self.right_widget.set_image(psf_diff_lim)
 
     def afficher_phase(self, coefficients, size):
         return self.fourier.afficher_pupille(coefficients, size)
@@ -190,11 +199,13 @@ class AiryView(QWidget):
         if not self.linked:
             self.fourier = FourierManager()
             coefficients, size = self.fourier.test_params()
-            psf_diff, psf_image = self.parent.calculate_psf_from_coefs(coefficients, size)
+            rf, psf_diff, psf_image = self.fourier.find_rf_from_coefs(coefficients, size)
         else:
             self.fourier = self.parent.fourier
-            psf_image = self.parent.psf_image
-            psf_diff = self.parent.psf_diff_lim
+            coefficients, size = self.parent.coefficients, self.parent.size
+            rf, psf_diff, psf_image = self.fourier.find_rf_from_coefs(coefficients, size)
+
+        self.rf_text = QLabel(f"Rf = {rf}")
 
         size = psf_image.shape
         self.slice0_abe = slice_image(psf_image, 0, False)
@@ -206,6 +217,8 @@ class AiryView(QWidget):
         self.slice45_dif = slice_image(psf_diff, size[1] / size[0], False)
         self.slice90_dif = slice_image(psf_diff, 0, True)
         self.slice135_dif = slice_image(psf_diff, -size[0] / size[1], True)
+
+        self.main_layout = QVBoxLayout()
 
         self.layout = QGridLayout()
         self.layout.setColumnStretch(0, 1)
@@ -233,12 +246,20 @@ class AiryView(QWidget):
         self.layout.addWidget(self.bot_left_widget, 1, 0)
         self.layout.addWidget(self.bot_right_widget, 1, 1)
 
-        self.setLayout(self.layout)
+        self.main_layout.addLayout(self.layout)
+        self.main_layout.addWidget(self.rf_text)
+
+        self.setLayout(self.main_layout)
 
         if self.linked:
             self.fourier = self.parent.fourier
         else:
             self.fourier = FourierManager()
+
+    def get_bounds(self):
+        X, _, _ = self.top_left_widget.shorten_bounds(self.slice90_abe[0], self.slice90_abe[1])
+        Y, _, _ = self.top_left_widget.shorten_bounds(self.slice0_abe[0], self.slice0_abe[1])
+        return len(X), len(Y)
 
 
 class MTFView(QWidget):
@@ -319,10 +340,10 @@ class FocalView(QWidget):
 
         self.maximum_slider = 200
         self.minimum_slider = -200
-        self.maximum_c3 = 5
-        self.minimum_c3 = -5
+        self.maximum_c3 = 7
+        self.minimum_c3 = -7
         self.Nstep = 30
-        self.color = (255, 255, 255)
+        self.color = (255, 150, 10)
 
         self.slider = QSlider()
         self.slider.setMaximum(self.maximum_slider)
@@ -354,8 +375,14 @@ class FocalView(QWidget):
         self.vslice = self.vslice_display.shorten_horizontal(self.vslice)
         self.vslice = resize_image(self.vslice, 900, 900)
         self.vslice = self.vslice_display.normalize_image(self.vslice)
-        self.vslice_display.set_image(self.vslice)
-        self.vslice_display.set_title("coupe vericale")
+
+        value = self.slider.value()
+        ratio = (value - self.minimum_slider) / (self.maximum_slider - self.minimum_slider)
+        vslice_copy = self.vslice_display.color_line(self.vslice, ratio, 2, self.color)
+        self.vslice_display.set_image(vslice_copy)
+
+        self.vslice_display.set_image(vslice_copy)
+        self.vslice_display.set_title("coupe verticale")
 
         self.layout.addWidget(self.c3_text)
         self.layout.addWidget(self.slider)
@@ -378,7 +405,7 @@ class FocalView(QWidget):
         self.hslice = resize_image_ratio(self.hslice, 900, 900)
         self.hslice_display.set_image(self.hslice)
 
-        vslice_copy = self.vslice_display.color_line(self.vslice, ratio, 5, self.color)
+        vslice_copy = self.vslice_display.color_line(self.vslice, ratio, 2, self.color)
         self.vslice_display.set_image(vslice_copy)
 
 
@@ -456,6 +483,11 @@ class PSFDisplayWidget(QWidget):
             i += 1
         return new_image
 
+    def shorten_bounds(self, image, margin: int = 4, lower_bound: float = 1e-05):
+        self.shorten_vertical(image, margin, lower_bound)
+        self.shorten_horizontal(image, margin, lower_bound)
+        return image
+
     def resize_image_to(self, image, h, w, keep_proportions = True):
         '''This function can be used to create a new image that is resized to the desired height(h)
         and width(w)'''
@@ -495,7 +527,7 @@ class PSFDisplayWidget(QWidget):
     def toRGB(self, image):
         '''Converts a grayscale image to RGB'''
         height, width, *channels = image.shape
-        if not channels:
+        if not channels or channels[0] == 1:
             image_grayscale = image.astype(np.uint8)
             image = np.stack((image_grayscale,) * 3, axis=-1)
         return image
@@ -507,7 +539,7 @@ class PSFDisplayWidget(QWidget):
 
         line_index_min = int(h * ratio) - height
         line_index_min = max(0, min(h - 1, line_index_min))
-        line_index_max = int(h * ratio) - height
+        line_index_max = int(h * ratio) + height
         line_index_max = max(0, min(h - 1, line_index_max))
 
         modified_image[line_index_min:line_index_max, :, :] = np.array(color, dtype=np.uint8)
@@ -528,7 +560,7 @@ class ChartDisplayWidget(QWidget):
         self.setLayout(self.layout)
     def set_array(self, X, Y, Z = None):
         self.image_display.set_background("white")
-        X, Y, Z = self.smoother_bounds(X, Y, Z)
+        X, Y, Z = self.shorten_bounds(X, Y, Z)
         if Z is None:
             self.image_display.set_data(X, Y)
         else:
@@ -538,7 +570,7 @@ class ChartDisplayWidget(QWidget):
     def set_title(self, title: str):
         self.image_display.set_title(title)
 
-    def smoother_bounds(self, x_array, y_array, second_y=None, margin: int = 4, lower_bound: float = 1e-05):
+    def shorten_bounds(self, x_array, y_array, second_y=None, margin: int = 4, lower_bound: float = 1e-05):
         '''This function performs an element_wise search in a list and tries to get the external zeroes out to get a
         smoother result
 
