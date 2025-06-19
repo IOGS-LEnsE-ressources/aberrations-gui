@@ -31,9 +31,9 @@ from PyQt6.QtWidgets import (
     QWidget
 )
 from models.zernike_coefficients import Zernike, aberrations_type, aberrations_list
-from models.fourier_manager import *
+from models.fourier_manager import FourierManager
 from utils.dataset_utils import generate_images_grid, DataSetState
-#from views.treatment_views import TreatmentView
+from views.treatment_view import *
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -58,11 +58,11 @@ class TreatmentController:
         self.main_widget: MainView = self.manager.main_widget
         self.sub_mode = ''
         self.corrected_initial_list = ['piston','tilt']
-        #
+
         self.masks_loaded = self.data_set.get_global_mask()
-        plt.figure()
+        """plt.figure()
         plt.imshow(self.masks_loaded)
-        plt.show()
+        plt.show()"""
         self.lambda_check = False
         self.lambda_value = 632.8
         self.colors = [None] * (self.zernike_coeffs.max_order + 1)
@@ -90,8 +90,42 @@ class TreatmentController:
         # Update menu and view
         self.init_view()
 
+        ### Secondary window displays
+
+        self.image = self.phase.get_unwrapped_phase()
+        self.fourier = FourierManager()
+        self.size = self.image.shape
+        self.coefficients = self.zernike_coeffs.get_coeffs()
+
+        self.fourier.center = [self.size[0] // 2, self.size[1] // 2]
+        """self.fourier.rpupil = self.size[0] // 2"""
+
+        self.rf, self.psf_diff_lim, self.psf_image = self.fourier.find_rf_from_coefs(self.coefficients, self.size)
+        self.mtf_image = self.fourier.MTF_from_PSF(self.psf_image)
+        self.mtf_diff = self.fourier.MTF_from_PSF(self.psf_diff_lim)
+
+        self.airy_view = AiryView(self)
+        self.psf_view = PSFView(self)
+        self.mtf_view = MTFView(self)
+        self.focal_view = FocalView(self)
+
+        ###
+
         self.options1_widget = AberrationsStartView(self)
 
+    def close_all(self):
+        self.psf_view.close()
+        self.airy_view.close()
+        self.mtf_view.close()
+        self.focal_view.close()
+
+    def calculate_psf_from_coefs(self, coefficients, size):
+        _, psf_diff_lim, psf_image = self.fourier.find_rf_from_coefs(coefficients, size)
+        return psf_diff_lim, psf_image
+
+    def calculate_psf_from_image(self, phase_map):
+        _, psf_diff_lim, psf_image = self.fourier.find_rf_from_image(phase_map)
+        return psf_diff_lim.astype(np.uint8), psf_image.astype(np.uint8)
 
     def init_view(self):
         """
@@ -138,9 +172,17 @@ class TreatmentController:
         # Specific submodes
         match self.submode:
             case 'psf_process':
-                pass
+                self.close_all()
+                self.psf_view.show()
             case 'airy_process':
-                pass
+                self.close_all()
+                self.airy_view.show()
+            case 'mtf_process':
+                self.close_all()
+                self.mtf_view.show()
+            case 'focal_process':
+                self.close_all()
+                self.focal_view.show()
 
 
     def update_submenu(self, event):

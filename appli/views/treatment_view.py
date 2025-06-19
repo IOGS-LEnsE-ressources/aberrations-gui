@@ -81,7 +81,7 @@ if __name__ == "__main__":
             self.layout = QVBoxLayout()
             self.fourier = FourierManager()
             self.coefficients, self.size = self.fourier.test_params()
-            self.psf_diff_lim, self.psf_image = self.calculate_psf_from_coefs(self.coefficients, self.size)
+            self.rf, self.psf_diff_lim, self.psf_image = self.fourier.find_rf_from_coefs(self.coefficients, self.size)
             self.mtf_image = self.fourier.MTF_from_PSF(self.psf_image)
             self.mtf_diff = self.fourier.MTF_from_PSF(self.psf_diff_lim)
 
@@ -203,7 +203,7 @@ class AiryView(QWidget):
         else:
             self.fourier = self.parent.fourier
             coefficients, size = self.parent.coefficients, self.parent.size
-            rf, psf_diff, psf_image = self.fourier.find_rf_from_coefs(coefficients, size)
+            rf, psf_diff, psf_image = self.parent.rf, self.parent.psf_diff_lim, self.parent.psf_image
 
         self.rf_text = QLabel(f"Rf = {rf}")
 

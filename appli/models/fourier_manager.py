@@ -90,6 +90,8 @@ class FourierManager:
         return abbe_z
 
     def PSF(self, complx_pupil):
+        if complx_pupil.dtype != np.complex128:
+            complx_pupil = np.exp(1j * complx_pupil)
         PSF = ifftshift(fft2(fftshift(complx_pupil)))
         PSF = (np.abs(PSF)) ** 2  # or PSF*PSF.conjugate()
         PSF = PSF / PSF.sum()  # normalizing the PSF
