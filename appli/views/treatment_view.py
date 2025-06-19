@@ -71,7 +71,7 @@ def slice_image(image, slope : float, axis : bool = False):
     if __name__ == "__main__":
         print(f"slope = {slope}")
 
-    return plot_x, plot_y, angle
+    return plot_x, plot_y, round(angle, 3)
 
 
 if __name__ == "__main__":
