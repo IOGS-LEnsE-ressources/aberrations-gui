@@ -178,7 +178,7 @@ class FourierManager:
         coefficients[3] = 0.3
         coefficients[4] = -0.2
         coefficients[5] = 0.3
-        coefficients[6] = -0.2
+        coefficients[6] = -0.1
         coefficients[7] = 0.5
         coefficients[8] = -2
         size = (800, 800)
