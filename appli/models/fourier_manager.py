@@ -11,7 +11,13 @@ from PyQt6.QtWidgets import (
 from scipy.fftpack import fftshift, ifftshift, fft2, ifft2
 import matplotlib.pyplot as plt
 
-class FourierManager:
+from PyQt6.QtCore import pyqtSignal, QObject
+
+
+class FourierManager(QObject):
+
+    scanProgress = pyqtSignal(str)
+
     def __init__(self, parent = None):
         super().__init__()
         self.parent = parent
@@ -200,6 +206,8 @@ class FourierManager:
                       ]
 
             y[i] = cropped
+
+            self.scanProgress.emit(str(int((i + 1) * 100/Nstep)))
 
         return y
 

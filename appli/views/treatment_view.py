@@ -19,10 +19,10 @@ if __name__ == "__main__":
 from lensepy import load_dictionary, translate, dictionary
 from lensepy.css import *
 from PyQt6.QtWidgets import (
-    QWidget, QLabel, QCheckBox,
+    QWidget, QLabel, QCheckBox,QProgressBar,
     QGridLayout, QVBoxLayout, QHBoxLayout, QGridLayout, QApplication, QPushButton, QSlider
 )
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, pyqtSignal
 from views.bar_graph_view import BarGraphView
 from views.images_display_view import ImagesDisplayView
 from lensepy.pyqt6.widget_xy_chart import XYChartWidget
@@ -476,6 +476,53 @@ class CircledEnergyView(QWidget):
 
         return x_axis, image_data, diff_lim_data
 
+
+class TreatmentOption1Widget(QWidget):
+
+    checkBoxSignal = pyqtSignal(bool)
+
+    def __init__(self, parent = None):
+        super().__init__()
+        self.parent = parent
+
+        self.layout = QVBoxLayout()
+
+        self.label_progress_bar = QLabel(translate("treatment_progress_bar_label"))
+        self.label_progress_bar.setStyleSheet(styleH1)
+        self.label_progress_bar.setStyleSheet(styleH2)
+        self.progress_bar = QProgressBar(self)
+        self.progress_bar.setMinimum(0)
+        self.progress_bar.setMaximum(100)
+        self.progress_bar.setValue(0)
+        self.progress_bar.setObjectName("IOGSProgressBar")
+        self.progress_bar.setStyleSheet(StyleSheet)
+        self.progress_bar.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.enhance_coeffs_label = QLabel("treatment_enhance_aberrations_label")
+        self.enhance_coeffs_label.setStyleSheet(styleH1)
+        self.enhance_coeffs = QCheckBox()
+        self.enhance_coeffs.clicked.connect(self.update)
+
+        self.layout.addWidget(self.label_progress_bar)
+        self.layout.addWidget(self.progress_bar)
+        self.layout.addWidget(self.enhance_coeffs_label)
+        self.layout.addWidget(self.enhance_coeffs)
+
+        self.layout.addStretch()
+
+        self.setLayout(self.layout)
+
+    def set_progress_bar_title(self, title):
+        self.label_progress_bar.setText(translate(title))
+
+    def set_checkbox_title(self, title):
+        self.enhance_coeffs_label.setText(translate(title))
+
+    def update_treatment_progress_bar(self, progress):
+        self.progress_bar.setValue(progress)
+
+    def update(self):
+        self.checkBoxSignal.emit(self.enhance_coeffs.isChecked())
 
 
 class PSFDisplayWidget(QWidget):

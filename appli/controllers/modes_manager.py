@@ -132,10 +132,13 @@ class ModesManager:
         match self.main_mode:
             case 'acquisition':
                 self.mode_controller = AcquisitionController(self)
+                self.first_treatment = True
             case 'images':
                 self.mode_controller = ImagesController(self)
+                self.first_treatment = True
             case 'masks':
                 self.mode_controller = MasksController(self)
+                self.first_treatment = True
             case 'analyses':
                 self.mode_controller = AnalysesController(self)
             case 'aberrations':

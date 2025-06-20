@@ -84,7 +84,7 @@ class TreatmentController:
         self.submenu.menu_changed.connect(self.update_submenu)
 
         # Option 1
-        self.options1_widget = QWidget()         # ??
+        self.options1_widget = QWidget()
         # Option 2
         self.options2_widget = QWidget()        # ??
 
@@ -95,18 +95,24 @@ class TreatmentController:
         self.fourier = FourierManager()
         self.image = self.phase.get_unwrapped_phase()
         size = self.image.shape
+
         x_pad = 800 - size[0] * (800 >= size[0])
         y_pad = 800 - size[1] * (800 >= size[1])
         pad_width = ((x_pad//2, x_pad//2), (y_pad//2, y_pad//2))
+
         self.fourier.rpupil = 75
         self.image = np.pad(self.image, pad_width, mode='constant', constant_values=0)
         self.size = self.image.shape
+
         print(f"size = {self.size[0]}, {self.size[1]}")
-        self.coefficients = self.zernike_coeffs.get_coeffs()
-        self.coefficients[0] = 0
-        self.coefficients[1] = 0
-        self.coefficients[2] = 0
-        self.coefficients = 10*self.coefficients
+
+        self.reserve_coefficients = self.zernike_coeffs.get_coeffs()
+        self.reserve_coefficients[0] = 0
+        self.reserve_coefficients[1] = 0
+        self.reserve_coefficients[2] = 0
+
+        self.coefficients = self.reserve_coefficients.copy()
+
         self.fourier.center = [self.size[0] // 2, self.size[1] // 2]
 
         self.rf, self.psf_diff_lim, self.psf_image = self.fourier.find_rf_from_coefs(self.coefficients, self.size)
@@ -121,7 +127,36 @@ class TreatmentController:
 
         ###
 
-        self.options1_widget = AberrationsStartView(self)
+        self.options1_widget = TreatmentOption1Widget(self)
+        self.options1_widget.update_treatment_progress_bar(0)
+        self.main_widget.set_options1_widget(self.options1_widget)
+        self.options1_widget.checkBoxSignal.connect(self.enhance_coeffs_action)
+
+        self.fourier.scanProgress.connect(self.scan_progress_action)
+
+    def enhance_coeffs_action(self, event):
+        print(event)
+        if event:
+            self.coefficients = 10 * self.reserve_coefficients.copy()
+        else:
+            self.coefficients = self.reserve_coefficients.copy()
+
+        self.rf, self.psf_diff_lim, self.psf_image = self.fourier.find_rf_from_coefs(self.coefficients, self.size)
+        self.mtf_image = self.fourier.MTF_from_PSF(self.psf_image)
+        self.mtf_diff = self.fourier.MTF_from_PSF(self.psf_diff_lim)
+        self.Initialize()
+        QApplication.processEvents()
+
+    def Initialize(self):
+        self.close_all()
+        self.airy_view = AiryView(self)
+        self.psf_view = QWidget()
+        self.mtf_view = QWidget()
+        self.focal_view = QWidget()
+        self.options1_widget.update_treatment_progress_bar(0)
+
+    def scan_progress_action(self, event):
+        self.options1_widget.update_treatment_progress_bar(int(event))
 
     def close_all(self):
         self.psf_view.close()
@@ -185,25 +220,37 @@ class TreatmentController:
                 self.close_all()
                 if not isinstance(self.psf_view, PSFView):
                     self.submenu.disable_buttons()
+                    self.options1_widget.enhance_coeffs.setEnabled(False)
+                    QApplication.processEvents()
                     self.psf_view = PSFView(self)
+                    self.options1_widget.enhance_coeffs.setEnabled(True)
                 self.psf_view.show()
             case 'airy_process':
                 self.close_all()
                 if not isinstance(self.airy_view, AiryView):
                     self.submenu.disable_buttons()
+                    self.options1_widget.enhance_coeffs.setEnabled(False)
+                    QApplication.processEvents()
                     self.airy_view = AiryView(self)
+                    self.options1_widget.enhance_coeffs.setEnabled(True)
                 self.airy_view.show()
             case 'mtf_process':
                 self.close_all()
                 if not isinstance(self.mtf_view, MTFView):
                     self.submenu.disable_buttons()
+                    self.options1_widget.enhance_coeffs.setEnabled(False)
+                    QApplication.processEvents()
                     self.mtf_view = MTFView(self)
+                    self.options1_widget.enhance_coeffs.setEnabled(True)
                 self.mtf_view.show()
             case 'focal_process':
                 self.close_all()
                 if not isinstance(self.focal_view, FocalView):
                     self.submenu.disable_buttons()
+                    self.options1_widget.enhance_coeffs.setEnabled(False)
+                    QApplication.processEvents()
                     self.focal_view = FocalView(self)
+                    self.options1_widget.enhance_coeffs.setEnabled(True)
                 self.focal_view.show()
 
 
