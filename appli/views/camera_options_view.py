@@ -42,9 +42,17 @@ class CameraOptionsView(QWidget):
         self.camera = self.controller.data_set.acquisition_mode.camera
         self.zoom_activated = False
         self.zoom_window = ImagesDisplayView()
+        self.default_parameters = self.controller.main_app.default_parameters
         # Default parameters to update on loading
-        self.default_exposure = 1000
-        self.default_max_expo = 20000
+        if 'Exposure Time' in self.default_parameters:
+            self.default_exposure = int(self.default_parameters['Exposure Time'])
+        else:
+            self.default_exposure = 1000
+        self.camera.set_exposure(self.default_exposure)
+        if 'Max Expo Time' in self.default_parameters:
+            self.default_max_expo = int(self.default_parameters['Max Expo Time'])
+        else:
+            self.default_max_expo = 5000
         self.default_fps = 8
         self.default_black = 9
 
@@ -75,14 +83,16 @@ class CameraOptionsView(QWidget):
         # Settings
         max_expo = self.default_max_expo
         default_expo = self.default_exposure
-        self.slider_exposure_time = SliderBloc(name='name_slider_exposure_time', unit='us',
+        self.slider_exposure_time = SliderBloc(name=translate('name_slider_exposure_time'),
+                                               unit='us',
                                                min_value=0, max_value=max_expo, integer=True)
         self.slider_exposure_time.set_value(default_expo)
         self.slider_exposure_time.slider_changed.connect(self.slider_exposure_time_changing)
 
         default_black = self.default_black
-        self.slider_black_level = SliderBloc(name='name_slider_black_level', unit='gray',
-                                              min_value=0, max_value=100, integer=True)
+        self.slider_black_level = SliderBloc(name=translate('name_slider_black_level'),
+                                             unit='gray',
+                                             min_value=0, max_value=100, integer=True)
         self.slider_black_level.set_value(default_black)
         self.slider_black_level.slider_changed.connect(self.slider_black_level_changing)
 

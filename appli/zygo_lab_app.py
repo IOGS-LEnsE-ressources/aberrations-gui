@@ -13,6 +13,7 @@ https://iogs-lense-ressources.github.io/camera-gui/
 
 .. moduleauthor:: Dorian MENDES (Promo 2026) <dorian.mendes@institutoptique.fr>
 .. moduleauthor:: Abdallah MRABTI (Promo 2026)
+.. moduleauthor:: Noam CHOPPINET (Promo 2027)
 .. moduleauthor:: Julien VILLEMEJANE (PRAG LEnsE) <julien.villemejane@institutoptique.fr>
 
 .. version:: 3.0
@@ -28,7 +29,7 @@ from controllers.modes_manager import ModesManager
 from models.dataset import DataSetModel
 from models.phase import PhaseModel
 
-version_app = 'r1.0'
+version_app = 'r1.1'
 
 
 class ZygoApp:

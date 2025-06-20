@@ -29,6 +29,13 @@ label_progress_acq_bar; Progression de l'acquisition
 label_simple_acq_title; Acquisition de données
 start_acq_button; Lancer l'acquisition
 camera_zoom_button; Zoom
+title_camera_settings; Paramètres de la caméra
+label_title_camera_id; ID Caméra
+name_slider_exposure_time; Temps Exposition
+name_slider_black_level; Black Level
+frame_rate_label; Raffraichissement (FPS)
+label_piezo_move_title; Déplacement Piézo
+piezo_voltage_slider; Tension appliquée
 # --------------
 # Images
 # --------------

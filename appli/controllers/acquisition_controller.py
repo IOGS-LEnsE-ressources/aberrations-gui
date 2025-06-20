@@ -29,7 +29,7 @@ from views.camera_options_view import CameraOptionsView
 from views.piezo_options_view import PiezoOptionsView
 from views.simple_acquisition_view import SimpleAcquisitionView
 from models.dataset import DataSetModel
-from utils.dataset_utils import generate_images_grid
+from utils.dataset_utils import DataSetState, generate_images_grid
 
 from typing import TYPE_CHECKING
 
@@ -246,6 +246,9 @@ class AcquisitionController:
         Update step in acquisition process.
         """
         if event == 'acq_end':
+            print('REsET DATA')
+            self.main_app.data_set.reset_data()
+            self.data_set.data_set_state = DataSetState.NODATA
             self.data_set.acquisition_mode.thread.join()
             # Display grid of images in top right area.
             time.sleep(0.1)
