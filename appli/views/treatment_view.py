@@ -28,6 +28,8 @@ from views.images_display_view import ImagesDisplayView
 from lensepy.pyqt6.widget_xy_chart import XYChartWidget
 from lensepy.images.conversion import resize_image_ratio, resize_image
 from models.fourier_manager import FourierManager
+from views.sub_menu import SubMenu
+
 
 def slice_image(image, slope : float, axis : bool = False):
     '''This global function is used in the following objects, it creates a plot from an image by slicing through it
@@ -89,23 +91,28 @@ if __name__ == "__main__":
             self.airy_button = QPushButton("Airy")
             self.mtf_button = QPushButton("MTF")
             self.foca_button = QPushButton("Focal view")
+            self.cir_button = QPushButton("Circled energy")
 
             self.layout.addWidget(self.psf_button)
             self.layout.addWidget(self.airy_button)
             self.layout.addWidget(self.mtf_button)
             self.layout.addWidget(self.foca_button)
+            self.layout.addWidget(self.cir_button)
 
             self.setLayout(self.layout)
+            self.submenu = QWidget()
 
             self.airy_view = AiryView(self)
             self.psf_view = PSFView(self)
             self.mtf_view = MTFView(self)
             self.focal_view = FocalView(self)
+            self.cir_view = CircledEnergyView(self)
 
             self.psf_button.clicked.connect(self.update_action)
             self.airy_button.clicked.connect(self.update_action)
             self.mtf_button.clicked.connect(self.update_action)
             self.foca_button.clicked.connect(self.update_action)
+            self.cir_button.clicked.connect(self.update_action)
 
         def update_action(self):
             sender = self.sender()
@@ -122,11 +129,16 @@ if __name__ == "__main__":
                 case self.foca_button:
                     self.close_all()
                     self.focal_view.show()
+                case self.cir_button:
+                    self.close_all()
+                    self.cir_view.show()
+
         def close_all(self):
             self.psf_view.close()
             self.airy_view.close()
             self.mtf_view.close()
             self.focal_view.close()
+            self.cir_view.close()
 
         def closeEvent(self, event):
             self.close_all()
@@ -166,14 +178,13 @@ class PSFView(QWidget):
         lims = max(bounds[0]//2, bounds[1]//2)
 
         if not self.linked:
-            self.fourier = FourierManager()
-            coefficients, size = self.fourier.test_params()
-            psf_diff_lim, psf_image = self.parent.calculate_psf_from_coefs(coefficients, size)
+            fourier = FourierManager()
+            coefficients, size = fourier.test_params()
+            _, psf_diff_lim, psf_image = fourier.find_rf_from_coefs(coefficients, size)
         else:
-            self.fourier = self.parent.fourier
             size = self.parent.size
-            psf_image = self.parent.psf_image
-            psf_diff_lim = self.parent.psf_diff_lim
+            psf_image = self.parent.psf_image.copy()
+            psf_diff_lim = self.parent.psf_diff_lim.copy()
 
         h, w = size
         psf_image = psf_image[h//2 - lims:h//2 + lims, w//2 - lims:w//2 + lims]
@@ -183,6 +194,9 @@ class PSFView(QWidget):
         psf_diff_lim = resize_image_ratio(psf_diff_lim, 900, 900)
         self.left_widget.set_image(psf_image)
         self.right_widget.set_image(psf_diff_lim)
+
+        if isinstance(self.parent.submenu, SubMenu):
+            self.parent.submenu.enable_buttons()
 
     """def display_phase(self, coefficients, size):
         return self.fourier.afficher_pupille(coefficients, size)"""
@@ -197,13 +211,11 @@ class AiryView(QWidget):
             self.linked = True
 
         if not self.linked:
-            self.fourier = FourierManager()
-            coefficients, size = self.fourier.test_params()
-            rf, psf_diff, psf_image = self.fourier.find_rf_from_coefs(coefficients, size)
+            fourier = FourierManager()
+            coefficients, size = fourier.test_params()
+            rf, psf_diff, psf_image = fourier.find_rf_from_coefs(coefficients, size)
         else:
-            self.fourier = self.parent.fourier
-            coefficients, size = self.parent.coefficients, self.parent.size
-            rf, psf_diff, psf_image = self.parent.rf, self.parent.psf_diff_lim, self.parent.psf_image
+            rf, psf_diff, psf_image = self.parent.rf, self.parent.psf_diff_lim.copy(), self.parent.psf_image.copy()
 
         self.rf_text = QLabel(f"Rf = {rf}")
 
@@ -251,10 +263,8 @@ class AiryView(QWidget):
 
         self.setLayout(self.main_layout)
 
-        if self.linked:
-            self.fourier = self.parent.fourier
-        else:
-            self.fourier = FourierManager()
+        if isinstance(self.parent.submenu, SubMenu):
+            self.parent.submenu.enable_buttons()
 
     def get_bounds(self):
         X, _, _ = self.top_left_widget.shorten_bounds(self.slice90_abe[0], self.slice90_abe[1])
@@ -272,15 +282,14 @@ class MTFView(QWidget):
             self.linked = True
 
         if not self.linked:
-            self.fourier = FourierManager()
-            coefficients, size = self.fourier.test_params()
-            psf_diff_lim, psf_image = self.parent.calculate_psf_from_coefs(coefficients, size)
-            mtf_image = self.fourier.MTF_from_PSF(psf_image)
-            mtf_diff = self.fourier.MTF_from_PSF(psf_diff_lim)
+            fourier = FourierManager()
+            coefficients, size = fourier.test_params()
+            _,psf_diff_lim, psf_image = fourier.find_rf_from_coefs(coefficients, size)
+            mtf_image = fourier.MTF_from_PSF(psf_image)
+            mtf_diff = fourier.MTF_from_PSF(psf_diff_lim)
         else:
-            self.fourier = self.parent.fourier
-            mtf_image = self.parent.mtf_image
-            mtf_diff = self.parent.mtf_diff
+            mtf_image = self.parent.mtf_image.copy()
+            mtf_diff = self.parent.mtf_diff.copy()
 
         size = mtf_image.shape
         self.slice0_abe = slice_image(mtf_image, 0, False)
@@ -321,10 +330,8 @@ class MTFView(QWidget):
 
         self.setLayout(self.layout)
 
-        if self.linked:
-            self.fourier = self.parent.fourier
-        else:
-            self.fourier = FourierManager()
+        if isinstance(self.parent.submenu, SubMenu):
+            self.parent.submenu.enable_buttons()
 
 
 class FocalView(QWidget):
@@ -354,15 +361,15 @@ class FocalView(QWidget):
             self.scan = self.fourier.focal_scan(coefficients, size, self.Nstep, self.minimum_c3, self.maximum_c3)
         else:
             self.fourier = self.parent.fourier
-            coefficients, size = self.parent.coefficients[:], self.parent.size
+            coefficients, size = self.parent.coefficients.copy(), self.parent.size
             self.scan = self.fourier.focal_scan(coefficients, size, self.Nstep, self.minimum_c3, self.maximum_c3)
 
         self.slider = QSlider()
-        self.maximum_slider = self.maximum_slider + int(coefficients[3] * self.maximum_slider/self.maximum_c3)
-        self.minimum_slider = self.minimum_slider + int(coefficients[3] * self.maximum_slider/self.maximum_c3)
+        #self.maximum_slider = self.maximum_slider + int(coefficients[3] * self.maximum_slider/self.maximum_c3)
+        #self.minimum_slider = self.minimum_slider + int(coefficients[3] * self.maximum_slider/self.maximum_c3)
         self.slider.setMaximum(self.maximum_slider)
         self.slider.setMinimum(self.minimum_slider)
-        self.slider.setSliderPosition(int(coefficients[3] * self.maximum_slider/self.maximum_c3))
+        self.slider.setSliderPosition(0)#int(coefficients[3] * self.maximum_slider/self.maximum_c3))
 
         self.hslice = self.scan[int(self.Nstep//2), :, :]
         self.vslice = self.scan[:, self.fourier.rpupil, :]
@@ -394,6 +401,9 @@ class FocalView(QWidget):
 
         self.setLayout(self.layout)
 
+        if isinstance(self.parent.submenu, SubMenu):
+            self.parent.submenu.enable_buttons()
+
     def slider_update(self):
         value = self.slider.value()
         ratio = (self.maximum_slider - value)/(self.maximum_slider - self.minimum_slider)
@@ -410,6 +420,62 @@ class FocalView(QWidget):
 
         vslice_copy = self.vslice_display.color_line(self.vslice, ratio, 2, self.color)
         self.vslice_display.set_image(vslice_copy)
+
+
+class CircledEnergyView(QWidget):
+    def __init__(self, parent = None):
+        super().__init__()
+        self.parent = parent
+        if self.parent is None:
+            self.linked = False
+        else:
+            self.linked = True
+
+        if self.linked:
+            self.psf_image = self.parent.psf_image.copy()
+            self.psf_diff_lim = self.parent.psf_diff_lim.copy()
+        else:
+            fourier = FourierManager()
+            coefficients, size = fourier.test_params()
+            _, self.psf_diff_lim, self.psf_image = fourier.find_rf_from_coefs(coefficients, size)
+
+        self.layout = QHBoxLayout()
+
+        self.display = ChartDisplayWidget(self)
+        self.x_axis, self.image_data, self.diff_lim_data = self.calculate_energy()
+        self.display.set_array(self.x_axis, self.image_data, self.diff_lim_data)
+        self.display.set_title("Energie encerclée")
+
+        self.layout.addWidget(self.display)
+
+        self.setLayout(self.layout)
+
+        if isinstance(self.parent.submenu, SubMenu):
+            self.parent.submenu.enable_buttons()
+
+    def calculate_energy(self):
+        h,w = self.psf_image.shape
+        radius = min(h, w)//2
+
+        diff_lim_data = np.zeros(radius)
+        image_data = np.zeros(radius)
+        x_axis = np.linspace(0, radius, radius)
+
+        x = np.arange(h) - h // 2
+        y = np.arange(w) - w // 2
+        X, Y = np.meshgrid(x, y)
+        R = np.sqrt(X ** 2 + Y ** 2)
+
+        psf_image_copy = self.psf_image.copy()
+        psf_diff_lim_copy = self.psf_diff_lim.copy()
+
+        for r in range(radius):
+            mask = R <= r
+            image_data[r] = psf_image_copy[mask].sum()
+            diff_lim_data[r] = psf_diff_lim_copy[mask].sum()
+
+        return x_axis, image_data, diff_lim_data
+
 
 
 class PSFDisplayWidget(QWidget):

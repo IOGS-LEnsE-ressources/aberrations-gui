@@ -60,6 +60,10 @@ class ModesManager:
         # Hardware
         self.piezo_connected = False
         self.camera_connected = False
+
+        self.first_treatment = True
+        self.treatment_controller = None
+
         # Main Help
         url = './docs/html/main.html'
         css = './docs/html/styles.css'
@@ -139,4 +143,7 @@ class ModesManager:
             case 'help':
                 self.mode_controller = HelpController(self)
             case 'postprocess':
-                self.mode_controller = TreatmentController(self)
+                if self.first_treatment:
+                    self.treatment_controller = TreatmentController(self)
+                    self.first_treatment = False
+                self.mode_controller = self.treatment_controller

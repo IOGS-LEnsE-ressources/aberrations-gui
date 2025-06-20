@@ -140,7 +140,7 @@ class FourierManager:
         mtf = abs(otf)
         return np.fft.fftshift(mtf)
 
-    def lentille(self, complex_pupil, pix_size:float, dist_foc: float, d: float = 0):
+    """def lentille(self, complex_pupil, pix_size:float, dist_foc: float, d: float = 0):
         '''This function returns the diffraction pattern resulting from an optical system at whatever distance (d)
         from its focal point (in algebraic value) you chose'''
         r = 1
@@ -163,7 +163,7 @@ class FourierManager:
 
         diff_pattern = no_aberration * complex_pupil
 
-        return self.PSF(diff_pattern)
+        return self.PSF(diff_pattern)"""
 
     def normalize(self, image):
         max_image = image.max()

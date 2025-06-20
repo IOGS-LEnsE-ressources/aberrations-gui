@@ -30,6 +30,7 @@ from lensepy.css import *
 from PyQt6.QtWidgets import (
     QWidget
 )
+from PyQt6.QtCore import QTimer
 from models.zernike_coefficients import Zernike, aberrations_type, aberrations_list
 from models.fourier_manager import FourierManager
 from utils.dataset_utils import generate_images_grid, DataSetState
@@ -105,7 +106,7 @@ class TreatmentController:
         self.coefficients[0] = 0
         self.coefficients[1] = 0
         self.coefficients[2] = 0
-
+        self.coefficients = 10*self.coefficients
         self.fourier.center = [self.size[0] // 2, self.size[1] // 2]
 
         self.rf, self.psf_diff_lim, self.psf_image = self.fourier.find_rf_from_coefs(self.coefficients, self.size)
@@ -114,9 +115,9 @@ class TreatmentController:
         self.mtf_diff = self.fourier.MTF_from_PSF(self.psf_diff_lim)
 
         self.airy_view = AiryView(self)
-        self.psf_view = PSFView(self)
-        self.mtf_view = MTFView(self)
-        self.focal_view = FocalView(self)
+        self.psf_view = QWidget()
+        self.mtf_view = QWidget()
+        self.focal_view = QWidget()
 
         ###
 
@@ -164,10 +165,10 @@ class TreatmentController:
         self.submenu.inactive_buttons()
 
         # Update views
-        self.main_widget.clear_bot_right()
-        self.main_widget.clear_options()
+        #self.main_widget.clear_bot_right()
+        #self.main_widget.clear_options()
         # For all submodes
-        self.display_bar_graph_coeff()
+        #self.display_bar_graph_coeff()
 
         self.bot_right_widget = HTMLView()
         url = 'docs/html/FR/process.html'
@@ -182,15 +183,27 @@ class TreatmentController:
         match self.submode:
             case 'psf_process':
                 self.close_all()
+                if not isinstance(self.psf_view, PSFView):
+                    self.submenu.disable_buttons()
+                    self.psf_view = PSFView(self)
                 self.psf_view.show()
             case 'airy_process':
                 self.close_all()
+                if not isinstance(self.airy_view, AiryView):
+                    self.submenu.disable_buttons()
+                    self.airy_view = AiryView(self)
                 self.airy_view.show()
             case 'mtf_process':
                 self.close_all()
+                if not isinstance(self.mtf_view, MTFView):
+                    self.submenu.disable_buttons()
+                    self.mtf_view = MTFView(self)
                 self.mtf_view.show()
             case 'focal_process':
                 self.close_all()
+                if not isinstance(self.focal_view, FocalView):
+                    self.submenu.disable_buttons()
+                    self.focal_view = FocalView(self)
                 self.focal_view.show()
 
 
@@ -199,6 +212,7 @@ class TreatmentController:
         Update data and views when the submenu is clicked.
         :param event: Sub menu click.
         """
+
         # Update view
         self.update_submenu_view(event)
         # Update Action

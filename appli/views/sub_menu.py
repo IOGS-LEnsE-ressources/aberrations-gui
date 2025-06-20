@@ -23,7 +23,7 @@ from lensepy.css import *
 from lensepy.pyqt6 import *
 from PyQt6.QtWidgets import (
     QWidget, QLabel, QPushButton,
-    QVBoxLayout
+    QVBoxLayout, QApplication
 )
 from PyQt6.QtCore import Qt, pyqtSignal
 
@@ -141,6 +141,26 @@ class SubMenu(QWidget):
             if element is not None:
                 if self.buttons_enabled[i]:
                     element.setStyleSheet(unactived_button)
+
+    def disable_buttons(self):
+        '''Disables all buttons on the panel'''
+        for i, element in enumerate(self.buttons_list):
+            self.buttons_enabled[i] = False
+            if element is not None:
+                self.buttons_list[i].setEnabled(False)
+                self.buttons_list[i].setStyleSheet(disabled_button)
+        QApplication.processEvents()
+        print(f"disabled {self.buttons_enabled}")
+
+    def enable_buttons(self):
+        '''Enables all buttons on the panel'''
+        for i, element in enumerate(self.buttons_list):
+            self.buttons_enabled[i] = True
+            if element is not None:
+                self.buttons_list[i].setEnabled(True)
+                self.buttons_list[i].setStyleSheet(unactived_button)
+        QApplication.processEvents()
+        print(f"enabled {self.buttons_enabled}")
 
     def set_button_enabled(self, button_index: int, value: bool):
         """
