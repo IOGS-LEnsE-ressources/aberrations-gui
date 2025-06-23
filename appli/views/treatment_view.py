@@ -825,7 +825,7 @@ class ChartDisplayWidget(QWidget):
 
         self.image_display = XYChartWidget()
         self.image_display.setMinimumSize(400, 400)
-        #self.image_display.set_x_label("position", unit='mm')
+        self.image_display.set_information('diffraction limit without aberrations (orange), with aberrations(blue)')
 
         self.layout = QVBoxLayout()
         self.layout.addWidget(self.image_display)
@@ -835,9 +835,9 @@ class ChartDisplayWidget(QWidget):
         self.image_display.set_background("white")
         X, Y, Z = self.shorten_bounds(X, Y, Z)
         if Z is None:
-            self.image_display.set_data(X * self.pixel_size * 1e-3, Y)
+            self.image_display.set_data(X * self.pixel_size * 1e-3, Y, x_label='position(mm)')
         else:
-            self.image_display.set_data(X * self.pixel_size * 1e-3, [Y, Z])
+            self.image_display.set_data(X * self.pixel_size * 1e-3, [Y, Z], x_label='position(mm)')
         self.image_display.refresh_chart()
 
     def set_title(self, title: str):
@@ -873,6 +873,6 @@ class ChartDisplayWidget(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    window = CoefficientsView()#TreatmentWindow()
+    window = TreatmentWindow() #CoefficientsView()
     window.show()
     sys.exit(app.exec())
