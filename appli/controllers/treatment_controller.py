@@ -41,6 +41,7 @@ if TYPE_CHECKING:
     from controllers.modes_manager import ModesManager
     from models.dataset import DataSetModel
     from models.phase import PhaseModel
+from lensepy.images.conversion import resize_image_ratio, resize_image
 
 class TreatmentController:
     """
@@ -96,12 +97,13 @@ class TreatmentController:
         self.image = self.phase.get_unwrapped_phase()
         size = self.image.shape
 
-        x_pad = 800 - size[0] * (800 >= size[0])
+        """x_pad = 800 - size[0] * (800 >= size[0])
         y_pad = 800 - size[1] * (800 >= size[1])
-        pad_width = ((x_pad//2, x_pad//2), (y_pad//2, y_pad//2))
+        pad_width = ((x_pad//2 + 1, x_pad//2), (y_pad//2 + 1, y_pad//2))"""
 
         self.fourier.rpupil = 75
-        self.image = np.pad(self.image, pad_width, mode='constant', constant_values=0)
+        self.image = resize_image(self.image, 800, 800)
+        #self.image = np.pad(self.image, pad_width, mode='constant', constant_values=0)
         self.size = self.image.shape
 
         print(f"size = {self.size[0]}, {self.size[1]}")
@@ -157,6 +159,7 @@ class TreatmentController:
         self.psf_view = QWidget()
         self.mtf_view = QWidget()
         self.focal_view = QWidget()
+        self.options1_widget.opened = 0
         self.options1_widget.update_treatment_progress_bar(0)
 
     def scan_progress_action(self, event):

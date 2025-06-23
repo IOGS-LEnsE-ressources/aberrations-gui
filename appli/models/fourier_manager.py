@@ -57,19 +57,29 @@ class FourierManager(QObject):
 
     def zernike_polar(self, coefficients, r, u):
         Z = coefficients
-        Z0 = Z[0] * 1 * (np.cos(u) ** 2 + np.sin(u) ** 2)
-        Z1 = Z[1] * 2 * r * np.cos(u)
-        Z2 = Z[2] * 2 * r * np.sin(u)
-        Z3 = Z[3] * np.sqrt(3) * (2 * r ** 2 - 1)
-        Z4 = Z[4] * np.sqrt(6) * r ** 2 * np.sin(2 * u)
-        Z5 = Z[5] * np.sqrt(6) * r ** 2 * np.cos(2 * u)
-        Z6 = Z[6] * np.sqrt(8) * (3 * r ** 2 - 2) * r * np.sin(u)
-        Z7 = Z[7] * np.sqrt(8) * (3 * r ** 2 - 2) * r * np.cos(u)
-        Z8 = Z[8] * np.sqrt(8) * (6 * r ** 4 - 6 * r ** 2 +1)
-        Z9 = Z[9] * np.sqrt(8) * r ** 3 * np.sin(3 * u)
-        Z10 = Z[10] * np.sqrt(8) * r ** 3 * np.cos(3 * u)
+        Z0 = Z[0] * 1 * (np.cos(u) ** 2 + np.sin(u) ** 2) #n = 0, m = 0   #Ordre 0
 
-        ZW = Z0 + Z1 + Z2 + Z3 + Z4 + Z5 + Z6 + Z7 + Z8 + Z9 + Z10
+        Z1 = Z[1] * 2 * r * np.cos(u) #n = 1, m = 1   #Ordre 1
+        Z2 = Z[2] * 2 * r * np.sin(u) #n = 1, m = -1
+
+        Z3 = Z[3] * np.sqrt(3) * (2 * r ** 2 - 1) #n = 2, m = 0   #Ordre 2
+        Z4 = Z[4] * np.sqrt(6) * r ** 2 * np.sin(2 * u) #n = 2, m = -2
+        Z5 = Z[5] * np.sqrt(6) * r ** 2 * np.cos(2 * u) #n = 2, m = 2
+
+        Z6 = Z[6] * np.sqrt(8) * (3 * r ** 2 - 2) * r * np.sin(u) #n = 3, m = -1   #Ordre 3
+        Z7 = Z[7] * np.sqrt(8) * (3 * r ** 2 - 2) * r * np.cos(u) #n = 3, m = 1
+        Z8 = Z[8] * np.sqrt(8) * r ** 3 * np.sin(3 * u) #n = 3, m = -3
+        Z9 = Z[9] * np.sqrt(8) * r ** 3 * np.cos(3 * u) #n = 3, m = 3
+
+        Z10 = Z[10] * np.sqrt(5) * (1 - 6 * r ** 2 + 6 * r ** 4) #n = 4, m = 0   #Ordre 4
+        Z11 = Z[11] * np.sqrt(10) * (4 * r ** 2 - 3) * r ** 2 * np.cos(2 * u) #n = 4, m = 2
+        Z12 = Z[12] * np.sqrt(10) * (4 * r ** 2 - 3) * r ** 2 * np.sin(2 * u) #n = 4, m = -2
+        Z13 = Z[13] * np.sqrt(10) * r ** 4 * np.cos(4 * u) #n = 4, m = 4
+        Z14 = Z[14] * np.sqrt(10) * r ** 4 * np.sin(4 * u) #n = 4, m = -4
+
+        Z15 = Z[15] * np.sqrt(7)*(20*r**6-30*r**4+12*r**2-1) #n = 6, m = 0   #Ordre 6
+
+        ZW = Z0 + Z1 + Z2 + Z3 + Z4 + Z5 + Z6 + Z7 + Z8 + Z9 + Z10 + Z11 + Z12 + Z13 + Z14 + Z15
         return ZW
 
     def phase(self, coefficients, size : tuple):
@@ -179,7 +189,7 @@ class FourierManager(QObject):
     def test_params(self):
         '''This function serves as a backup for testing when no acquisition is done beforehand,
         it returns the coefficients and the image size which are necessary for further use'''
-        coefficients = np.zeros(11)
+        coefficients = np.zeros(16)
         coefficients[1] = 0.1
         coefficients[2] = 0.1
         coefficients[3] = 0.3
