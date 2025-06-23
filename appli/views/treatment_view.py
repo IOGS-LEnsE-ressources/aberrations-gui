@@ -19,7 +19,7 @@ if __name__ == "__main__":
 from lensepy import load_dictionary, translate, dictionary
 from lensepy.css import *
 from PyQt6.QtWidgets import (
-    QWidget, QLabel, QCheckBox,QProgressBar,
+    QWidget, QLabel, QCheckBox,QProgressBar, QSpacerItem,
     QGridLayout, QVBoxLayout, QHBoxLayout, QGridLayout, QApplication, QPushButton, QSlider
 )
 from PyQt6.QtCore import Qt, pyqtSignal
@@ -480,6 +480,7 @@ class CircledEnergyView(QWidget):
 class TreatmentOption1Widget(QWidget):
 
     checkBoxSignal = pyqtSignal(bool)
+    buttonsSignal = pyqtSignal(str)
 
     def __init__(self, parent = None):
         super().__init__()
@@ -487,9 +488,12 @@ class TreatmentOption1Widget(QWidget):
 
         self.layout = QVBoxLayout()
 
+        self.circled_energy = CircledEnergyView(self.parent)
+        self.modify_coefficients = CoefficientsView(self.parent)
+
         self.label_progress_bar = QLabel(translate("treatment_progress_bar_label"))
         self.label_progress_bar.setStyleSheet(styleH1)
-        self.label_progress_bar.setStyleSheet(styleH2)
+        #self.label_progress_bar.setStyleSheet(styleH2)
         self.progress_bar = QProgressBar(self)
         self.progress_bar.setMinimum(0)
         self.progress_bar.setMaximum(100)
@@ -503,10 +507,29 @@ class TreatmentOption1Widget(QWidget):
         self.enhance_coeffs = QCheckBox()
         self.enhance_coeffs.clicked.connect(self.update)
 
+        spacer = QSpacerItem(50, 50)
+
+        self.circled_energy_button = QPushButton(translate("circled_energy"))
+        self.circled_energy_button.setStyleSheet(unactived_button)
+        self.circled_energy_button.clicked.connect(self.update)
+        self.circled_energy_button.setFixedHeight(BUTTON_HEIGHT)
+
+        self.modify_coefficients_button = QPushButton(translate("modify_coefficients"))
+        self.modify_coefficients_button.setStyleSheet(unactived_button)
+        self.modify_coefficients_button.clicked.connect(self.update)
+        self.modify_coefficients_button.setFixedHeight(BUTTON_HEIGHT)
+
+        self.further_actions = QLabel(translate("further_actions"))
+        self.further_actions.setStyleSheet(styleH2)
+
         self.layout.addWidget(self.label_progress_bar)
         self.layout.addWidget(self.progress_bar)
         self.layout.addWidget(self.enhance_coeffs_label)
         self.layout.addWidget(self.enhance_coeffs)
+        self.layout.addItem(spacer)
+        self.layout.addWidget(self.further_actions)
+        self.layout.addWidget(self.circled_energy_button)
+        self.layout.addWidget(self.modify_coefficients_button)
 
         self.layout.addStretch()
 
@@ -521,9 +544,111 @@ class TreatmentOption1Widget(QWidget):
     def update_treatment_progress_bar(self, progress):
         self.progress_bar.setValue(progress)
 
-    def update(self):
-        self.checkBoxSignal.emit(self.enhance_coeffs.isChecked())
+    def close(self):
+        self.modify_coefficients.close()
+        self.circled_energy.close()
 
+    def update(self):
+        sender = self.sender()
+        match sender:
+            case self.enhance_coeffs:
+                self.checkBoxSignal.emit(self.enhance_coeffs.isChecked())
+            case self.circled_energy_button:
+                self.buttonsSignal.emit("circled_energy")
+                self.close()
+                self.circled_energy.show()
+            case self.modify_coefficients_button:
+                self.buttonsSignal.emit("coefficients")
+                self.close()
+                self.modify_coefficients.show()
+
+
+class CoefficientsView(QWidget):
+    def __init__(self, parent = None):
+        super().__init__()
+        self.parent = parent
+        if self.parent is None:
+            self.linked = False
+        else:
+            self.linked = True
+
+        if self.linked:
+            self.fourier = self.parent.fourier
+            self.coefficients, self.size = self.parent.coefficients.copy(), self.parent.size
+            _, _, self.psf_image = self.fourier.find_rf_from_coefs(self.coefficients, self.size)
+        else:
+            self.fourier = FourierManager()
+            self.coefficients, self.size = self.fourier.test_params()
+            _, _, self.psf_image = self.fourier.find_rf_from_coefs(self.coefficients, self.size)
+
+        self.maximum_slider = 200
+        self.minimum_slider = -200
+        self.maximum_coeffs = 7
+        self.minimum_coeffs = self.minimum_slider * self.maximum_coeffs / self.maximum_slider
+
+        COEFFICIENT_DEPTH = 7
+
+        self.layout = QHBoxLayout()
+        self.sliders_layout = QVBoxLayout()
+        self.sliders = [QSlider(Qt.Orientation.Horizontal) for i in range(COEFFICIENT_DEPTH)]
+        for i,slider in enumerate(self.sliders):
+            slider.setMinimum(self.minimum_slider)
+            slider.setMaximum(self.maximum_slider)
+
+            slider.setFixedWidth(175)
+
+            coeff_index = i + 4
+            coef_value = self.coefficients[coeff_index]
+            ratio = (coef_value - self.minimum_coeffs) / (self.maximum_coeffs - self.minimum_coeffs)
+            slider_value = int(ratio * (self.maximum_slider - self.minimum_slider) + self.minimum_slider)
+
+            slider.blockSignals(True)
+            slider.setValue(slider_value)
+            slider.blockSignals(False)
+            slider.valueChanged.connect(self.slider_action)
+            self.sliders_layout.addWidget(slider)
+
+        self.slider_text_layout = QVBoxLayout()
+        self.slider_text = [QLabel(f"C{i+4} = {round(self.coefficients[i+4], 3)}") for i in range(COEFFICIENT_DEPTH)]
+        for title in self.slider_text:
+            title.setFixedSize(75, 25)
+            self.slider_text_layout.addWidget(title)
+
+        self.psf_image_display = PSFDisplayWidget()
+        self.pupil_display = PSFDisplayWidget()
+
+        psf_image = resize_image_ratio(self.psf_image, 900, 900)
+        self.psf_image_display.set_image(psf_image)
+        self.psf_image_display.setMaximumHeight(900)
+        pupil = self.fourier.afficher_pupille(self.coefficients, self.size)
+        pupil = resize_image_ratio(pupil, 900, 900)
+        self.pupil_display.set_image(pupil)
+        self.pupil_display.setMaximumHeight(900)
+        self.psf_image_display.set_title("PSF Image")
+        self.pupil_display.set_title("Défaut de phase")
+
+        self.layout.addLayout(self.slider_text_layout)
+        self.layout.addLayout(self.sliders_layout)
+        self.layout.addWidget(self.psf_image_display)
+        self.layout.addWidget(self.pupil_display)
+
+        self.setLayout(self.layout)
+
+    def slider_action(self):
+        sender = self.sender()
+        for i,slider in enumerate(self.sliders):
+            if sender == slider:
+                value = slider.value()
+                ratio = (self.maximum_slider - value) / (self.maximum_slider - self.minimum_slider)
+                self.coefficients[i + 4] = ratio * (self.minimum_coeffs - self.maximum_coeffs) - self.minimum_coeffs
+                self.slider_text[i].setText(f"C{i+4} = {round(self.coefficients[i+4], 3)}")
+                break
+        _, _, self.psf_image = self.fourier.find_rf_from_coefs(self.coefficients, self.size)
+        psf_image = resize_image_ratio(self.psf_image, 900, 900)
+        pupil = self.fourier.afficher_pupille(self.coefficients, self.size)
+        pupil = resize_image_ratio(pupil, 900, 900)
+        self.psf_image_display.set_image(psf_image)
+        self.pupil_display.set_image(pupil)
 
 class PSFDisplayWidget(QWidget):
     def __init__(self, parent = None, set_bounds = 1):
@@ -531,6 +656,7 @@ class PSFDisplayWidget(QWidget):
         self.parent = parent
 
         self.title = QLabel("")
+        self.title.setStyleSheet(styleH2)
         self.image_display = ImagesDisplayView()
 
         if set_bounds:
@@ -561,11 +687,11 @@ class PSFDisplayWidget(QWidget):
         self.image_display.set_image_from_array(image)
         self.image_display.fit_images_in_view()
 
-    def set_array(self, X, Y):
+    """def set_array(self, X, Y):
         self.image_display = XYChartWidget()
         self.image_display.set_background("white")
         self.image_display.set_data(X, Y)
-        self.image_display.refresh_chart()
+        self.image_display.refresh_chart()"""
 
     def set_title(self, title: str):
         self.title.setText(title)
@@ -667,8 +793,13 @@ class ChartDisplayWidget(QWidget):
         super().__init__()
         self.parent = parent
 
+        PIXEL_SIZE = 3.5
+
+        self.pixel_size = PIXEL_SIZE
+
         self.image_display = XYChartWidget()
         self.image_display.setMinimumSize(400, 400)
+        #self.image_display.set_x_label("position", unit='mm')
 
         self.layout = QVBoxLayout()
         self.layout.addWidget(self.image_display)
@@ -678,9 +809,9 @@ class ChartDisplayWidget(QWidget):
         self.image_display.set_background("white")
         X, Y, Z = self.shorten_bounds(X, Y, Z)
         if Z is None:
-            self.image_display.set_data(X, Y)
+            self.image_display.set_data(X * self.pixel_size * 1e-3, Y)
         else:
-            self.image_display.set_data(X, [Y, Z])
+            self.image_display.set_data(X * self.pixel_size * 1e-3, [Y, Z])
         self.image_display.refresh_chart()
 
     def set_title(self, title: str):
@@ -716,6 +847,6 @@ class ChartDisplayWidget(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    window = TreatmentWindow()
+    window = CoefficientsView()#TreatmentWindow()
     window.show()
     sys.exit(app.exec())

@@ -131,11 +131,12 @@ class TreatmentController:
         self.options1_widget.update_treatment_progress_bar(0)
         self.main_widget.set_options1_widget(self.options1_widget)
         self.options1_widget.checkBoxSignal.connect(self.enhance_coeffs_action)
+        self.options1_widget.buttonsSignal.connect(self.further_actions)
 
         self.fourier.scanProgress.connect(self.scan_progress_action)
 
     def enhance_coeffs_action(self, event):
-        print(event)
+        #print(event)
         if event:
             self.coefficients = 10 * self.reserve_coefficients.copy()
         else:
@@ -146,6 +147,9 @@ class TreatmentController:
         self.mtf_diff = self.fourier.MTF_from_PSF(self.psf_diff_lim)
         self.Initialize()
         QApplication.processEvents()
+
+    def further_actions(self, event):
+        self.close_all()
 
     def Initialize(self):
         self.close_all()
@@ -163,6 +167,7 @@ class TreatmentController:
         self.airy_view.close()
         self.mtf_view.close()
         self.focal_view.close()
+        self.options1_widget.close()
 
     def calculate_psf_from_coefs(self, coefficients, size):
         _, psf_diff_lim, psf_image = self.fourier.find_rf_from_coefs(coefficients, size)

@@ -57,18 +57,19 @@ class FourierManager(QObject):
 
     def zernike_polar(self, coefficients, r, u):
         Z = coefficients
-        Z1 = Z[0] * 1 * (np.cos(u) ** 2 + np.sin(u) ** 2)
-        Z2 = Z[1] * 2 * r * np.cos(u)
-        Z3 = Z[2] * 2 * r * np.sin(u)
-        Z4 = Z[3] * np.sqrt(3) * (2 * r ** 2 - 1)
-        Z5 = Z[4] * np.sqrt(6) * r ** 2 * np.sin(2 * u)
-        Z6 = Z[5] * np.sqrt(6) * r ** 2 * np.cos(2 * u)
-        Z7 = Z[6] * np.sqrt(8) * (3 * r ** 2 - 2) * r * np.sin(u)
-        Z8 = Z[7] * np.sqrt(8) * (3 * r ** 2 - 2) * r * np.cos(u)
+        Z0 = Z[0] * 1 * (np.cos(u) ** 2 + np.sin(u) ** 2)
+        Z1 = Z[1] * 2 * r * np.cos(u)
+        Z2 = Z[2] * 2 * r * np.sin(u)
+        Z3 = Z[3] * np.sqrt(3) * (2 * r ** 2 - 1)
+        Z4 = Z[4] * np.sqrt(6) * r ** 2 * np.sin(2 * u)
+        Z5 = Z[5] * np.sqrt(6) * r ** 2 * np.cos(2 * u)
+        Z6 = Z[6] * np.sqrt(8) * (3 * r ** 2 - 2) * r * np.sin(u)
+        Z7 = Z[7] * np.sqrt(8) * (3 * r ** 2 - 2) * r * np.cos(u)
+        Z8 = Z[8] * np.sqrt(8) * (6 * r ** 4 - 6 * r ** 2 +1)
         Z9 = Z[9] * np.sqrt(8) * r ** 3 * np.sin(3 * u)
         Z10 = Z[10] * np.sqrt(8) * r ** 3 * np.cos(3 * u)
 
-        ZW = Z1 + Z2 + Z3 + Z4 + Z5 + Z6 + Z7 + Z8 + Z9 + Z10
+        ZW = Z0 + Z1 + Z2 + Z3 + Z4 + Z5 + Z6 + Z7 + Z8 + Z9 + Z10
         return ZW
 
     def phase(self, coefficients, size : tuple):

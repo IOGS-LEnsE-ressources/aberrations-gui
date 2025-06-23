@@ -150,7 +150,6 @@ class SubMenu(QWidget):
                 self.buttons_list[i].setEnabled(False)
                 self.buttons_list[i].setStyleSheet(disabled_button)
         QApplication.processEvents()
-        print(f"disabled {self.buttons_enabled}")
 
     def enable_buttons(self):
         '''Enables all buttons on the panel'''
@@ -160,7 +159,6 @@ class SubMenu(QWidget):
                 self.buttons_list[i].setEnabled(True)
                 self.buttons_list[i].setStyleSheet(unactived_button)
         QApplication.processEvents()
-        print(f"enabled {self.buttons_enabled}")
 
     def set_button_enabled(self, button_index: int, value: bool):
         """
