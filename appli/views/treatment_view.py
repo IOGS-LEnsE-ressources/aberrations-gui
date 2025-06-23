@@ -166,8 +166,8 @@ class PSFView(QWidget):
         self.left_widget = PSFDisplayWidget(self)
         self.right_widget = PSFDisplayWidget(self)
 
-        self.left_widget.set_title("PSF with aberrations")
-        self.right_widget.set_title("Diffraction limit PSF (no aberrations)")
+        self.left_widget.set_title("PSF avec aberrations")
+        self.right_widget.set_title("Limite de diffraction (pas d'aberrations)")
 
         self.layout.addWidget(self.left_widget)
         self.layout.addWidget(self.right_widget)
@@ -825,7 +825,7 @@ class ChartDisplayWidget(QWidget):
 
         self.image_display = XYChartWidget()
         self.image_display.setMinimumSize(400, 400)
-        self.image_display.set_information('diffraction limit without aberrations (orange), with aberrations(blue)')
+        self.image_display.set_information(translate('ChartDisplayWidget_label'))
 
         self.layout = QVBoxLayout()
         self.layout.addWidget(self.image_display)
