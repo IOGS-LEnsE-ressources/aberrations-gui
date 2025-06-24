@@ -44,7 +44,7 @@ def slice_image(image, slope : float, axis : bool = False):
     --------|------> x    axis0 -> axis0 + 1
             |             axis1 -> axis1 + slope
             |
-    If the slope is too big, the program will invert the axis by default and return the associated slice
+    If the slope is too big, the program will invert the axis and the slope by default and return the appropriate slice
     '''
     size = image.shape
     assert size[0] != 0 and size[1] != 0 and image is not None, "The data is not suitable : 0-dimensional array"
@@ -214,7 +214,7 @@ class AiryView(QWidget):
         else:
             rf, psf_diff, psf_image = self.parent.rf, self.parent.psf_diff_lim.copy(), self.parent.psf_image.copy()
 
-        self.rf_text = QLabel(f"Rf = {round(rf, 5) * 100}%")
+        self.rf_text = QLabel(f"Rapport de Strehl : {int(rf * 1000)//10}%")
 
         size = psf_image.shape
         self.slice0_abe = slice_image(psf_image, 0, False)
