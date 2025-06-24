@@ -301,8 +301,32 @@ class AberrationsController:
 
     def display_seidel_table(self):
         """
-
+        list of the first five coefficients of the Seidel decomposition:
+                    | Amplitude        | Angle             |
+        Tilt        | sqrt(C1^2+C2^2)  | arctan(C2/C1)     |
+        Focus       |    2C3 - 6C8     |                   |
+        Astig       | 2sqrt(C4^2+C5^2) | (1/2)arctan(C5/C4)|
+        Coma        | 3sqrt(C6^2+C7^2) | arctan(C7/C6)     |
+        Spherical   |       6C8        |                   |
         """
+        self.main_widget.clear_bot_right()
+        rows = 5
+        cols = 3
+        self.bot_right_widget = TableView(rows=rows, cols=cols, height=30,
+                                          title=translate('zernike_table'))
+        self.bot_right_widget.set_cols_size([120, 100, 100, 100, 100, 100, 100, 100])
+        self.bot_right_widget.set_rows_colors(['H', 'N', 'N', 'N', 'N'])
+        self.bot_right_widget.set_cols_colors(['N', 'N', 'N'])
+        coeff = list(map(lambda x: round(x, 4), self.zernike_coeffs.get_coeffs().copy()))
+        data = [[0] * cols for _ in range(rows)]
+        unit = 'um' if self.lambda_check else '\u03BB'
+        data[0] = [unit, translate('Amplitude'), translate('Angle')]
+        data[1] = [translate('ab_tilt_title'), coeff[4], coeff[11], coeff[20], coeff[31]]
+        data[2] = ['', coeff[5], coeff[12], coeff[21], coeff[32]]
+        data[3] = [translate('ab_coma_title'), coeff[6], coeff[13], coeff[22], coeff[33]]
+        data[4] = ['', coeff[7], coeff[14], coeff[23], coeff[34]]
+        self.bot_right_widget.set_data(data)
+        self.main_widget.set_bot_right_widget(self.bot_right_widget)
         pass
 
     def display_zernike_table(self):

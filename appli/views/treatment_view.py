@@ -594,6 +594,9 @@ class CoefficientsView(QWidget):
 
         COEFFICIENT_DEPTH = 11  #Nombre de coefficients pris en compte à partir de C4
 
+        self.coefficients[:4] = 0
+        self.coefficients[0] = 1
+
         self.layout = QHBoxLayout()
         self.sliders_layout = QVBoxLayout()
         self.sliders = [QSlider(Qt.Orientation.Horizontal) for i in range(COEFFICIENT_DEPTH + 1)]
@@ -683,6 +686,7 @@ class CoefficientsView(QWidget):
         pupil = resize_image_ratio(pupil, 900, 900)
         self.psf_image_display.set_image(psf_image)
         self.pupil_display.set_image(pupil)
+        print(self.coefficients)
 
 
 class PSFDisplayWidget(QWidget):
@@ -873,6 +877,6 @@ class ChartDisplayWidget(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    window = TreatmentWindow() #CoefficientsView()
+    window = CoefficientsView()#TreatmentWindow()
     window.show()
     sys.exit(app.exec())

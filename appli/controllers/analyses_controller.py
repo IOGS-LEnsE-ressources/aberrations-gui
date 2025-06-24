@@ -62,6 +62,8 @@ class AnalysesController:
         Default constructor.
         :param manager: Main manager of the application (ModesManager).
         """
+        #super().__init__()
+
         self.manager: "ModesManager" = manager
         self.data_set: DataSetModel = self.manager.data_set
         self.phase: "PhaseModel" = self.manager.phase
@@ -92,12 +94,17 @@ class AnalysesController:
         # Update menu and view
         self.init_view()
         # Start Analyses
-        if self.phase.get_wrapped_phase() is None:
-            ## Where to find set_number ?
-            set_number = 1
-            mask = self.data_set.get_global_mask().shape
-            self.process_wrapped_phase_calculation(set_number)
-            self.update_submenu('')
+
+        #if self.phase.get_wrapped_phase() is None:
+
+        # Putting this condition was in fact a mistake, it caused the
+        # analysis process to not start when opened again
+        ## Where to find set_number ?
+
+        set_number = 1
+        mask = self.data_set.get_global_mask().shape
+        self.process_wrapped_phase_calculation(set_number)
+        self.update_submenu('')
 
     def init_view(self):
         """

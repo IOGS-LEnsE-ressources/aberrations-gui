@@ -29,6 +29,8 @@ if TYPE_CHECKING:
     from zygo_lab_app import ZygoApp
     from views.main_menu import MainMenu
 
+from PyQt6.QtWidgets import QWidget
+
 class ModesManager:
     """
     Main modes manager.
@@ -63,6 +65,9 @@ class ModesManager:
 
         self.first_treatment = True
         self.treatment_controller = None
+
+        self.analyses_controller = None
+        self.first_analysis = True
 
         # Main Help
         url = './docs/html/main.html'
@@ -133,14 +138,20 @@ class ModesManager:
             case 'acquisition':
                 self.mode_controller = AcquisitionController(self)
                 self.first_treatment = True
+                self.first_analysis = True
             case 'images':
                 self.mode_controller = ImagesController(self)
                 self.first_treatment = True
+                self.first_analysis = True
             case 'masks':
                 self.mode_controller = MasksController(self)
                 self.first_treatment = True
+                self.first_analysis = True
             case 'analyses':
-                self.mode_controller = AnalysesController(self)
+                if self.first_analysis:
+                    self.analyses_controller = AnalysesController(self)
+                    self.first_analysis = False
+                self.mode_controller = self.analyses_controller
             case 'aberrations':
                 self.mode_controller = AberrationsController(self)
             case 'help':
