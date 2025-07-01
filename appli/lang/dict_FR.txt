@@ -97,7 +97,6 @@ label_zernike_progress_bar; Progression des calculs
 Zernike_coefficients_button; Coefficients de Zernike
 Seidel_coefficients_button; Coefficients de Seidel
 coefficients_correction_button; Correction de la phase
-aberrations_analyses_button; Analyses poussées
 label_aberrations_options; Etude simplifiée
 label_wedge_value; Wedge Factor
 label_pv_rms_corrected; Statistiques phase corrigée
