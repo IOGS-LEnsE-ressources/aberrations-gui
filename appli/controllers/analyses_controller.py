@@ -285,7 +285,7 @@ class AnalysesController:
             Z1 = np.ma.masked_where(np.logical_not(mask), self.corrected_phase) * gain
             self.w_3d_view.add_labels(name1='Corrected Phase', name2='Unwrapped Phase')
         else:
-            Z1 = Z2
+            Z1 = Z2 * gain
         x, y, w_s = self.w_3d_view.prepare_data_for_mesh(Z1, undersampling=10)
         self.w_3d_view.create_mesh_surface(x, y, w_s)
         self.w_3d_view.showMaximized()
@@ -304,7 +304,6 @@ class AnalysesController:
             else:
                 self.display_2D_unwrapped(gain=5)
         if change[0] == 'disp_3D':
-            print('Display 3D ??')
             self.display_3D(gain=10)
         if change[0] == 'wedge':
             if is_float(change[1]):

@@ -39,6 +39,9 @@ class ZygoApp:
         load_default_dictionary("FR")
         self.default_parameters = load_default_parameters('./config.txt')
         self.data_set = DataSetModel()
+        if 'Piezo Voltage' in self.default_parameters:
+            volt_list = self.default_parameters['Piezo Voltage'].split(',')
+            self.data_set.acquisition_mode.set_voltages(volt_list)
         self.phase = PhaseModel(self.data_set)
         if 'Wedge Factor' in self.default_parameters:
             self.phase.set_wedge_factor(float(self.default_parameters['Wedge Factor']))

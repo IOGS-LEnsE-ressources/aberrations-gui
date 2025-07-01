@@ -44,7 +44,6 @@ class DataSetModel:
         self.data_set_state = DataSetState()
 
 
-
     def add_set_images(self, images: list) -> bool:
         """
         Add a new set of images.
