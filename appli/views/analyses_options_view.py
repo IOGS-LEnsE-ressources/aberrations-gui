@@ -54,6 +54,7 @@ class AnalysesOptionsView(QWidget):
         self.layout_3D_wedge = QHBoxLayout()
         self.widget_3D_wedge.setLayout(self.layout_3D_wedge)
         self.widget_2D_3D = QPushButton(translate('label_2D_3D_choice'))
+        self.widget_2D_3D.setFixedHeight(OPTIONS_BUTTON_HEIGHT)
         self.widget_2D_3D.setStyleSheet(disabled_button)
         self.widget_2D_3D.clicked.connect(self.display_changed)
         self.widget_2D_3D.setEnabled(False)
@@ -121,7 +122,7 @@ class AnalysesOptionsView(QWidget):
         Set enable the 2D/3D display checkbox.
         :param value: True or False.
         """
-        self.widget_2D_3D.set_enabled(value)
+        self.widget_2D_3D.setEnabled(value)
 
     def set_enable_tilt(self, value: bool):
         """

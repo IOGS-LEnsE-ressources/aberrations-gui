@@ -103,6 +103,7 @@ class AnalysesController:
 
         set_number = 1
         mask = self.data_set.get_global_mask().shape
+        print("Init Analyses !!")
         self.process_wrapped_phase_calculation(set_number)
         self.update_submenu('')
 
@@ -172,7 +173,7 @@ class AnalysesController:
                 self.options1_widget.widget_2D_3D.setEnabled(False)
                 self.options1_widget.widget_2D_3D.setStyleSheet(disabled_button)
                 # Display wrapped in 2D
-                if self.data_set.data_set_state == DataSetState.WRAPPED:
+                if self.data_set.is_wrapped():
                     self.display_2D_wrapped()
                 # Help
                 self.display_help()  # Help in bottom right
@@ -222,7 +223,7 @@ class AnalysesController:
                 # Display Wrapped array in top right area
                 self.options1_widget.erase_pv_rms()
                 # Process unwrapped phase
-                if self.data_set.data_set_state == DataSetState.WRAPPED:
+                if self.data_set.is_wrapped():
                     self.process_unwrapped_phase_calculation()
                     self.update_submenu('wrappedphase_analyses')
 
@@ -404,7 +405,7 @@ class AnalysesController:
         Process unwrapped phase from the wrapped phase.
         :param set_number: Number of the set to process.
         """
-        if self.data_set.is_data_ready() and self.data_set.data_set_state == DataSetState.WRAPPED:
+        if self.data_set.is_data_ready() and self.data_set.is_wrapped():
             # Process Phase
             self.phase.process_unwrapped_phase()
             # End of process

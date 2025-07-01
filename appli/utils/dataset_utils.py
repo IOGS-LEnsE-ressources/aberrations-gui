@@ -19,7 +19,7 @@ from lensepy.images.conversion import resize_image_ratio
 
 class DataSetStateValue(Flag):
     # Flag - Analys. / Unw. / Wrap. / Crop. / Masks / Images / On
-    NODATA = auto()
+    ON = auto()
     IMAGES = auto()
     MASKS = auto()
     CROPPED = auto()
@@ -30,16 +30,16 @@ class DataSetStateValue(Flag):
 
 class DataSetState:
     def __init__(self):
-        self.state = DataSetStateValue.NODATA
+        self.state = DataSetStateValue.ON
 
     def reset(self):
-        self.state = DataSetStateValue.NODATA
+        self.state = DataSetStateValue.ON
 
     def check_state(self, value: DataSetStateValue):
-        return (self.state & value) == value
+        return bool(self.state & value)
 
     def toggle_state(self, value: DataSetStateValue):
-        if (self.state & value) == value:
+        if self.state & value:
             self.state = self.state & ~value
         else:
             self.state = self.state | value

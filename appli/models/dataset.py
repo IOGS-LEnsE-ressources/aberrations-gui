@@ -174,6 +174,9 @@ class DataSetModel:
     def is_unwrapped(self):
         return self.data_set_state.check_state(DataSetStateValue.UNWRAPPED)
 
+    def has_mask(self):
+        return self.data_set_state.check_state(DataSetStateValue.MASKS)
+
 
 if __name__ == '__main__':
     from matplotlib import pyplot as plt

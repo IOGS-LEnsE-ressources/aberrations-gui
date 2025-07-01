@@ -86,7 +86,6 @@ class SimpleAcquisitionView(QWidget):
         volt_list = [0.80, 1.62, 2.43, 3.24, 4.05]
         self.data_set.acquisition_mode.set_voltages(volt_list)
         if sender == self.start_acq_keep_button:
-            print('Keep Masks')
             self.data_set.reset_data(keep_mask=True)
         else:
             self.data_set.reset_data()
@@ -110,6 +109,15 @@ class SimpleAcquisitionView(QWidget):
             self.progress_bar.setValue(100)
             time.sleep(0.01)
             self.acquisition_end.emit('acq_end')
+
+    def update_view(self):
+        print(f"Update View ? {self.data_set.has_mask()}")
+        if self.data_set.has_mask():
+            self.start_acq_keep_button.setEnabled(True)
+            self.start_acq_keep_button.setStyleSheet(unactived_button)
+        else:
+            self.start_acq_keep_button.setEnabled(False)
+            self.start_acq_keep_button.setStyleSheet(disabled_button)
 
 
 

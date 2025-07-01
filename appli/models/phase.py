@@ -112,7 +112,7 @@ class PhaseModel:
             self.unwrapped_phase = unwrap_phase(self.wrapped_phase) / (2 * np.pi)
             self.unwrapped_phase[~mask] = np.nan
             self.unwrapped_phase = np.ma.masked_where(np.logical_not(mask), self.unwrapped_phase)
-            self.data_set.data_set_state = DataSetState.UNWRAPPED
+            self.data_set.set_unwrapped_state()
             return True
         else:
             self.unwrapped_phase = None

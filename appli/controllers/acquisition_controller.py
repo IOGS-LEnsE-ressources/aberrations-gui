@@ -176,6 +176,7 @@ class AcquisitionController:
 
             case 'simple_acquisition':
                 self.stop_acquisition()
+                self.options1_widget.update_view()
                 self.histo_here = False
 
             case 'multi_acquisition':
@@ -264,6 +265,7 @@ class AcquisitionController:
             if 'nodata' in self.manager.options_list:
                 self.manager.options_list.remove('nodata')
             self.manager.update_menu()
+            self.update_submenu()
 
     def params_changed(self, event):
         """
