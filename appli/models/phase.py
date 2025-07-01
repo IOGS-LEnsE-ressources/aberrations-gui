@@ -75,7 +75,7 @@ class PhaseModel:
                 images_f[im_k] = np.ma.masked_where(np.logical_not(mask_cropped), image_f)
             self.cropped_images_sets.add_set_images(images_f)
         self.cropped_data_ready = True
-        self.data_set.data_set_state = DataSetState.CROPPED
+        self.data_set.set_cropped_state(True)
 
     def process_wrapped_phase(self, set_number: int=1):
         """
@@ -89,7 +89,7 @@ class PhaseModel:
             images_list = self.cropped_images_sets.get_images_set(set_number)
             self.wrapped_phase = hariharan_algorithm(images_list, mask)
             self.wrapped_phase = np.ma.masked_where(np.logical_not(mask), self.wrapped_phase)
-            self.data_set.data_set_state = DataSetState.WRAPPED
+            self.data_set.set_wrapped_state(True)
             return True
         else:
             self.wrapped_phase = None

@@ -54,7 +54,6 @@ class DataSetModel:
         state = self.images_sets.add_set_images(images)
         if state:
             self.data_set_state.set_state(DataSetStateValue.IMAGES, True)
-            print(f'D = {self.data_set_state.state}')
         return state
 
     def get_images_sets(self, index: int=1) -> list[np.ndarray]:
@@ -89,7 +88,7 @@ class DataSetModel:
         :param type_m: Type of mask (Circular, Rectangular, Polygon).
         """
         self.masks_sets.add_mask(mask, type_m)
-        self.data_set_state = DataSetState.MASKS
+        self.data_set_state.set_state(DataSetStateValue.MASKS)
 
     def load_mask_from_file(self, filename: str = '') -> bool:
         """
@@ -99,7 +98,7 @@ class DataSetModel:
         """
         state = self.masks_sets.load_mask_from_file(filename)
         if state:
-            self.data_set_state = DataSetState.MASKS
+            self.data_set_state.set_state(DataSetStateValue.MASKS, True)
         return state
 
 
@@ -149,17 +148,31 @@ class DataSetModel:
         """Reset all the data of the data set."""
         if keep_mask is False:
             self.masks_sets.reset_masks()
-            '''
-            if (self.data_set_state & DataSetState.MASKS) == DataSetState.MASKS:
-                self.data_set_state -= DataSetState.MASKS
-            '''
+            self.data_set_state.set_state(DataSetStateValue.MASKS, False)
             print('Delete Masks')
         self.images_sets.reset_all_images()
-        '''
-        if (self.data_set_state & DataSetState.IMAGES) == DataSetState.IMAGES:
-            self.data_set_state -= DataSetState.IMAGES
-            print('Delete Images')
-        '''
+        self.data_set_state.set_state(DataSetStateValue.IMAGES, False)
+
+    def set_masks_state(self, value: bool = True):
+        self.data_set_state.set_state(DataSetStateValue.MASKS, value)
+
+    def set_cropped_state(self, value: bool = True):
+        self.data_set_state.set_state(DataSetStateValue.CROPPED, value)
+
+    def set_wrapped_state(self, value: bool = True):
+        self.data_set_state.set_state(DataSetStateValue.WRAPPED, value)
+
+    def set_unwrapped_state(self, value: bool = True):
+        self.data_set_state.set_state(DataSetStateValue.UNWRAPPED, value)
+
+    def is_analyzed(self):
+        return self.data_set_state.check_state(DataSetStateValue.ANALYZED)
+
+    def is_wrapped(self):
+        return self.data_set_state.check_state(DataSetStateValue.WRAPPED)
+
+    def is_unwrapped(self):
+        return self.data_set_state.check_state(DataSetStateValue.UNWRAPPED)
 
 
 if __name__ == '__main__':

@@ -88,6 +88,7 @@ class ModesManager:
 
         :return:
         """
+        print(f'State = {self.data_set.data_set_state.state}')
         if self.main_mode != 'first':
             nocam = 'nocam' in self.options_list
             nopiezo = 'nopiezo' in self.options_list

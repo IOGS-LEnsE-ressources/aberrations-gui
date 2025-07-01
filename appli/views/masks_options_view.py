@@ -149,6 +149,8 @@ class MasksTableList(QTableWidget):
         """
         Initialize graphical lines of the table.
         """
+        if self.data_set.masks_sets.get_masks_number() == 0:
+            self.data_set.set_masks_state(False)
         for mask_index in range(self.data_set.masks_sets.get_masks_number()):
             self.add_new_row(mask_index+1)
             self.setRowHeight(mask_index+1, 40)

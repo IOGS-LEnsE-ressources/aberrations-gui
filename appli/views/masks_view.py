@@ -94,7 +94,8 @@ class MasksView(QDialog):
         self.points = []
         self.mask = np.zeros_like(self.image, dtype=np.uint8)
 
-        self.showMaximized()
+        self.setWindowState(Qt.WindowState.WindowMaximized)
+        print('D Maximized')
         # Assign mousePressEvent to capture points
         self.label.mousePressEvent = self.get_points_circle
 

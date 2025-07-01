@@ -44,7 +44,7 @@ class DataSetState:
         else:
             self.state = self.state | value
 
-    def set_state(self, value: DataSetStateValue, state: bool):
+    def set_state(self, value: DataSetStateValue, state: bool = True):
         actual_state = self.check_state(value)
         if actual_state != state:
             if state:

@@ -247,8 +247,10 @@ class AcquisitionController:
         """
         if event == 'acq_end':
             print('REsET DATA')
+            '''
             self.main_app.data_set.reset_data()
             self.data_set.data_set_state.reset()
+            '''
             self.data_set.acquisition_mode.thread.join()
             # Display grid of images in top right area.
             time.sleep(0.1)

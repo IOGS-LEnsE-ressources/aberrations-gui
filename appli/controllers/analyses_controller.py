@@ -140,12 +140,12 @@ class AnalysesController:
             self.submenu.set_button_enabled(k + 1, False)
 
         ## Activate button depending on data
-        if self.data_set.data_set_state == DataSetState.WRAPPED:
+        if self.data_set.is_wrapped():
             self.submenu.set_button_enabled(1, True)
-        if self.data_set.data_set_state == DataSetState.UNWRAPPED:
+        if self.data_set.is_unwrapped():
             self.submenu.set_button_enabled(1, True)
             self.submenu.set_button_enabled(2, True)
-        if self.data_set.data_set_state == DataSetState.ANALYZED:
+        if self.data_set.is_analyzed():
             self.submenu.set_button_enabled(1, True)
             self.submenu.set_button_enabled(2, True)
             self.submenu.set_button_enabled(3, True)
@@ -212,7 +212,7 @@ class AnalysesController:
         Update data and views when the submenu is clicked.
         :param event: Sub menu click.
         """
-        if self.data_set.data_set_state == DataSetState.ANALYZED:
+        if self.data_set.is_analyzed():
             self.tilt_possible = True
         # Update view
         self.update_submenu_view(event)
@@ -396,7 +396,7 @@ class AnalysesController:
             # Process Phase
             self.phase.process_wrapped_phase()
             # End of process
-            self.data_set.data_set_state = DataSetState.WRAPPED
+            self.data_set.set_wrapped_state(True)
 
 
     def process_unwrapped_phase_calculation(self, set_number: int = 1):
@@ -408,7 +408,7 @@ class AnalysesController:
             # Process Phase
             self.phase.process_unwrapped_phase()
             # End of process
-            self.data_set.data_set_state = DataSetState.UNWRAPPED
+            self.data_set.set_unwrapped_state(True)
 
     def process_zernike_calculation(self, coeff: int):
         """Process Zernike coefficients for correction."""
