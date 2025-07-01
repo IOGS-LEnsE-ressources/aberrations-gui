@@ -27,7 +27,8 @@ multi_analysis_button; Analyse multi-acquisition
 acquisition_simple_button; Acquisition simple
 label_progress_acq_bar; Progression de l'acquisition
 label_simple_acq_title; Acquisition de données
-start_acq_button; Lancer l'acquisition
+start_acq_button; Lancer l'acquisition (suppression des masques)
+start_acq_keep_button; Lancer l'acquisition (conservation des masques)
 camera_zoom_button; Zoom
 title_camera_settings; Paramètres de la caméra
 label_title_camera_id; ID Caméra

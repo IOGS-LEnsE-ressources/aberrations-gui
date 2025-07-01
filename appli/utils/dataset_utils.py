@@ -9,7 +9,7 @@
 Creation : march/2025
 """
 import sys, os
-from enum import Enum
+from enum import Flag, auto
 import numpy as np
 import scipy
 import cv2
@@ -17,14 +17,41 @@ import cv2
 from lensepy.images.conversion import resize_image_ratio
 
 
-class DataSetState(Enum):
-    NODATA = 0
-    IMAGES = 1
-    MASKS = 2
-    CROPPED = 3
-    WRAPPED = 4
-    UNWRAPPED = 5
-    ANALYZED = 6
+class DataSetStateValue(Flag):
+    # Flag - Analys. / Unw. / Wrap. / Crop. / Masks / Images / On
+    NODATA = auto()
+    IMAGES = auto()
+    MASKS = auto()
+    CROPPED = auto()
+    WRAPPED = auto()
+    UNWRAPPED = auto()
+    ANALYZED = auto()
+
+
+class DataSetState:
+    def __init__(self):
+        self.state = DataSetStateValue.NODATA
+
+    def reset(self):
+        self.state = DataSetStateValue.NODATA
+
+    def check_state(self, value: DataSetStateValue):
+        return (self.state & value) == value
+
+    def toggle_state(self, value: DataSetStateValue):
+        if (self.state & value) == value:
+            self.state = self.state & ~value
+        else:
+            self.state = self.state | value
+
+    def set_state(self, value: DataSetStateValue, state: bool):
+        actual_state = self.check_state(value)
+        if actual_state != state:
+            if state:
+                self.state = self.state | value
+            else:
+                self.state = self.state & ~value
+
 
 def generate_images_grid(images: list[np.ndarray]):
     """Generate a grid with 5 images.

@@ -26,7 +26,7 @@ from enum import Enum
 from models.images import ImagesModel
 from models.masks import MasksModel
 from models.acquisition import AcquisitionModel
-from utils.dataset_utils import DataSetState
+from utils.dataset_utils import DataSetState, DataSetStateValue
 
 
 class DataSetModel:
@@ -41,7 +41,9 @@ class DataSetModel:
         self.images_sets = ImagesModel(set_size)
         self.masks_sets = MasksModel()
         self.acquisition_mode = AcquisitionModel(set_size)
-        self.data_set_state = DataSetState.NODATA
+        self.data_set_state = DataSetState()
+
+
 
     def add_set_images(self, images: list) -> bool:
         """
@@ -51,7 +53,8 @@ class DataSetModel:
         """
         state = self.images_sets.add_set_images(images)
         if state:
-            self.data_set_state = DataSetState.IMAGES
+            self.data_set_state.set_state(DataSetStateValue.IMAGES, True)
+            print(f'D = {self.data_set_state.state}')
         return state
 
     def get_images_sets(self, index: int=1) -> list[np.ndarray]:
@@ -142,11 +145,21 @@ class DataSetModel:
             data['Masks'] = new_mask
         scipy.io.savemat(file_path, data)
 
-    def reset_data(self):
+    def reset_data(self, keep_mask: bool = False):
         """Reset all the data of the data set."""
-        self.masks_sets.reset_masks()
+        if keep_mask is False:
+            self.masks_sets.reset_masks()
+            '''
+            if (self.data_set_state & DataSetState.MASKS) == DataSetState.MASKS:
+                self.data_set_state -= DataSetState.MASKS
+            '''
+            print('Delete Masks')
         self.images_sets.reset_all_images()
-        self.data_set_state = DataSetState.NODATA
+        '''
+        if (self.data_set_state & DataSetState.IMAGES) == DataSetState.IMAGES:
+            self.data_set_state -= DataSetState.IMAGES
+            print('Delete Images')
+        '''
 
 
 if __name__ == '__main__':

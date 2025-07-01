@@ -50,11 +50,16 @@ class SimpleAcquisitionView(QWidget):
         self.label_simple_acq_title.setStyleSheet(styleH1)
         self.label_simple_acq_title.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        # Start acquisition
+        # Start acquisition - delete mask
         self.start_acq_button = QPushButton(translate('start_acq_button'))
         self.start_acq_button.setStyleSheet(unactived_button)
         self.start_acq_button.setFixedHeight(BUTTON_HEIGHT)
         self.start_acq_button.clicked.connect(self.start_acquisition)
+        # Start acquisition - keep mask
+        self.start_acq_keep_button = QPushButton(translate('start_acq_keep_button'))
+        self.start_acq_keep_button.setStyleSheet(unactived_button)
+        self.start_acq_keep_button.setFixedHeight(BUTTON_HEIGHT)
+        self.start_acq_keep_button.clicked.connect(self.start_acquisition)
 
         # Progression Bar
         self.label_progress_bar = QLabel(translate('label_progress_acq_bar'))
@@ -67,6 +72,7 @@ class SimpleAcquisitionView(QWidget):
         # Add graphical elements to the layout
         self.layout.addWidget(self.label_simple_acq_title)
         self.layout.addWidget(self.start_acq_button)
+        self.layout.addWidget(self.start_acq_keep_button)
         self.layout.addStretch()
         self.layout.addWidget(self.label_progress_bar)
         self.layout.addWidget(self.progress_bar)
@@ -76,9 +82,14 @@ class SimpleAcquisitionView(QWidget):
         """
         Start acquisition of one set of images.
         """
+        sender = self.sender()
         volt_list = [0.80, 1.62, 2.43, 3.24, 4.05]
         self.data_set.acquisition_mode.set_voltages(volt_list)
-        self.data_set.reset_data()
+        if sender == self.start_acq_keep_button:
+            print('Keep Masks')
+            self.data_set.reset_data(keep_mask=True)
+        else:
+            self.data_set.reset_data()
         if self.data_set.acquisition_mode.is_possible():
             self.data_set.acquisition_mode.start()
             thread = threading.Thread(target=self.update_progress_bar)
