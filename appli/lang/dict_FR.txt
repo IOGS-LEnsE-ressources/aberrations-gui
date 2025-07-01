@@ -80,13 +80,14 @@ label_sub_acquisition_title; Correction
 check_tilt; Tilt
 label_2D_3D_choice; Affichage 3D
 label_wedge_value; Wedge Factor
-label_pv_rms_uncorrected; Statistiques phase non corrigée
-label_pv_rms_corrected; Statistiques phase corrigée
+label_pv_rms_uncorrected; Statistiques surface non corrigée
+label_pv_rms_corrected; Statistiques surface corrigée
 label_tilt_choice; Correction du tilt
 label_range_choice; Même échelle
 label_PV; Pic à Vallée
 label_RMS; Valeur RMS
 histo_corrected_phase; Histogramme de la phase affichée
+corrected_surface; Surface corrigée
 # --------------
 # Aberrations
 # --------------

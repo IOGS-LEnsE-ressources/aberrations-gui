@@ -40,6 +40,7 @@ class AnalysesOptionsView(QWidget):
         """
         super().__init__()
         self.controller: "AnalysesController" = controller
+        self.tilt_on = False
         #self.data_set = self.controller.data_set
         self.layout = QVBoxLayout()
         self.setLayout(self.layout)
@@ -49,19 +50,14 @@ class AnalysesOptionsView(QWidget):
         self.label_analyses_options.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.layout.addWidget(self.label_analyses_options)
 
-        # 2D/3D display and Wedge Factor
-        self.widget_3D_wedge = QWidget()
-        self.layout_3D_wedge = QHBoxLayout()
-        self.widget_3D_wedge.setLayout(self.layout_3D_wedge)
+        # 2D/3D display
         self.widget_2D_3D = QPushButton(translate('label_2D_3D_choice'))
         self.widget_2D_3D.setFixedHeight(OPTIONS_BUTTON_HEIGHT)
-        self.widget_2D_3D.setStyleSheet(disabled_button)
+        self.widget_2D_3D.setStyleSheet(unactived_button)
         self.widget_2D_3D.clicked.connect(self.display_changed)
-        self.widget_2D_3D.setEnabled(False)
+        # Wedge Factor
         self.wedge_edit = LineEditView('wedge', translate('label_wedge_value'), '1')
         self.wedge_edit.text_changed.connect(self.wedge_changed)
-        self.layout_3D_wedge.addWidget(self.widget_2D_3D)
-        self.layout_3D_wedge.addWidget(self.wedge_edit)
 
         # PV/RMS displayed (for uncorrected phase)
         self.label_pv_rms_uncorrected = QLabel(translate('label_pv_rms_uncorrected'))
@@ -72,40 +68,35 @@ class AnalysesOptionsView(QWidget):
         # PV/RMS displayed (for corrected phase)
         self.label_pv_rms_corrected = QLabel(translate('label_pv_rms_corrected'))
         self.label_pv_rms_corrected.setStyleSheet(styleH2)
-        ## Checkbox for TILT
-        self.widget_tilt = CheckBoxView('tilt', translate('label_tilt_choice'))
-        self.widget_tilt.check_changed.connect(self.tilt_changed)
-        self.widget_tilt.set_enabled(False)
-        self.widget_tilt.set_checked(False)
-
-        # Range check
-        self.widget_range = CheckBoxView('range', translate('label_range_choice'))
-        self.widget_range.check_changed.connect(self.range_changed)
-        self.widget_range.set_enabled(False)
-        self.widget_range.set_checked(False)
+        ## Button for TILT
+        self.widget_tilt = QPushButton(translate('label_tilt_choice'))
+        self.widget_tilt.setStyleSheet(unactived_button)
+        self.widget_tilt.setFixedHeight(OPTIONS_BUTTON_HEIGHT)
+        self.widget_tilt.clicked.connect(self.tilt_changed)
 
         self.pv_rms_corrected = PVRMSView()
 
         # Add graphical elements to the layout.
-        self.layout.addWidget(self.widget_3D_wedge)
+        self.layout.addWidget(self.wedge_edit)
         self.layout.addWidget(self.label_pv_rms_uncorrected)
         self.layout.addWidget(self.pv_rms_uncorrected)
         self.layout.addWidget(self.label_pv_rms_corrected)
         self.layout.addWidget(self.widget_tilt)
         self.layout.addWidget(self.pv_rms_corrected)
-        self.layout.addWidget(self.widget_range)
         self.layout.addStretch()
-
-        self.hide_correction()
+        self.layout.addWidget(self.widget_2D_3D)
+        self.layout.addStretch()
+        self.show_correction()
 
     def hide_correction(self):
         """
         Hide the corrected option part of the widget.
         """
         self.widget_tilt.hide()
+        self.label_pv_rms_uncorrected.hide()
+        self.pv_rms_uncorrected.hide()
         self.label_pv_rms_corrected.hide()
         self.pv_rms_corrected.hide()
-        self.widget_range.hide()
 
     def show_correction(self):
         """
@@ -113,9 +104,10 @@ class AnalysesOptionsView(QWidget):
         ## Only when corrected button in analyses is clicked.
         """
         self.widget_tilt.show()
+        self.label_pv_rms_uncorrected.show()
+        self.pv_rms_uncorrected.show()
         self.label_pv_rms_corrected.show()
         self.pv_rms_corrected.show()
-        self.widget_range.show()
 
     def set_enable_2D_3D(self, value: bool):
         """
@@ -129,28 +121,14 @@ class AnalysesOptionsView(QWidget):
         Set enable the 2D/3D display checkbox.
         :param value: True or False.
         """
-        self.widget_tilt.set_enabled(value)
-
-    def set_enable_range(self, value: bool):
-        """
-        Set enable the Range display checkbox.
-        :param value: True or False.
-        """
-        self.widget_range.set_enabled(value)
+        self.widget_tilt.setEnabled(value)
 
     def is_tilt_checked(self):
         """
         Return if the tilt checkbox is checked.
         :return: True if checked.
         """
-        return self.widget_tilt.checkbox_choice.isChecked()
-
-    def is_range_checked(self):
-        """
-        Return if the tilt checkbox is checked.
-        :return: True if checked.
-        """
-        return self.widget_range.checkbox_choice.isChecked()
+        return self.tilt_on
 
     def display_changed(self, event):
         """
@@ -158,15 +136,22 @@ class AnalysesOptionsView(QWidget):
         """
         sender = self.sender()
         if sender == self.widget_2D_3D:
-            self.analyses_changed.emit('disp_3D')
+            self.analyses_changed.emit('disp_3D,')
         else:
             self.analyses_changed.emit(event)
 
-    def tilt_changed(self, event):
+    def tilt_changed(self):
         """
         Action performed when the 2D/3D checkbox is checked.
         """
-        self.analyses_changed.emit(event)
+        if self.tilt_on:
+            self.tilt_on = False
+            self.analyses_changed.emit('tilt,off')
+            self.widget_tilt.setStyleSheet(unactived_button)
+        else:
+            self.tilt_on = True
+            self.analyses_changed.emit('tilt,on')
+            self.widget_tilt.setStyleSheet(actived_button)
 
     def range_changed(self, event):
         """

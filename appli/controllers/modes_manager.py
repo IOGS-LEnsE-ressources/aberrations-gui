@@ -88,7 +88,7 @@ class ModesManager:
 
         :return:
         """
-        print(f'State = {self.data_set.data_set_state.state}')
+        #print(f'State = {self.data_set.data_set_state.state}')
         if self.main_mode != 'first':
             nocam = 'nocam' in self.options_list
             nopiezo = 'nopiezo' in self.options_list
@@ -98,19 +98,15 @@ class ModesManager:
         if self.main_mode == 'first':
             if self.data_set.acquisition_mode.is_camera() is False:
                 self.options_list.append('nocam')
-            '''
             if self.data_set.acquisition_mode.is_piezo() is False:
                 self.options_list.append('nopiezo')
-            '''
             self.main_mode = ''
         else:
             # To avoid to check hardware each time
             if nocam:
                 self.options_list.append('nocam')
-            '''
             if nopiezo:
                 self.options_list.append('nopiezo')
-            '''
 
         # Check dataset
         if self.data_set.is_data_ready() is False:

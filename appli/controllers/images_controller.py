@@ -126,14 +126,14 @@ class ImagesController:
                 if state:
                     # Erase old data
                     self.manager.phase.reset_phase()
-                    self.data_set.data_set_state = DataSetState.NODATA
+                    self.data_set.data_set_state.reset()
                     # Update submenu to display images
                     self.update_submenu("display_images")
                 else:
                     self.update_submenu("")
             case 'display_images':
                 if self.data_set.images_sets.get_number_of_sets() >= 1:
-                    self.data_set.data_set_state == DataSetState.IMAGES
+                    self.data_set.set_images_state()
                     # Display first image in top left
                     images = self.data_set.get_images_sets(1)
                     self.top_left_widget.set_image_from_array(images[0])

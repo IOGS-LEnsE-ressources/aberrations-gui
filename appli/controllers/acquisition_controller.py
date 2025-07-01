@@ -209,11 +209,9 @@ class AcquisitionController:
             else:
                 self.top_left_widget.set_image_from_array(image)
             # Update histogram in camera mode
-
             if self.submode == 'camera_acquisition':
                 if self.histo_here and not self.options1_widget.zoom_activated:
                     self.top_right_widget.set_image(image.squeeze())
-                    self.top_right_widget.update_info()
                 self.update_slice(image)
             elif self.submode == 'piezo_acquisition':
                 self.update_slice(image)
@@ -265,7 +263,7 @@ class AcquisitionController:
             if 'nodata' in self.manager.options_list:
                 self.manager.options_list.remove('nodata')
             self.manager.update_menu()
-            self.update_submenu()
+            #self.update_submenu('')
 
     def params_changed(self, event):
         """

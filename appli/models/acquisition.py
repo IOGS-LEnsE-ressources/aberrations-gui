@@ -141,6 +141,7 @@ class AcquisitionModel:
         self.thread = threading.Thread(target=self.thread_acquisition)
         time.sleep(0.0001)
         self.thread.start()
+        return True
 
     def get_image(self) -> np.ndarray:
         """
@@ -158,9 +159,10 @@ class AcquisitionModel:
             #print(f'ImCnt = {self.images_counter + 1} / {self.set_size} -- '
             #     f'SetCnt = {self.acquisition_counter + 1} / {self.acquisition_number}')
             # Move piezo
+            print(f'Move {self.voltages_list[self.images_counter]}')
             self.piezo.write_dac(self.voltages_list[self.images_counter])
             # Wait end of movement
-            time.sleep(0.1)
+            time.sleep(0.3)
         # Acquire image
         image = self.camera.get_image() #fast_mode=True)
         time.sleep(0.01)
@@ -171,7 +173,9 @@ class AcquisitionModel:
         Thread for acquisition of data.
         """
         self.camera.start_acquisition()
+        print(f'Acq Counter = {self.acquisition_counter}')
         if self.acquisition_counter < self.acquisition_number:
+            print(f'Im Counter = {self.images_counter}')
             if self.images_counter < self.set_size:
                 new_image = self._one_acquisition()
                 self.current_images_set.append(new_image)
@@ -269,7 +273,7 @@ if __name__ == '__main__':
     volt_list = [0.80,1.62,2.43,3.24,4.05]
     acquisition.set_voltages(volt_list)
     if acquisition.is_camera():
-        if acquisition.set_exposure(20000):
+        if acquisition.set_exposure(400):
             print('Expo Changed')
     if acquisition.is_possible():
         print('ACQ is possible')
@@ -286,10 +290,6 @@ if __name__ == '__main__':
 
         image_set = ImagesModel(nb_of_images_per_set)
         image_set.add_set_images(new_images)
-        '''
-        image_set.add_set_images(acquisition.get_images_set(2))
-        image_set.add_set_images(acquisition.get_images_set(3))
-        '''
 
         ## Test class
         print(f'Number of sets = {image_set.get_number_of_sets()}')

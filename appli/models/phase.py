@@ -143,7 +143,7 @@ class PhaseModel:
         self.wrapped_phase = None
         self.unwrapped_phase = None
         self.zernike_coeffs.reset_coeffs()
-        self.data_set.data_set_state = DataSetState.CROPPED
+        self.data_set.set_cropped_state()
 
     def set_wedge_factor(self, value: float):
         """

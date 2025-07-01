@@ -19,7 +19,7 @@ from views.images_display_view import ImagesDisplayView
 from views.html_view import HTMLView
 from views.analyses_options_view import AnalysesOptionsView
 from views.surface_2D_view import Surface2DView
-from views.double_3d_view import DoubleGraph3DView
+from views.double_3d_view import DoubleGraph3DView, Surface3DView
 from lensepy import load_dictionary, translate, dictionary
 from models.phase import process_statistics_surface
 from lensepy.css import *
@@ -62,8 +62,6 @@ class AnalysesController:
         Default constructor.
         :param manager: Main manager of the application (ModesManager).
         """
-        #super().__init__()
-
         self.manager: "ModesManager" = manager
         self.data_set: DataSetModel = self.manager.data_set
         self.phase: "PhaseModel" = self.manager.phase
@@ -94,17 +92,24 @@ class AnalysesController:
         # Update menu and view
         self.init_view()
         # Start Analyses
-
-        #if self.phase.get_wrapped_phase() is None:
-
-        # Putting this condition was in fact a mistake, it caused the
-        # analysis process to not start when opened again
-        ## Where to find set_number ?
-
         set_number = 1
-        mask = self.data_set.get_global_mask().shape
+        self.submenu.set_button_enabled(1, False)
+        self.submenu.set_button_enabled(3, False)
+        self.submenu.set_button_enabled(4, False)
         print("Init Analyses !!")
-        self.process_wrapped_phase_calculation(set_number)
+        if not self.data_set.is_wrapped():
+            print('Wrapping...')
+            self.process_wrapped_phase_calculation(set_number)
+        if not self.data_set.is_unwrapped():
+            print('UnWrapping...')
+            self.process_unwrapped_phase_calculation(set_number)
+        if self.data_set.is_unwrapped() and not self.data_set.is_analyzed():
+            print('Zernike Processing...')
+            self.zernike_coeffs.set_phase(self.phase)
+            for k in range(3):
+                self.process_zernike_calculation(k)
+            self.data_set.set_analyzed_state()
+            self.tilt_possible = True  # ???
         self.update_submenu('')
 
     def init_view(self):
@@ -139,28 +144,17 @@ class AnalysesController:
         self.submenu.inactive_buttons()
         for k in range(len(self.submenu.buttons_list)):
             self.submenu.set_button_enabled(k + 1, False)
-
-        ## Activate button depending on data
-        if self.data_set.is_wrapped():
-            self.submenu.set_button_enabled(1, True)
-        if self.data_set.is_unwrapped():
-            self.submenu.set_button_enabled(1, True)
-            self.submenu.set_button_enabled(2, True)
-        if self.data_set.is_analyzed():
-            self.submenu.set_button_enabled(1, True)
-            self.submenu.set_button_enabled(2, True)
-            self.submenu.set_button_enabled(3, True)
-            self.submenu.set_button_enabled(4, True)
+        self.submenu.set_button_enabled(1, True)
+        self.submenu.set_button_enabled(3, True)
+        self.submenu.set_button_enabled(4, True)
         # Activate submenu
         match self.submode:
             case 'wrappedphase_analyses':
-                self.submenu.set_activated(1)
-            case 'unwrappedphase_analyses':
-                self.submenu.set_activated(2)
-            case 'correctedphase_analyses':
                 self.submenu.set_activated(3)
-            case 'histophase_analyses':
+            case 'unwrappedphase_analyses':
                 self.submenu.set_activated(4)
+            case 'correctedphase_analyses':
+                self.submenu.set_activated(1)
         # Update views
         self.main_widget.clear_bot_right()
         # For all submodes
@@ -175,17 +169,8 @@ class AnalysesController:
                 # Display wrapped in 2D
                 if self.data_set.is_wrapped():
                     self.display_2D_wrapped()
-                # Help
-                self.display_help()  # Help in bottom right
                 # Options
                 self.options1_widget.wedge_edit.setEnabled(False)
-                self.options1_widget.hide_correction()
-
-            case 'unwrappedphase_analyses':
-                self.options1_widget.widget_2D_3D.setEnabled(True)
-                self.options1_widget.widget_2D_3D.setStyleSheet(unactived_button)
-                # Options
-                self.options1_widget.wedge_edit.setEnabled(True)
                 self.options1_widget.hide_correction()
 
             case 'correctedphase_analyses':
@@ -194,14 +179,10 @@ class AnalysesController:
                 self.options1_widget.widget_2D_3D.setStyleSheet(unactived_button)
                 self.options1_widget.wedge_edit.setEnabled(True)
                 self.options1_widget.show_correction()
-
-            case 'histophase_analyses':
-                self.options1_widget.wedge_edit.setEnabled(False)
-                self.options1_widget.widget_2D_3D.setStyleSheet(disabled_button)
-                self.bot_right_widget = HistogramWidget(translate('histo_corrected_phase'))
-                self.bot_right_widget.set_background('white')
-                # Options
-                self.options1_widget.show_correction()
+                if self.options1_widget.is_tilt_checked():
+                    self.display_2D_correction(gain=5)
+                else:
+                    self.display_2D_unwrapped(gain=5)
 
             case _:
                 self.options1_widget.wedge_edit.setEnabled(False)
@@ -215,6 +196,7 @@ class AnalysesController:
         """
         if self.data_set.is_analyzed():
             self.tilt_possible = True
+        print(event)
         # Update view
         self.update_submenu_view(event)
         # Update Action
@@ -223,34 +205,9 @@ class AnalysesController:
                 # Display Wrapped array in top right area
                 self.options1_widget.erase_pv_rms()
                 # Process unwrapped phase
-                if self.data_set.is_wrapped():
+                if self.data_set.is_wrapped() and not self.data_set.is_unwrapped():
+                    print("Unwrapping...")
                     self.process_unwrapped_phase_calculation()
-                    self.update_submenu('wrappedphase_analyses')
-
-            case 'unwrappedphase_analyses':
-                # Display wrapped in 2D
-                self.display_2D_wrapped()
-                # Display unwrapped in 2D
-                self.display_2D_unwrapped()
-                # Start Zernike coefficient process - for piston and tilt correction
-                if self.data_set.data_set_state == DataSetState.UNWRAPPED:
-                    self.zernike_coeffs.set_phase(self.phase)
-                    for k in range(3):
-                        self.process_zernike_calculation(k)
-                    self.data_set.data_set_state = DataSetState.ANALYZED
-                    self.tilt_possible = True
-                    self.update_submenu('unwrappedphase_analyses')
-
-            case 'correctedphase_analyses':
-                self.display_2D_unwrapped(gain=5)
-                self.display_2D_correction(gain=5)
-
-            case 'histophase_analyses':
-                bins = np.linspace(-10, 10, 1001)
-                self.bot_right_widget.set_data(self.corrected_phase, bins)
-                self.bot_right_widget.refresh_chart()
-                self.main_widget.set_bot_right_widget(self.bot_right_widget)
-                self.display_2D_correction()
 
     def display_help(self):
         self.main_widget.clear_bot_right()
@@ -269,43 +226,32 @@ class AnalysesController:
         wrapped_array = wrapped.filled(np.nan)
         # Display unwrapped and corrected in 2D
         self.main_widget.clear_top_right()
-        self.top_right_widget = Surface2DView('Wrapped Phase')
-        self.main_widget.set_top_right_widget(self.top_right_widget)
+        self.top_right_widget = Surface2DView(translate('wrapped_phase'))
+
+        self.main_widget.set_right_widget(self.top_right_widget)
         self.top_right_widget.set_array(wrapped_array)
 
-    def display_2D_unwrapped(self, gain = 1):
+    def display_2D_unwrapped(self, gain=1):
         """
         Display unwrapped phase in 2D at the bottom right corner.
         """
         unwrapped = self.phase.get_unwrapped_phase()
         unwrapped_array = unwrapped.filled(np.nan)
         # Display unwrapped and corrected in 2D
-        self.main_widget.clear_bot_right()
-        self.bot_right_widget = Surface2DView('Unwrapped Phase')
-        self.main_widget.set_bot_right_widget(self.bot_right_widget)
-        self.bot_right_widget.set_array(unwrapped_array*gain)
+        self.bot_right_widget = Surface2DView(translate('unwrapped_surface'))
+        self.main_widget.set_right_widget(self.bot_right_widget)
+        self.bot_right_widget.set_array(unwrapped_array * gain)
         pv, rms = process_statistics_surface(unwrapped)
         self.options1_widget.set_pv_uncorrected(pv, '\u03BB')
         self.options1_widget.set_rms_uncorrected(rms, '\u03BB')
-        if self.tilt_possible:
-            self.options1_widget.set_enable_tilt(True)
-            self.options1_widget.set_enable_range(True)
-        else:
-            self.main_widget.clear_bot_right()
-            self.bot_right_widget = HTMLView()
-            if __name__ == "__main__":
-                self.bot_right_widget.set_url('../docs/html/analyses.html', '../docs/html/styles.css')
-            else:
-                self.bot_right_widget.set_url('docs/html/analyses.html', 'docs/html/styles.css')
-            self.main_widget.set_bot_right_widget(self.bot_right_widget)
 
-    def display_2D_correction(self, gain = 1):
+    def display_2D_correction(self, gain=1):
         """
         Display correction depending on tilt checkbox value.
         """
         self.main_widget.clear_top_right()
-        self.top_right_widget = Surface2DView('Corrected Phase')
-        self.main_widget.set_top_right_widget(self.top_right_widget)
+        self.top_right_widget = Surface2DView(translate('corrected_surface'))
+        self.main_widget.set_right_widget(self.top_right_widget)
         ## TO DO : update colorbar depending on the max range of TOP and BOT right area.
         unwrapped = self.phase.get_unwrapped_phase()
         unwrapped_array = unwrapped.filled(np.nan)
@@ -318,19 +264,9 @@ class AnalysesController:
         else:
             corrected = unwrapped
         self.corrected_phase = corrected.filled(np.nan)
-        self.top_right_widget.set_array(self.corrected_phase*gain)
+        self.top_right_widget.set_array(self.corrected_phase * gain)
         # Test if range is checked
-        if self.options1_widget.is_range_checked():
-            if self.submode == 'correctedphase_analyses':
-                rangeC = self.top_right_widget.get_z_range()
-                rangeI = self.bot_right_widget.get_z_range()
-                range_min = np.min([rangeC[0], rangeI[0]])
-                range_max = np.max([rangeC[1], rangeI[1]])
-                new_range = (range_min, range_max)
-                self.bot_right_widget.set_z_range(new_range)
-                self.top_right_widget.set_z_range(new_range)
-        else:
-            self.top_right_widget.reset_z_range()
+        self.top_right_widget.reset_z_range()
         self.options1_widget.erase_pv_rms()
         pv, rms = process_statistics_surface(self.corrected_phase)
         self.options1_widget.set_pv_corrected(pv, '\u03BB')
@@ -339,24 +275,19 @@ class AnalysesController:
         self.options1_widget.set_pv_uncorrected(pv, '\u03BB')
         self.options1_widget.set_rms_uncorrected(rms, '\u03BB')
 
-    def display_3D(self):
-        self.w_3d_view = DoubleGraph3DView()
+    def display_3D(self, gain=1):
+        self.w_3d_view = Surface3DView()
         mask, _ = self.phase.cropped_masks_sets.get_mask(1)
         unwrapped = self.phase.get_unwrapped_phase()
         unwrapped_array = unwrapped.filled(np.nan)
         Z2 = np.ma.masked_where(np.logical_not(mask), unwrapped_array)
-        if self.submode == 'unwrappedphase_analyses':
-            wrapped = self.phase.get_wrapped_phase()
-            wrapped_array = wrapped.filled(np.nan)
-            Z1 = np.ma.masked_where(np.logical_not(mask), wrapped_array/6.28)
-            self.w_3d_view.add_labels(name1='Wrapped Phase', name2='Unwrapped Phase')
-        elif self.submode == 'correctedphase_analyses':
-            Z1 = np.ma.masked_where(np.logical_not(mask), self.corrected_phase)
+        if self.options1_widget.is_tilt_checked():
+            Z1 = np.ma.masked_where(np.logical_not(mask), self.corrected_phase) * gain
             self.w_3d_view.add_labels(name1='Corrected Phase', name2='Unwrapped Phase')
         else:
             Z1 = Z2
-        x, y, w_s, u_s = self.w_3d_view.prepare_data_for_mesh(Z1, Z2, undersampling=5)
-        self.w_3d_view.create_mesh_surface(x, y, w_s, u_s)
+        x, y, w_s = self.w_3d_view.prepare_data_for_mesh(Z1, undersampling=10)
+        self.w_3d_view.create_mesh_surface(x, y, w_s)
         self.w_3d_view.showMaximized()
         self.w_3d_view.raise_()
 
@@ -366,23 +297,21 @@ class AnalysesController:
         :param event: Signal that triggers the event.
         """
         change = event.split(',')
+        print(event)
         if change[0] == 'tilt':
-            if self.submode == 'histophase_analyses':
-                bins = np.linspace(-1, 1, 101)
-                self.bot_right_widget.set_data(self.corrected_phase, bins)
-                self.bot_right_widget.refresh_chart()
-            self.display_2D_correction()
-        if change[0] == 'range':
-            self.display_2D_correction()
+            if change[1] == 'on':
+                self.display_2D_correction(gain=5)
+            else:
+                self.display_2D_unwrapped(gain=5)
         if change[0] == 'disp_3D':
-            self.display_3D()
+            print('Display 3D ??')
+            self.display_3D(gain=10)
         if change[0] == 'wedge':
             if is_float(change[1]):
                 self.phase.set_wedge_factor(float(change[1]))
                 if self.submode == 'unwrappedphase_analyses':
                     self.display_2D_unwrapped()
                 elif self.submode == 'correctedphase_analyses':
-                    self.display_2D_unwrapped()
                     self.display_2D_correction()
 
     def process_wrapped_phase_calculation(self, set_number: int = 1):
@@ -398,7 +327,6 @@ class AnalysesController:
             self.phase.process_wrapped_phase()
             # End of process
             self.data_set.set_wrapped_state(True)
-
 
     def process_unwrapped_phase_calculation(self, set_number: int = 1):
         """

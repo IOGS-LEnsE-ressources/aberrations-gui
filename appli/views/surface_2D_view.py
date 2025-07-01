@@ -17,13 +17,23 @@ from PyQt6.QtWidgets import (
     QWidget, QGraphicsView, QGraphicsScene,
     QHBoxLayout,
 )
-from PyQt6.QtGui import QPen, QColor
+from PyQt6.QtGui import QPen, QColor, QFont
 from PyQt6.QtCore import Qt
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtWidgets
 from pyqtgraph import ColorMap
 
 pg.setConfigOptions(imageAxisOrder='row-major')
+
+class ColoredAxis(pg.AxisItem):
+    def __init__(self, orientation, **kwargs):
+        super().__init__(orientation, **kwargs)
+        self.font_color = 'red'
+        self.font_size = 12
+
+    def tickStrings(self, values, scale, spacing):
+        return [f'<span style="color:{self.font_color}; font-size:{self.font_size}pt">{v:g}</span>' for v in values]
+
 
 class Surface2DView(QWidget):
     """
@@ -69,6 +79,12 @@ class Surface2DView(QWidget):
         self.plot.hideButtons()
         self.plot.showAxes(False)
         self.plot.invertY(True)
+
+        axis = self.color_bar.axis
+        font = QFont("Arial", 14)
+        axis.setTickFont(font)
+
+
 
     def set_z_axis_label(self, label: str):
         """

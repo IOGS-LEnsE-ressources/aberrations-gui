@@ -72,7 +72,7 @@ class DataSetModel:
         """
         state = self.images_sets.load_images_set_from_file(filename)
         if state:
-            self.data_set_state = DataSetState.IMAGES
+            self.data_set_state.set_state(DataSetStateValue.IMAGES, True)
         return state
 
     def get_masks_list(self) -> list[np.ndarray]:
@@ -156,6 +156,9 @@ class DataSetModel:
     def set_masks_state(self, value: bool = True):
         self.data_set_state.set_state(DataSetStateValue.MASKS, value)
 
+    def set_images_state(self, value: bool = True):
+        self.data_set_state.set_state(DataSetStateValue.IMAGES, value)
+
     def set_cropped_state(self, value: bool = True):
         self.data_set_state.set_state(DataSetStateValue.CROPPED, value)
 
@@ -164,6 +167,9 @@ class DataSetModel:
 
     def set_unwrapped_state(self, value: bool = True):
         self.data_set_state.set_state(DataSetStateValue.UNWRAPPED, value)
+
+    def set_analyzed_state(self, value: bool = True):
+        self.data_set_state.set_state(DataSetStateValue.ANALYZED, value)
 
     def is_analyzed(self):
         return self.data_set_state.check_state(DataSetStateValue.ANALYZED)
