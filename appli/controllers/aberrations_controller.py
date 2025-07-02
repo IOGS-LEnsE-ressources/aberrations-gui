@@ -109,7 +109,6 @@ class AberrationsController:
             self.submenu.set_button_enabled(1, True)
             self.submenu.set_button_enabled(2, True)
             self.submenu.set_button_enabled(4, True)
-            self.submenu.set_button_enabled(6, True)
 
     def update_submenu_view(self, submode: str):
         """
@@ -131,8 +130,6 @@ class AberrationsController:
                 self.submenu.set_activated(2)
             case 'coefficientscorrection_aberrations':
                 self.submenu.set_activated(4)
-            case 'aberrationsanalyses_aberrations':
-                self.submenu.set_activated(6)
         # Update views
         self.main_widget.clear_bot_right()
         self.main_widget.clear_options()
@@ -166,9 +163,6 @@ class AberrationsController:
 
                 self.options2_widget = AberrationsChoiceView()
                 self.main_widget.set_options2_widget(self.options2_widget)
-
-            case 'aberrationsanalyses_aberrations':
-                pass
 
             case _:
                 self.bot_right_widget = HTMLView()
