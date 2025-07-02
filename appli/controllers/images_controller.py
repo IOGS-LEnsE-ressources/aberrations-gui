@@ -129,6 +129,8 @@ class ImagesController:
                     self.data_set.data_set_state.reset()
                     # Update submenu to display images
                     self.update_submenu("display_images")
+                    self.data_set.set_images_state(self.images_loaded)
+                    self.data_set.set_masks_state(self.masks_loaded)
                 else:
                     self.update_submenu("")
             case 'display_images':

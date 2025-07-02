@@ -145,12 +145,17 @@ class DataSetModel:
 
     def reset_data(self, keep_mask: bool = False):
         """Reset all the data of the data set."""
+        self.images_sets.reset_all_images()
+        self.data_set_state.set_state(DataSetStateValue.IMAGES, False)
+        self.data_set_state.set_state(DataSetStateValue.CROPPED, False)
+        self.data_set_state.set_state(DataSetStateValue.ANALYZED, False)
+        self.data_set_state.set_state(DataSetStateValue.WRAPPED, False)
+        self.data_set_state.set_state(DataSetStateValue.UNWRAPPED, False)
         if keep_mask is False:
             self.masks_sets.reset_masks()
             self.data_set_state.set_state(DataSetStateValue.MASKS, False)
-            print('Delete Masks')
-        self.images_sets.reset_all_images()
-        self.data_set_state.set_state(DataSetStateValue.IMAGES, False)
+        else:
+            self.data_set_state.set_state(DataSetStateValue.MASKS, True)
 
     def set_masks_state(self, value: bool = True):
         self.data_set_state.set_state(DataSetStateValue.MASKS, value)

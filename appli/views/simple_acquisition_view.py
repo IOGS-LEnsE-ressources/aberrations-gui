@@ -90,7 +90,7 @@ class SimpleAcquisitionView(QWidget):
         else:
             self.data_set.reset_data()
         if self.data_set.acquisition_mode.is_possible():
-            self.data_set.acquisition_mode.start()
+            print(f'Start ? {self.data_set.acquisition_mode.start()}')
             thread = threading.Thread(target=self.update_progress_bar)
             time.sleep(0.01)
             thread.start()

@@ -138,6 +138,8 @@ class AcquisitionModel:
         if self.is_possible() is False:
             return False
         self.acquisition_counter = 0
+        self.current_images_set = []
+        self.images_sets.reset_all_images()
         self.thread = threading.Thread(target=self.thread_acquisition)
         time.sleep(0.0001)
         self.thread.start()
@@ -159,7 +161,6 @@ class AcquisitionModel:
             #print(f'ImCnt = {self.images_counter + 1} / {self.set_size} -- '
             #     f'SetCnt = {self.acquisition_counter + 1} / {self.acquisition_number}')
             # Move piezo
-            print(f'Move {self.voltages_list[self.images_counter]}')
             self.piezo.write_dac(self.voltages_list[self.images_counter])
             # Wait end of movement
             time.sleep(0.3)
@@ -173,15 +174,16 @@ class AcquisitionModel:
         Thread for acquisition of data.
         """
         self.camera.start_acquisition()
-        print(f'Acq Counter = {self.acquisition_counter}')
         if self.acquisition_counter < self.acquisition_number:
-            print(f'Im Counter = {self.images_counter}')
             if self.images_counter < self.set_size:
                 new_image = self._one_acquisition()
+                print(f'New Image {self.images_counter}')
                 self.current_images_set.append(new_image)
                 self.images_counter += 1
             else:
+                print(f'End 2 {len(self.current_images_set)}')
                 self.images_sets.add_set_images(self.current_images_set)
+                print(f'End  {len(self.images_sets.images_list)}')
                 self.acquisition_counter += 1
                 self.images_counter = 0
                 self.current_images_set = []
