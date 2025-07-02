@@ -166,7 +166,7 @@ class AcquisitionModel:
             time.sleep(0.3)
         # Acquire image
         image = self.camera.get_image() #fast_mode=True)
-        time.sleep(0.01)
+        time.sleep(0.1)
         return image
 
     def thread_acquisition(self):
