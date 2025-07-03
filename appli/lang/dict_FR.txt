@@ -116,3 +116,7 @@ initial_corrected_phase; Phase corrigée (Piston, Tilt)
 phase_value_in; Phase
 coeff_y_axis_label; Valeur des coefficients de Zernike
 coeff_x_axis_label; Indice des coefficients (Noll)
+# --------------
+# Aberrations - post process
+# --------------
+post_process_button; Post traitement
