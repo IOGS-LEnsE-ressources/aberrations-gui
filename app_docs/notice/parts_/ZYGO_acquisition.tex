@@ -29,6 +29,29 @@ Cette étape se fait dans la partie \textbf{\textsc{Acquisition}} de l'applicati
 Cette section regroupe les sous-mode suivant :
 
 \begin{description}
-	\item[Camera] qui permet de modifier le temps d'exposition et le niveau de noir de la caméra Basler du système
-	\item[]
+	\item[Caméra] qui permet de modifier le temps d'exposition et le niveau de noir de la caméra Basler du système
+	\item[Gestion du piezo] qui permet de valider le fonctionnement de la cale piézoélectrique
+	\item[Acquisition Simple] qui permet de lancer une nouvelle acquisition d'interférogramme (5 images déphasées de $\lambda/2$.
 \end{description}
+
+
+\subsection{Caméra}
+
+La section \textsc{\textbf{Caméra}} permet de lancer la \textbf{visualisation de l'interférogramme} (en mode \textsc{View}).
+
+Un \textbf{histogramme} ainsi qu'une \textbf{coupe au centre de l'image} sont affichés dans la partie de droite. 
+
+\medskip
+
+Il est possible de régler le \textbf{temps d'exposition} et le \textbf{niveau de noir} (offset des pixels) de la caméra. 
+
+Le \textbf{niveau de noir} doit être réglé pour que les franges sombres ne soient pas écrêtées vers le bas (autour de 0) sur la coupe tout en maintenant un niveau proche de 0 en terme de luminisité.
+
+Le \textbf{temps d'exposition} doit être réglé pour que les franges claires ne soient pas écrêtées vers le haut (autour de 255) sur la coupe tout en garantissant la meilleure dynamique possible sur la caméra.
+
+\medskip
+
+
+\begin{center}
+	\includegraphics[width=0.9\textwidth]{images/zygo_acquisition_camera.png}
+\end{center}
