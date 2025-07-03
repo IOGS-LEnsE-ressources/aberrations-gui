@@ -97,7 +97,7 @@ class AnalysesController:
         self.submenu.set_button_enabled(3, False)
         self.submenu.set_button_enabled(4, False)
         print("Init Analyses !!")
-        if not self.data_set.is_wrapped():
+        if not self.data_set.is_wrapped():  #?????
             print('Wrapping...')
             self.process_wrapped_phase_calculation(set_number)
         if not self.data_set.is_unwrapped():

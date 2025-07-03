@@ -145,16 +145,16 @@ class ModesManager:
                 self.first_treatment = True
                 self.first_analysis = True
             case 'analyses':
-                if self.first_analysis:
+                """if self.first_analysis or self.analyses_controller is None:
                     self.analyses_controller = AnalysesController(self)
-                    self.first_analysis = False
-                self.mode_controller = self.analyses_controller
+                    self.first_analysis = False"""
+                self.mode_controller = AnalysesController(self)
             case 'aberrations':
                 self.mode_controller = AberrationsController(self)
             case 'help':
                 self.mode_controller = HelpController(self)
             case 'postprocess':
-                if self.first_treatment:
+                """if self.first_treatment:
                     self.treatment_controller = TreatmentController(self)
-                    self.first_treatment = False
-                self.mode_controller = self.treatment_controller
+                    self.first_treatment = False"""
+                self.mode_controller = TreatmentController(self)
