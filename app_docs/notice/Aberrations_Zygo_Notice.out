@@ -10,3 +10,7 @@
 \BOOKMARK [1][-]{section.0.7}{Structure de l'application}{}% 10
 \BOOKMARK [1][-]{section.0.8}{Acquisition d'une s\351rie d'interf\351rogrammes}{}% 11
 \BOOKMARK [2][-]{subsection.0.8.1}{Cam\351ra}{section.0.8}% 12
+\BOOKMARK [2][-]{subsection.0.8.2}{Acquisition Simple}{section.0.8}% 13
+\BOOKMARK [2][-]{subsection.0.8.3}{Gestion de la cale pi\351zo\351lectrique}{section.0.8}% 14
+\BOOKMARK [1][-]{section.0.9}{Cr\351ation d'un masque}{}% 15
+\BOOKMARK [2][-]{subsection.0.9.1}{Ajout d'un nouveau masque}{section.0.9}% 16
