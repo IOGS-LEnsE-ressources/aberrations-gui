@@ -110,6 +110,7 @@ class PhaseModel:
         if self.wrapped_phase is not None:
             mask, _ = self.cropped_masks_sets.get_mask(1)
             self.unwrapped_phase = unwrap_phase(self.wrapped_phase) / (2 * np.pi)
+            print(f'Unwrapping : Max-Min = {np.max(self.unwrapped_phase) - np.min(self.unwrapped_phase)}')
             self.unwrapped_phase[~mask] = np.nan
             self.unwrapped_phase = np.ma.masked_where(np.logical_not(mask), self.unwrapped_phase)
             self.data_set.set_unwrapped_state()

@@ -180,9 +180,9 @@ class AnalysesController:
                 self.options1_widget.wedge_edit.setEnabled(True)
                 self.options1_widget.show_correction()
                 if self.options1_widget.is_tilt_checked():
-                    self.display_2D_correction(gain=5)
+                    self.display_2D_correction()
                 else:
-                    self.display_2D_unwrapped(gain=5)
+                    self.display_2D_unwrapped()
 
             case _:
                 self.options1_widget.wedge_edit.setEnabled(False)
@@ -241,7 +241,8 @@ class AnalysesController:
         self.bot_right_widget = Surface2DView(translate('unwrapped_surface'))
         self.main_widget.set_right_widget(self.bot_right_widget)
         self.bot_right_widget.set_array(unwrapped_array * gain)
-        pv, rms = process_statistics_surface(unwrapped)
+        pv, rms = process_statistics_surface(unwrapped_array)
+        print(f'G = {gain} // MAX = {np.nanmax(unwrapped_array)} / MIN = {np.nanmin(unwrapped_array)}')
         self.options1_widget.set_pv_uncorrected(pv, '\u03BB')
         self.options1_widget.set_rms_uncorrected(rms, '\u03BB')
 
@@ -269,9 +270,12 @@ class AnalysesController:
         self.top_right_widget.reset_z_range()
         self.options1_widget.erase_pv_rms()
         pv, rms = process_statistics_surface(self.corrected_phase)
+        print(f'G = {gain} // CC - MAX = {np.nanmax(self.corrected_phase)} / MIN = {np.nanmin(self.corrected_phase)}')
         self.options1_widget.set_pv_corrected(pv, '\u03BB')
         self.options1_widget.set_rms_corrected(rms, '\u03BB')
         pv, rms = process_statistics_surface(unwrapped_array)
+
+        print(f'NC - MAX = {np.nanmax(unwrapped_array)} / MIN = {np.nanmin(unwrapped_array)}')
         self.options1_widget.set_pv_uncorrected(pv, '\u03BB')
         self.options1_widget.set_rms_uncorrected(rms, '\u03BB')
 
@@ -300,9 +304,9 @@ class AnalysesController:
         print(event)
         if change[0] == 'tilt':
             if change[1] == 'on':
-                self.display_2D_correction(gain=5)
+                self.display_2D_correction()
             else:
-                self.display_2D_unwrapped(gain=5)
+                self.display_2D_unwrapped()
         if change[0] == 'disp_3D':
             self.display_3D(gain=10)
         if change[0] == 'wedge':
