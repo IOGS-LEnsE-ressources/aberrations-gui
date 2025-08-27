@@ -136,7 +136,7 @@ plt.show()
 ## Gaussian filter on image*
 print('Opening Images...')
 sigma = 10
-images_filtered = list(map(lambda x:gaussian_filter(x, sigma), images_c))
+images_filtered = images_c # list(map(lambda x:gaussian_filter(x, sigma), images_c))
 
 for i, img in enumerate(images_filtered):
     plt.subplot(1,5,i+1)
