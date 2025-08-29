@@ -21,6 +21,7 @@ from PyQt6.QtWidgets import (
 )
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QColor, QFont
+from utils.dataset_utils import DataSetState, DataSetStateValue
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -207,14 +208,24 @@ class MasksTableList(QTableWidget):
         self.controller.update_submenu('first')
 
     def delete_mask(self, event):
+        print(f'DELETE MASK !')
         sender = self.sender()
         for i, delete_button in enumerate(self.delete_list):
             if sender == delete_button:
                 if i != 0:
+                    print('i/0')
                     if self.data_set.masks_sets.get_masks_number() >= 1:
                         self.data_set.masks_sets.del_mask(i)
                         self.delete_data()
+                    if self.data_set.masks_sets.get_masks_number() == 0:
+                        print("No More Mask")
+                        self.data_set.set_cropped_state(False)
+                        self.data_set.set_analyzed_state(False)
+                        self.data_set.set_wrapped_state(False)
+                        self.data_set.set_unwrapped_state(False)
+
                 else:
+                    print('i=0')
                     self.data_set.masks_sets.reset_masks()
                     self.delete_data()
                 self.init_data()

@@ -67,6 +67,7 @@ class Surface2DView(QWidget):
         :param array: Array to display.
         """
         self.array_2D = array
+        print(f'\t Surface 2D Size = {self.array_2D.shape}')
         # Create an ImageItem for the new image
         self.imv = pg.ImageItem(image=self.array_2D)
 
@@ -77,13 +78,12 @@ class Surface2DView(QWidget):
         self.color_bar = self.plot.addColorBar(self.imv, colorMap='cividis', interactive=False, pen=pen)
         self.plot.setMouseEnabled(x=False, y=False)
         self.plot.hideButtons()
-        self.plot.showAxes(False)
+        self.plot.showAxes(True)
         self.plot.invertY(True)
 
         axis = self.color_bar.axis
         font = QFont("Arial", 14)
         axis.setTickFont(font)
-
 
 
     def set_z_axis_label(self, label: str):
@@ -101,7 +101,7 @@ class Surface2DView(QWidget):
     def set_z_range(self, range_z: Tuple[float]):
         """
         Set the range of the Z-axis, for the colorbar.
-        :param range: tuple of float, minimum and maximum values of the colorbar.
+        :param range_z: tuple of float, minimum and maximum values of the colorbar.
         """
         self.imv.setLevels(range_z)
         self.color_bar.setLevels(range_z)

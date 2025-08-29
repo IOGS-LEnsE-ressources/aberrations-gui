@@ -138,6 +138,7 @@ class MasksModel:
         """
         global_mask = self.get_global_mask()
         top_left, bottom_right = find_mask_limits(global_mask)
+        print(f'\t Mask Limits (masks.py) : {top_left} / {bottom_right}')
         height, width = bottom_right[1] - top_left[1], bottom_right[0] - top_left[0]
         pos_x, pos_y = top_left[1], top_left[0]
         global_crop = crop_images([global_mask], (height, width), (pos_x, pos_y))[0]

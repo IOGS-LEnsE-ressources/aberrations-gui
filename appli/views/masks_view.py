@@ -8,7 +8,7 @@
 .. moduleauthor:: Julien VILLEMEJANE (PRAG LEnsE) <julien.villemejane@institutoptique.fr>
 Creation : march/2025
 """
-import sys, os
+import sys, os, time
 import numpy as np
 import cv2
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
@@ -22,7 +22,7 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
     QApplication
 )
-from PyQt6.QtCore import Qt, QPoint
+from PyQt6.QtCore import Qt, QPoint, QTimer
 from PyQt6.QtGui import QPixmap, QPainter, QPen, QColor, QKeyEvent, QMouseEvent, QResizeEvent
 
 
@@ -144,31 +144,37 @@ class MasksView(QDialog):
                         self.draw_point(pos.x(), pos.y())
                         # Test if the figure is ending
                         if len(self.points) == 3:
-                            self.draw_circle()
                             self.can_draw = False
-                            self.accept()
 
                 case 'rectangular':
                     if len(self.points) < 2:
                         self.points.append((pos.x(), pos.y()))
                         self.draw_point(pos.x(), pos.y())
+                        # Test if the figure is ending
                         if len(self.points) == 2:
-                            self.draw_rectangle()
                             self.can_draw = False
-                            time.sleep(0.5)
-                            self.accept()
                 case 'polygon':
-                    limit = 10 * self.ratio  # px
+                    limit = 20 * self.ratio  # px
                     self.points.append((pos.x(), pos.y()))
                     self.draw_point(pos.x(), pos.y())
                     dx = self.points[-1][0] - self.points[0][0]
                     dy = self.points[-1][1] - self.points[0][1]
                     dist = dx ** 2 + dy ** 2
+                    # Test if the figure is ending
                     if len(self.points) > 1 and dist < limit ** 2:
-                        self.draw_polygon()
                         self.can_draw = False
-                        time.sleep(0.5)
-                        self.accept()
+
+        # When figure ended
+        if self.can_draw is False:
+            match self.type:
+                case 'circular':
+                    self.draw_circle()
+                case 'rectangular':
+                    self.draw_rectangle()
+                case 'polygon':
+                    self.draw_polygon()
+
+            QTimer.singleShot(1000, self.accept)
 
     def draw_point(self, x: int, y: int) -> None:
         """
@@ -327,7 +333,7 @@ class MasksView(QDialog):
 
         # Draw the rectangle on the pixmap
         painter = QPainter(self.pixmap)
-        pen = QPen(QColor(0, 0, 255), 2)
+        pen = QPen(Qt.GlobalColor.blue, 2)
         painter.setPen(pen)
         painter.drawRect(x1, y1, (x2-x1), (y2-y1))
         painter.end()
@@ -392,7 +398,7 @@ class MasksView(QDialog):
 
         # Draw polygon on the main pixmap
         painter = QPainter(self.pixmap)
-        pen = QPen(QColor(0, 0, 255), 2)
+        pen = QPen(Qt.GlobalColor.blue, 2)
         painter.setPen(pen)
         painter.drawPolygon(points)
         painter.end()
@@ -442,7 +448,7 @@ if __name__ == '__main__':
 
     image = np.random.randint(0, 255, (2000, 1000), dtype=np.uint8)
     try:
-        dialog = MasksView(image, 'circular')
+        dialog = MasksView(image, 'rectangular')
         result = dialog.exec()
     except Exception as e:
         print(e)

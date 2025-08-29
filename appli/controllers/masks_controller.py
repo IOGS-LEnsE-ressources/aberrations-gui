@@ -102,9 +102,9 @@ class MasksController:
         match submode:
             case 'circular_masks':
                 self.submenu.set_activated(1)
-            case 'rectangular_masks':
-                self.submenu.set_activated(2)
             case 'polygon_masks':
+                self.submenu.set_activated(2)
+            case 'rectangular_masks':
                 self.submenu.set_activated(3)
 
     def update_submenu(self, event):
@@ -162,7 +162,7 @@ class MasksController:
         :param event: Signal that triggers the event.
         """
         change = event.split(',')
-        print(change)
+        print(f'M Changed / {change}')
 
 
 if __name__ == "__main__":
