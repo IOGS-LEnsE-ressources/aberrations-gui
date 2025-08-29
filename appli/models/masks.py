@@ -138,7 +138,6 @@ class MasksModel:
         """
         global_mask = self.get_global_mask()
         top_left, bottom_right = find_mask_limits(global_mask)
-        print(f'\t Mask Limits (masks.py) : {top_left} / {bottom_right}')
         height, width = bottom_right[1] - top_left[1], bottom_right[0] - top_left[0]
         pos_x, pos_y = top_left[1], top_left[0]
         global_crop = crop_images([global_mask], (height, width), (pos_x, pos_y))[0]
@@ -173,7 +172,6 @@ class MasksModel:
             # Process masks from MAT file
             if 'Masks' in data_from_mat:
                 mask_mat = data_from_mat['Masks']
-                print(mask_mat.shape)
                 mask_d = split_3d_array(mask_mat, size=1)
                 if 'Masks_type' in data_from_mat:
                     print(f'Masks Type = {data_from_mat["Masks_type"]}')
@@ -183,7 +181,6 @@ class MasksModel:
                         self.add_mask(maskk.squeeze())
                 return True
             else:
-                print('No Mask')
                 return False
         return False
 

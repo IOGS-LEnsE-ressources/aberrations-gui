@@ -72,6 +72,12 @@ class AnalysesController:
         self.tilt_possible = False
         self.sub_mode = ''
         self.corrected_phase = None
+        # Other parameters
+        if 'colormap_2D' in self.manager.main_app.default_parameters:
+            self.colormap_2D = self.manager.main_app.default_parameters['colormap_2D']
+        else:
+            self.colormap_2D = 'cividis'
+
         # Graphical elements
         self.top_left_widget = ImagesDisplayView()  # Display first image of a set
         self.top_right_widget = QWidget()  # ??
@@ -96,15 +102,11 @@ class AnalysesController:
         self.submenu.set_button_enabled(1, False)
         self.submenu.set_button_enabled(3, False)
         self.submenu.set_button_enabled(4, False)
-        print("Init Analyses !!")
-        if not self.data_set.is_wrapped():  #?????
-            print('Wrapping...')
+        if not self.data_set.is_wrapped():
             self.process_wrapped_phase_calculation(set_number)
         if not self.data_set.is_unwrapped():
-            print('UnWrapping...')
             self.process_unwrapped_phase_calculation(set_number)
         if self.data_set.is_unwrapped() and not self.data_set.is_analyzed():
-            print('Zernike Processing...')
             self.zernike_coeffs.set_phase(self.phase)
             for k in range(3):
                 self.process_zernike_calculation(k)
@@ -196,7 +198,7 @@ class AnalysesController:
         """
         if self.data_set.is_analyzed():
             self.tilt_possible = True
-        print(event)
+        #print(event)
         # Update view
         self.update_submenu_view(event)
         # Update Action
@@ -206,7 +208,6 @@ class AnalysesController:
                 self.options1_widget.erase_pv_rms()
                 # Process unwrapped phase
                 if self.data_set.is_wrapped() and not self.data_set.is_unwrapped():
-                    print("Unwrapping...")
                     self.process_unwrapped_phase_calculation()
 
     def display_help(self):
@@ -226,7 +227,7 @@ class AnalysesController:
         wrapped_array = wrapped.filled(np.nan)
         # Display unwrapped and corrected in 2D
         self.main_widget.clear_top_right()
-        self.top_right_widget = Surface2DView(translate('wrapped_phase'))
+        self.top_right_widget = Surface2DView(translate('wrapped_phase'), colormap_2D=self.colormap_2D)
 
         self.main_widget.set_right_widget(self.top_right_widget)
         self.top_right_widget.set_array(wrapped_array)
@@ -238,11 +239,10 @@ class AnalysesController:
         unwrapped = self.phase.get_unwrapped_phase()
         unwrapped_array = unwrapped.filled(np.nan)
         # Display unwrapped and corrected in 2D
-        self.bot_right_widget = Surface2DView(translate('unwrapped_surface'))
+        self.bot_right_widget = Surface2DView(translate('unwrapped_surface'), colormap_2D=self.colormap_2D)
         self.main_widget.set_right_widget(self.bot_right_widget)
         self.bot_right_widget.set_array(unwrapped_array * gain)
         pv, rms = process_statistics_surface(unwrapped_array)
-        print(f'G = {gain} // MAX = {np.nanmax(unwrapped_array)} / MIN = {np.nanmin(unwrapped_array)}')
         self.options1_widget.set_pv_uncorrected(pv, '\u03BB')
         self.options1_widget.set_rms_uncorrected(rms, '\u03BB')
 
@@ -251,7 +251,7 @@ class AnalysesController:
         Display correction depending on tilt checkbox value.
         """
         self.main_widget.clear_top_right()
-        self.top_right_widget = Surface2DView(translate('corrected_surface'))
+        self.top_right_widget = Surface2DView(translate('corrected_surface'), colormap_2D=self.colormap_2D)
         self.main_widget.set_right_widget(self.top_right_widget)
         ## TO DO : update colorbar depending on the max range of TOP and BOT right area.
         unwrapped = self.phase.get_unwrapped_phase()
@@ -270,12 +270,10 @@ class AnalysesController:
         self.top_right_widget.reset_z_range()
         self.options1_widget.erase_pv_rms()
         pv, rms = process_statistics_surface(self.corrected_phase)
-        print(f'G = {gain} // CC - MAX = {np.nanmax(self.corrected_phase)} / MIN = {np.nanmin(self.corrected_phase)}')
         self.options1_widget.set_pv_corrected(pv, '\u03BB')
         self.options1_widget.set_rms_corrected(rms, '\u03BB')
         pv, rms = process_statistics_surface(unwrapped_array)
 
-        print(f'NC - MAX = {np.nanmax(unwrapped_array)} / MIN = {np.nanmin(unwrapped_array)}')
         self.options1_widget.set_pv_uncorrected(pv, '\u03BB')
         self.options1_widget.set_rms_uncorrected(rms, '\u03BB')
 
@@ -290,7 +288,7 @@ class AnalysesController:
             self.w_3d_view.add_labels(name1='Corrected Phase', name2='Unwrapped Phase')
         else:
             Z1 = Z2 * gain
-        x, y, w_s = self.w_3d_view.prepare_data_for_mesh(Z1, undersampling=10)
+        x, y, w_s = self.w_3d_view.prepare_data_for_mesh(Z1, undersampling=4)
         self.w_3d_view.create_mesh_surface(x, y, w_s)
         self.w_3d_view.showMaximized()
         self.w_3d_view.raise_()
@@ -301,14 +299,17 @@ class AnalysesController:
         :param event: Signal that triggers the event.
         """
         change = event.split(',')
-        print(event)
         if change[0] == 'tilt':
             if change[1] == 'on':
                 self.display_2D_correction()
             else:
                 self.display_2D_unwrapped()
         if change[0] == 'disp_3D':
+            self.display_3D(gain=2)
+
+        if change[0] == 'disp_3D_gain':
             self.display_3D(gain=10)
+
         if change[0] == 'wedge':
             if is_float(change[1]):
                 self.phase.set_wedge_factor(float(change[1]))

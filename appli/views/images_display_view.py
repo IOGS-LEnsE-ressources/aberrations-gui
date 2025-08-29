@@ -117,9 +117,6 @@ if __name__ == "__main__":
     width, height = 256, 256
     random_pixels = np.random.randint(0, 256, (height, width), dtype=np.uint8)
     image = QImage(random_pixels, width, height, QImage.Format.Format_Grayscale8)
-    print(type(random_pixels))
-    print(random_pixels.dtype)
-    print(random_pixels.shape)
     main_widget.set_image(image)
     main_widget.set_image_from_array(random_pixels)
 

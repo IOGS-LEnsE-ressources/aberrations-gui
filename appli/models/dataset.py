@@ -195,10 +195,8 @@ if __name__ == '__main__':
 
     images_set = ImagesModel(number_of_images)
     if images_set.load_images_set_from_file('../_data/test3.mat'):
-        print('Images OK')
         data_set.add_set_images(images_set.get_images_set(1))
 
-    print(f'Number of sets = {data_set.images_sets.get_number_of_sets()}')
     if data_set.images_sets.get_number_of_sets() >= 1:
         image_1_1 = data_set.get_images_sets(1)
         if isinstance(image_1_1, list):

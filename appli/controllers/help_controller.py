@@ -91,5 +91,5 @@ class HelpController:
         # Update view
         self.update_submenu_view(event)
         # Update Action
-        print(event)
+        #print(event)
 

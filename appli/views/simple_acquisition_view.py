@@ -90,7 +90,6 @@ class SimpleAcquisitionView(QWidget):
         else:
             self.data_set.reset_data()
         if self.data_set.acquisition_mode.is_possible():
-            print(f'Start ? {self.data_set.acquisition_mode.start()}')
             thread = threading.Thread(target=self.update_progress_bar)
             time.sleep(0.01)
             thread.start()
@@ -111,7 +110,6 @@ class SimpleAcquisitionView(QWidget):
             self.acquisition_end.emit('acq_end')
 
     def update_view(self):
-        print(f"Update View ? {self.data_set.has_mask()}")
         if self.data_set.has_mask():
             self.start_acq_keep_button.setEnabled(True)
             self.start_acq_keep_button.setStyleSheet(unactived_button)

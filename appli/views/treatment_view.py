@@ -686,7 +686,6 @@ class CoefficientsView(QWidget):
         pupil = resize_image_ratio(pupil, 900, 900)
         self.psf_image_display.set_image(psf_image)
         self.pupil_display.set_image(pupil)
-        print(self.coefficients)
 
 
 class PSFDisplayWidget(QWidget):

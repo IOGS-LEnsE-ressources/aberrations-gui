@@ -22,6 +22,7 @@ from PyQt6.QtCore import Qt
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtWidgets
 from pyqtgraph import ColorMap
+from matplotlib import colormaps as cm
 
 pg.setConfigOptions(imageAxisOrder='row-major')
 
@@ -40,16 +41,18 @@ class Surface2DView(QWidget):
     Class Surface 2D allowing to display a 2D array in a widget.
     """
 
-    def __init__(self, title: str=''):
+    def __init__(self, title: str='', colormap_2D='cividis'):
         """
         Default constructor.
         :param title: Title of the image to display.
+        :param colormap_2D: Colormap to use in the 2D display
         """
         super().__init__()
         # Data
         self.array_2D = np.random.rand(20, 20)
         self.title = title
         self.z_axis_label = ''
+        self.colormap_2D = colormap_2D
         # Graphic area for image
         self.imv = pg.ImageItem(image=self.array_2D)
         # Création du layout principal
@@ -67,7 +70,6 @@ class Surface2DView(QWidget):
         :param array: Array to display.
         """
         self.array_2D = array
-        print(f'\t Surface 2D Size = {self.array_2D.shape}')
         # Create an ImageItem for the new image
         self.imv = pg.ImageItem(image=self.array_2D)
 
@@ -75,7 +77,9 @@ class Surface2DView(QWidget):
         self.plot.addItem(self.imv)
         self.plot.setAspectLocked(True)
         pen = QPen(QColor('black'))
-        self.color_bar = self.plot.addColorBar(self.imv, colorMap='cividis', interactive=False, pen=pen)
+        pg_cmap = pg.colormap.getFromMatplotlib(self.colormap_2D)
+        self.color_bar = self.plot.addColorBar(self.imv, colorMap=pg_cmap, interactive=False, pen=pen)
+        self.imv.setColorMap(pg_cmap)
         self.plot.setMouseEnabled(x=False, y=False)
         self.plot.hideButtons()
         self.plot.showAxes(True)
@@ -127,8 +131,5 @@ if __name__ == "__main__":
     window = Surface2DView()
     array_2D = np.random.rand(50, 50)
     window.set_array(array_2D)
-    print(window.get_z_range())
-    #window.set_z_range((-5, 5))
-    print(window.get_z_range())
     window.show()
     sys.exit(app.exec())

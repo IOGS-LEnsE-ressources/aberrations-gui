@@ -55,6 +55,11 @@ class AnalysesOptionsView(QWidget):
         self.widget_2D_3D.setFixedHeight(OPTIONS_BUTTON_HEIGHT)
         self.widget_2D_3D.setStyleSheet(unactived_button)
         self.widget_2D_3D.clicked.connect(self.display_changed)
+        # 2D/3D display with gain
+        self.widget_2D_3D_gain = QPushButton(translate('label_2D_3D_choice_gain'))
+        self.widget_2D_3D_gain.setFixedHeight(OPTIONS_BUTTON_HEIGHT)
+        self.widget_2D_3D_gain.setStyleSheet(unactived_button)
+        self.widget_2D_3D_gain.clicked.connect(self.display_changed)
         # Wedge Factor
         self.wedge_edit = LineEditView('wedge', translate('label_wedge_value'), '1')
         self.wedge_edit.text_changed.connect(self.wedge_changed)
@@ -85,6 +90,7 @@ class AnalysesOptionsView(QWidget):
         self.layout.addWidget(self.pv_rms_corrected)
         self.layout.addStretch()
         self.layout.addWidget(self.widget_2D_3D)
+        self.layout.addWidget(self.widget_2D_3D_gain)
         self.layout.addStretch()
         self.show_correction()
 
@@ -132,11 +138,13 @@ class AnalysesOptionsView(QWidget):
 
     def display_changed(self, event):
         """
-        Action performed when the 2D/3D checkbox is checked.
+        Action performed when the 2D/3D button is clicked.
         """
         sender = self.sender()
         if sender == self.widget_2D_3D:
             self.analyses_changed.emit('disp_3D,')
+        elif sender == self.widget_2D_3D_gain:
+            self.analyses_changed.emit('disp_3D_gain,')
         else:
             self.analyses_changed.emit(event)
 

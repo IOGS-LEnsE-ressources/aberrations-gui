@@ -149,7 +149,6 @@ class CameraOptionsView(QWidget):
         """
         self.zoom_activated = True
         camera = self.controller.data_set.acquisition_mode.camera
-        print(f'FPS = {camera.get_frame_rate()}')
         self.zoom_window.showMaximized()
         self.zoom_window.closeEvent = self.zoom_closed
 
@@ -158,7 +157,6 @@ class CameraOptionsView(QWidget):
         Deactivate zoom window.
         """
         self.zoom_activated = False
-        print('Close Zoom')
 
 
 if __name__ == "__main__":

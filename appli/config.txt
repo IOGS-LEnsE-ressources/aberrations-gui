@@ -16,3 +16,5 @@ Piezo Active;1
 Piezo Channel;1
 ### Default directory
 Dir Images;D:\tools\git_repo\LEnsE\ressources\camera-gui\applis\Zygo-labwork_v2b\_test
+###Display
+colormap_2D;jet

@@ -95,7 +95,6 @@ class MasksView(QDialog):
         self.mask = np.zeros_like(self.image, dtype=np.uint8)
 
         self.setWindowState(Qt.WindowState.WindowMaximized)
-        print('D Maximized')
         # Assign mousePressEvent to capture points
         self.label.mousePressEvent = self.get_points_circle
 
@@ -154,8 +153,19 @@ class MasksView(QDialog):
                         if len(self.points) == 2:
                             self.can_draw = False
                 case 'polygon':
-                    limit = 20 * self.ratio  # px
+                    limit = np.int32(10 * self.ratio)  # px
                     self.points.append((pos.x(), pos.y()))
+                    # Display a red circle for the end of the polygon
+                    if len(self.points) == 1:
+                        combined_pixmap = self.pixmap
+                        painter = QPainter(combined_pixmap)
+                        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+                        pen = QPen(Qt.GlobalColor.red, 2)
+                        painter.setPen(pen)
+                        painter.drawEllipse(QPoint(pos.x(), pos.y()), limit, limit)
+                        painter.end()
+                        self.label.setPixmap(combined_pixmap)
+
                     self.draw_point(pos.x(), pos.y())
                     dx = self.points[-1][0] - self.points[0][0]
                     dy = self.points[-1][1] - self.points[0][1]
@@ -448,7 +458,7 @@ if __name__ == '__main__':
 
     image = np.random.randint(0, 255, (2000, 1000), dtype=np.uint8)
     try:
-        dialog = MasksView(image, 'rectangular')
+        dialog = MasksView(image, 'polygon')
         result = dialog.exec()
     except Exception as e:
         print(e)

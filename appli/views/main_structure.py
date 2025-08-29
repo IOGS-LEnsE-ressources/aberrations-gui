@@ -260,10 +260,6 @@ class MainView(QWidget):
             camera.stop_acquisition()
             camera.free_memory()
         controller = self.main_app.mode_manager.mode_controller
-        '''
-        if isinstance(controller, AcquisitionController):
-            print('STOP !!')
-        '''
         print('End of APP')
 
 

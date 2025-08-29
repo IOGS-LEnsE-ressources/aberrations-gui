@@ -244,7 +244,6 @@ class AcquisitionController:
         Update step in acquisition process.
         """
         if event == 'acq_end':
-            print('REsET DATA')
             self.data_set.acquisition_mode.thread.join()
             # Display grid of images in top right area.
             time.sleep(0.1)
@@ -266,13 +265,12 @@ class AcquisitionController:
         :param event:
         """
         if event == 'zoom':
-            print("Zoom")
+            pass
         if event == 'voltage':
             volt = self.options1_widget.get_voltage()
             self.data_set.acquisition_mode.piezo.write_dac(volt)
 
     def __del__(self):
-        print('del acq controller')
         if self.acquiring:
             self.stop_acquisition()
             #self.data_set.acquisition_mode.camera.disconnect()

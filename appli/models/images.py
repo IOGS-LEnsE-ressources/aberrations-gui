@@ -48,7 +48,6 @@ class ImagesModel:
 
     def reset_all_images(self):
         """Reset all images."""
-        print('RESET IMAGES')
         self.images_list.clear()
         self.images_sets_number = 0
 
@@ -111,7 +110,6 @@ class ImagesModel:
         """
         new_data = np.concatenate([np.stack(sublist, axis=-1) for sublist in self.images_list], axis=-1)
         new_data = new_data.astype(np.uint8)
-        print(new_data.shape)
         data = {
             'Images': new_data
         }
@@ -126,8 +124,6 @@ if __name__ == '__main__':
 
     ## Open MAT file - including 'Images' and 'Masks'
     if image_set.load_images_set_from_file('../_data/test3.mat'):
-        print('Images OK')
-
         image_set.save_images_set_to_file('../_data/test_new.mat')
 
     ## Test class

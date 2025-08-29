@@ -56,10 +56,10 @@ rectangular_mask_button; Masque Rectangulaire
 polygon_mask_button; Masque Polygonal
 label_masks_options; Affichage des masques
 masks_list_all; ALL
-delete_all; Supprimer tous
+delete_all; Tout supprimer
 show_all; Montrer tous
 show_mask; Montrer masque
-del_mask; Supprimer masque
+delete_mask; Supprimer masque
 masks_list_nb; Num.
 masks_list_type; Type
 masks_list_select; Select.
@@ -75,11 +75,10 @@ wrapped_phase_button; Affichage Phase non déroulée
 unwrapped_phase_button; Affichage Phase déroulée
 corrected_phase_button; Correction du tilt
 histogram_phase_button; Histogramme de la phase
-wedge_factor_label; Wedge Factor
 label_sub_acquisition_title; Correction
 check_tilt; Tilt
 label_2D_3D_choice; Affichage 3D
-label_wedge_value; Wedge Factor
+label_2D_3D_choice_gain; Affichage 3D (gain 10)
 label_pv_rms_uncorrected; Statistiques surface non corrigée
 label_pv_rms_corrected; Statistiques surface corrigée
 label_tilt_choice; Correction du tilt
@@ -98,8 +97,8 @@ Zernike_coefficients_button; Coefficients de Zernike
 Seidel_coefficients_button; Coefficients de Seidel
 coefficients_correction_button; Correction de la phase
 label_aberrations_options; Etude simplifiée
-label_wedge_value; Wedge Factor
-label_pv_rms_corrected; Statistiques phase corrigée
+label_wedge_value; Rapport frange/longueur d’onde
+label_pv_rms_corrected; Statistiques surface corrigée
 label_correct_disp_choice; Suppression coefficients corrigés
 label_correct_first_choice; Piston/Tilt (Bar graph)
 label_correct_defocus_choice; Correction du defocus

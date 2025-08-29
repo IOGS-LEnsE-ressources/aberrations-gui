@@ -406,7 +406,7 @@ if __name__ == "__main__":
     # Test class
     app = QApplication(sys.argv)
     main_widget = DoubleGraph3DView()
-    x, y, w_s, u_s = main_widget.prepare_data_for_mesh(wrapped, unwrapped)
+    x, y, w_s, u_s = main_widget.prepare_data_for_mesh(wrapped, unwrapped, undersampling=3)
     main_widget.create_mesh_surface(x, y, w_s, u_s)
     main_widget.setGeometry(100, 100, 800, 700)
     main_widget.add_labels('Wrapped Phase', 'Unwrapped Phase')

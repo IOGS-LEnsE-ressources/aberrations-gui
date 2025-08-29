@@ -142,7 +142,6 @@ class MasksController:
             result = dialog.exec()
             if result == QDialog.DialogCode.Rejected:
                 message_box('No mask added', 'No mask will be added to the list of masks.')
-                #print('NO MASK ADDED !')
             else:
                 mask = dialog.mask.copy()
                 # Add mask to the data_set
@@ -162,7 +161,6 @@ class MasksController:
         :param event: Signal that triggers the event.
         """
         change = event.split(',')
-        print(f'M Changed / {change}')
 
 
 if __name__ == "__main__":

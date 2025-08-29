@@ -231,7 +231,6 @@ if __name__ == "__main__":
     mask = F.mask(size)
     image = F.complex_pupil(F.phase(coefficients, size), mask)
     rf, psf_diff_lim, psf_image = F.find_rf_from_coefs(coefficients, size)
-    print(f"Rf = {rf}")
 
     plt.figure()
     plt.imshow(phase.astype(np.uint8), cmap = "gray")

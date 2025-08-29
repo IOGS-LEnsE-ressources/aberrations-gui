@@ -106,8 +106,6 @@ class TreatmentController:
         #self.image = np.pad(self.image, pad_width, mode='constant', constant_values=0)
         self.size = self.image.shape
 
-        print(f"size = {self.size[0]}, {self.size[1]}")
-
         self.reserve_coefficients = self.zernike_coeffs.get_coeffs()
         self.reserve_coefficients[0] = 0
         self.reserve_coefficients[1] = 0

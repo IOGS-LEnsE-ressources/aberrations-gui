@@ -280,8 +280,6 @@ class Zernike:
         """
         coeffs = np.array(self.coeff_list.copy()) * self.phase.get_wedge_factor()
         if self.lambda_nm:
-            print(f'in NM')
-            print(coeffs.dtype)
             coeffs = coeffs * self.lambda_value * 1e-3 # nm -> um
         return coeffs
 
@@ -306,7 +304,7 @@ class Zernike:
         self.lambda_nm = um_check
         if value is not None:
             self.lambda_value = value
-        print(f'Check ? {self.lambda_nm} / {self.lambda_value}')
+
 
     def convert_to_seidel(self):
         """
@@ -470,7 +468,6 @@ if __name__ == "__main__":
     data_set = DataSetModel(5)
     print(f'Set ok ? {data_set.add_set_images(images)}')
     data_set.add_mask(mask)
-    print(f'Mask type ? {data_set.get_global_mask()}')
     phase = PhaseModel(data_set)
     phase.prepare_data()
     phase.process_wrapped_phase()

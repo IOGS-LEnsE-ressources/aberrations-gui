@@ -65,7 +65,6 @@ class AcquisitionModel:
             self.camera_state = HWState.CONNECTED
             self.camera.init_camera() # Add test in lensecam -> True if init correctly
             self.camera_state = HWState.INITIALIZED
-            print(f'Alloc ? {self.camera.alloc_memory()}')
             self.camera_state = HWState.READY
 
         if self.piezo.is_piezo_here() is True:
@@ -177,13 +176,10 @@ class AcquisitionModel:
         if self.acquisition_counter < self.acquisition_number:
             if self.images_counter < self.set_size:
                 new_image = self._one_acquisition()
-                print(f'New Image {self.images_counter}')
                 self.current_images_set.append(new_image)
                 self.images_counter += 1
             else:
-                print(f'End 2 {len(self.current_images_set)}')
                 self.images_sets.add_set_images(self.current_images_set)
-                print(f'End  {len(self.images_sets.images_list)}')
                 self.acquisition_counter += 1
                 self.images_counter = 0
                 self.current_images_set = []

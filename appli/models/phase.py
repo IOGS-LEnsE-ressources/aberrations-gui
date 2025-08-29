@@ -74,8 +74,6 @@ class PhaseModel:
                 image_f[~mask_cropped] = np.nan
                 images_f[im_k] = np.ma.masked_where(np.logical_not(mask_cropped), image_f)
             self.cropped_images_sets.add_set_images(images_f)
-
-        print(f'\t Cropped Image Size = {images_f[0].shape}')
         self.cropped_data_ready = True
         self.data_set.set_cropped_state(True)
 
@@ -88,8 +86,6 @@ class PhaseModel:
         if self.data_set.is_data_ready() and self.cropped_data_ready:
             self.cropped_phase = []
             mask,_ = self.cropped_masks_sets.get_mask(1)
-
-            print(f'\t Cropped Mask Size (process_wrap) = {mask.shape}')
             images_list = self.cropped_images_sets.get_images_set(set_number)
             self.wrapped_phase = hariharan_algorithm(images_list, mask)
             self.wrapped_phase = np.ma.masked_where(np.logical_not(mask), self.wrapped_phase)
@@ -113,12 +109,9 @@ class PhaseModel:
         """
         if self.wrapped_phase is not None:
             mask, _ = self.cropped_masks_sets.get_mask(1)
-            print(f'\t Cropped Mask Size (process_unwrap) = {mask.shape}')
             self.unwrapped_phase = unwrap_phase(self.wrapped_phase) / (2 * np.pi)
-            print(f'Unwrapping : Max-Min = {np.max(self.unwrapped_phase) - np.min(self.unwrapped_phase)}')
             self.unwrapped_phase[~mask] = np.nan
             self.unwrapped_phase = np.ma.masked_where(np.logical_not(mask), self.unwrapped_phase)
-            print(f'\t Unwrapped surface Size (process_unwrap) = {self.unwrapped_phase.shape}')
             self.data_set.set_unwrapped_state()
             return True
         else:
@@ -163,7 +156,7 @@ class PhaseModel:
         """
         Get the wedge factor.
         """
-        return self.wedge_factor
+        return -self.wedge_factor
 
 
 if __name__ == '__main__':
