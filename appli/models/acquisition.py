@@ -65,7 +65,8 @@ class AcquisitionModel:
             self.camera_state = HWState.CONNECTED
             self.camera.init_camera() # Add test in lensecam -> True if init correctly
             self.camera_state = HWState.INITIALIZED
-            self.camera_state = HWState.READY
+            if self.camera.alloc_memory():
+                self.camera_state = HWState.READY
 
         if self.piezo.is_piezo_here() is True:
             self.piezo_state = HWState.CONNECTED
