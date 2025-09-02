@@ -9,7 +9,7 @@ label_subtitle;Interface développée par le LEnsE
 # --------------
 # MainMenuWidget
 # --------------
-label_title_main_menu; Menu Principal
+label_title_main_menu;
 camera_button; Caméra
 load_images_button; Images pré-enregistrées
 masks_button; Gestion des masques
@@ -69,11 +69,11 @@ masks_list_delete; Supp.
 # Analyses
 # --------------
 label_analyses_options; Analyse simple
-simple_analyses_button; Analyse simple
+simple_analyses_button; Analyse
 submenu_analyses; Analyse simple
 wrapped_phase_button; Affichage Phase non déroulée
-unwrapped_phase_button; Affichage Phase déroulée
-corrected_phase_button; Correction du tilt
+unwrapped_phase_button; Affichage Surface
+corrected_phase_button; Affichage Surface
 histogram_phase_button; Histogramme de la phase
 label_sub_acquisition_title; Correction
 check_tilt; Tilt
