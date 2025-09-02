@@ -278,7 +278,7 @@ class Zernike:
         Return an array of the coefficients.
         :return: 1D array with the coefficients.
         """
-        coeffs = np.array(self.coeff_list.copy()) * self.phase.get_wedge_factor()
+        coeffs = -np.array(self.coeff_list.copy()) * self.phase.get_wedge_factor()
         if self.lambda_nm:
             coeffs = coeffs * self.lambda_value * 1e-3 # nm -> um
         return coeffs

@@ -318,7 +318,7 @@ class TreatmentController:
         wedge_factor = self.phase.get_wedge_factor()
         correction_list = self.corrected_initial_list
         _, corrected = self.zernike_coeffs.process_surface_correction(correction_list)
-        unwrapped_array = corrected * wedge_factor
+        unwrapped_array = -corrected * wedge_factor
         if self.lambda_check:
             unwrapped_array = unwrapped_array * self.lambda_value * 1e-9 * 1e6
         unwrapped_array = unwrapped_array.filled(np.nan)

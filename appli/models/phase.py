@@ -124,9 +124,9 @@ class PhaseModel:
         :return: Unwrapped phase as an array in 2D. None if not processed.
         """
         if self.unwrapped_phase is not None:
-            return self.unwrapped_phase * self.wedge_factor
+            return -self.unwrapped_phase * self.wedge_factor
         else:
-            return self.unwrapped_phase
+            return None
 
     def is_analysis_ready(self):
         """
@@ -156,7 +156,7 @@ class PhaseModel:
         """
         Get the wedge factor.
         """
-        return -self.wedge_factor
+        return self.wedge_factor
 
 
 if __name__ == '__main__':

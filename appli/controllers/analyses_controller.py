@@ -89,6 +89,7 @@ class AnalysesController:
         else:
             self.submenu.load_menu('menu/analyses_menu.txt')
         self.submenu.menu_changed.connect(self.update_submenu)
+        #self.update_submenu_view('correctedphase_analyses')
         # Option 1
         self.options1_widget = AnalysesOptionsView()  # Analyses Options
         # Option 2
@@ -112,7 +113,7 @@ class AnalysesController:
                 self.process_zernike_calculation(k)
             self.data_set.set_analyzed_state()
             self.tilt_possible = True  # ???
-        self.update_submenu('')
+        self.update_submenu('correctedphase_analyses')
 
     def init_view(self):
         """
@@ -153,8 +154,6 @@ class AnalysesController:
         match self.submode:
             case 'wrappedphase_analyses':
                 self.submenu.set_activated(3)
-            case 'unwrappedphase_analyses':
-                self.submenu.set_activated(4)
             case 'correctedphase_analyses':
                 self.submenu.set_activated(1)
         # Update views
@@ -168,6 +167,8 @@ class AnalysesController:
             case 'wrappedphase_analyses':
                 self.options1_widget.widget_2D_3D.setEnabled(False)
                 self.options1_widget.widget_2D_3D.setStyleSheet(disabled_button)
+                self.options1_widget.widget_2D_3D_gain.setEnabled(False)
+                self.options1_widget.widget_2D_3D_gain.setStyleSheet(disabled_button)
                 # Display wrapped in 2D
                 if self.data_set.is_wrapped():
                     self.display_2D_wrapped()
