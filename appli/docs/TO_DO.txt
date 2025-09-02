@@ -21,9 +21,7 @@ Functions
 -->     GLOBAL : Hardware - default values for camera and piezo to update
             if hardware is connected
 -->     ACQ : Histogram and slice in the image for contrast (with slider ?)
--->     Save mask type in MAT file (and read it)
 -->     Analyses mode / view : add 3D option - old version ?
--->     In 3D display, add a Z-axis factor to increase details ?
 -->     Save images from acquisition in ACQ mode for exemple (or in MASK mode) =/= IMAGES mode
 
 
@@ -36,9 +34,6 @@ Bugs
 
 -->     in acquisition controllers (and global)
             + find a way to update DEFAULT parameters (for camera and piezo)
-            + find a way to stop thread_update camera on closing acquisition mode
--->     in masks controllers / options view
-            + in update_submenu : update 'nomask' in options_list of manager
 
 -->     GLOBAL TEST
             +> main_menu
@@ -51,5 +46,4 @@ Bugs
 
 Test to do
 ==========
--> Save set of images (with multi acquisition)
 -> Display images from multi sets
