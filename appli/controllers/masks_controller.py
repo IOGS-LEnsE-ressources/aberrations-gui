@@ -146,6 +146,10 @@ class MasksController:
                 mask = dialog.mask.copy()
                 # Add mask to the data_set
                 self.data_set.add_mask(mask, type_m)
+                self.data_set.set_cropped_state(False)
+                self.data_set.set_analyzed_state(False)
+                self.data_set.set_wrapped_state(False)
+                self.data_set.set_unwrapped_state(False)
 
                 # Test if no mask -> update options_list
                 if 'nomask' in self.manager.options_list:

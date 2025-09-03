@@ -215,11 +215,10 @@ class MasksTableList(QTableWidget):
                     if self.data_set.masks_sets.get_masks_number() >= 1:
                         self.data_set.masks_sets.del_mask(i)
                         self.delete_data()
-                    if self.data_set.masks_sets.get_masks_number() == 0:
-                        self.data_set.set_cropped_state(False)
-                        self.data_set.set_analyzed_state(False)
-                        self.data_set.set_wrapped_state(False)
-                        self.data_set.set_unwrapped_state(False)
+                    self.data_set.set_cropped_state(False)
+                    self.data_set.set_analyzed_state(False)
+                    self.data_set.set_wrapped_state(False)
+                    self.data_set.set_unwrapped_state(False)
 
                 else:
                     self.data_set.masks_sets.reset_masks()
